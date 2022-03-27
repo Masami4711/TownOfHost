@@ -123,6 +123,7 @@ namespace TownOfHost
                     if (cRole == CustomRoles.Jester) hasTasks = false;
                     if (cRole == CustomRoles.MadGuardian && ForRecompute) hasTasks = false;
                     if (cRole == CustomRoles.MadSnitch && ForRecompute) hasTasks = false;
+                    if (cRole == CustomRoles.MadMayor) hasTasks = false;
                     if (cRole == CustomRoles.Opportunist) hasTasks = false;
                     if (cRole == CustomRoles.Sheriff) hasTasks = false;
                     if (cRole == CustomRoles.Madmate) hasTasks = false;
@@ -199,7 +200,7 @@ namespace TownOfHost
                     if (Options.SheriffCanKillOpportunist) text += String.Format("\n{0}:{1}", getString("SheriffCanKillOpportunist"), getOnOff(Options.SheriffCanKillOpportunist));
                     if (Options.SheriffCanKillMadmate) text += String.Format("\n{0}:{1}", getString("SheriffCanKillMadmate"), getOnOff(Options.SheriffCanKillMadmate));
                 }
-                if (CustomRoles.MadGuardian.isEnable() || CustomRoles.MadSnitch.isEnable() || CustomRoles.Madmate.isEnable() || CustomRoles.SKMadmate.isEnable())
+                if (CustomRoles.MadGuardian.isEnable() || CustomRoles.MadSnitch.isEnable() || CustomRoles.Madmate.isEnable() || CustomRoles.SKMadmate.isEnable() || CustomRoles.MadMayor.isEnable())
                 {
                     if (Options.MadmateHasImpostorVision) text += String.Format("\n{0}:{1}", getString("MadmateHasImpostorVision"), getOnOff(Options.MadmateHasImpostorVision));
                     if (Options.MadmateCanFixLightsOut) text += String.Format("\n{0}:{1}", getString("MadmateCanFixLightsOut"), getOnOff(Options.MadmateCanFixLightsOut));

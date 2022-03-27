@@ -495,6 +495,7 @@ namespace TownOfHost
         public static bool isSabotageMaster(this PlayerControl target) { return target.getCustomRole() == CustomRoles.SabotageMaster; }
         public static bool isMadGuardian(this PlayerControl target) { return target.getCustomRole() == CustomRoles.MadGuardian; }
         public static bool isMadSnitch(this PlayerControl target) { return target.getCustomRole() == CustomRoles.MadSnitch; }
+        public static bool isMadMayor(this PlayerControl target) { return target.getCustomRole() == CustomRoles.MadMayor; }
         public static bool isMayor(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Mayor; }
         public static bool isOpportunist(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Opportunist; }
         public static bool isSnitch(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Snitch; }
