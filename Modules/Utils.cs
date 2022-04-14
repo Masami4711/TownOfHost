@@ -411,6 +411,16 @@ namespace TownOfHost
                     if (seer.GetKillOrSpell() == false) SelfSuffix = "Mode:" + getString("WitchModeKill");
                     if (seer.GetKillOrSpell() == true) SelfSuffix = "Mode:" + getString("WitchModeSpell");
                 }
+                if (main.GuesserShootingItems.ContainsKey(seer.PlayerId))
+                {
+                    if (main.GuesserShootingItems[seer.PlayerId].Item1 == 0) SelfSuffix = null;
+                    if (main.GuesserShootingItems[seer.PlayerId].Item1 == 1) SelfSuffix = "cansel";
+                    if (main.GuesserShootingItems[seer.PlayerId].Item1 == 2)
+                    {
+                        var guessertarget = getPlayerById(main.GuesserShootingItems[seer.PlayerId].Item3);
+                        SelfSuffix = "cansel" + guessertarget.getCustomRole();
+                    }
+                }
 
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
@@ -453,6 +463,8 @@ namespace TownOfHost
                     || seer.isEgoSchrodingerCat() //seerがエゴイストのシュレディンガーの猫
                     || NameColorManager.Instance.GetDataBySeer(seer.PlayerId).Count > 0 //seer視点用の名前色データが一つ以上ある
                     || seer.isArsonist()
+                    || seer.isNiceguesser()
+                    || seer.isEvilguesser()
                 )
                 {
                     foreach (var target in PlayerControl.AllPlayerControls)
@@ -465,6 +477,7 @@ namespace TownOfHost
                         string TargetTaskText = hasTasks(target.Data, false) && seer.Data.IsDead ? $"{getTaskText(target)}" : "";
 
                         //Loversのハートマークなどを入れてください。
+                        string Targetsuffix = "";
                         string TargetMark = "";
                         //タスク完了直前のSnitchにマークを表示
                         if (target.isSnitch() && seer.getCustomRole().isImpostor())
@@ -476,6 +489,25 @@ namespace TownOfHost
                         if (seer.isArsonist() && seer.isDousedPlayer(target))
                         {
                             TargetMark += $"<color={getRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
+                        }
+                        if (main.GuesserShootingItems.ContainsKey(seer.PlayerId))
+                        {
+                            var guessertarget = getPlayerById(main.GuesserShootingItems[seer.PlayerId].Item3);
+                            var player = getPlayerById(main.GuesserShootingItems[seer.PlayerId].Item2);
+                            if (main.GuesserShootingItems[seer.PlayerId].Item1 == 1)
+                            {
+                                if (target == guessertarget || target == player) Targetsuffix = null;
+                            }
+                            if (main.GuesserShootingItems[seer.PlayerId].Item1 == 1)
+                            {
+                                if (target == guessertarget) Targetsuffix = "vote";
+                                if (target == player) Targetsuffix = "shoot";
+                            }
+                            if (main.GuesserShootingItems[seer.PlayerId].Item1 == 2)
+                            {
+                                if (target == guessertarget) Targetsuffix = "shoot";
+                                if (target == player) Targetsuffix = "select";
+                            }
                         }
 
                         //他人の役職とタスクはtargetがタスクを持っているかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
@@ -505,7 +537,7 @@ namespace TownOfHost
                         }
 
                         //全てのテキストを合成します。
-                        string TargetName = $"{TargetRoleText}{TargetPlayerName}{TargetMark}";
+                        string TargetName = $"{TargetRoleText}{TargetPlayerName}{TargetMark}\r\n{Targetsuffix}";
                         //適用
                         target.RpcSetNamePrivate(TargetName, true, seer);
                         HudManagerPatch.LastSetNameDesyncCount++;

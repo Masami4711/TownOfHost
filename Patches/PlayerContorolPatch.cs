@@ -668,6 +668,31 @@ namespace TownOfHost
                     {
                         Mark += $"<color={Utils.getRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
                     }
+                    if (main.GuesserShootingItems.ContainsKey(PlayerControl.LocalPlayer.PlayerId))
+                    {
+                        if (__instance == PlayerControl.LocalPlayer)
+                        {
+                            if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 0) Suffix = null;
+                            if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 1) Suffix = "cansel";
+                            if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 2) Suffix = "cansel" + Utils.getPlayerById(main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item3).getCustomRole();
+                        }
+                        var guessertarget = Utils.getPlayerById(main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item3);
+                        var player = Utils.getPlayerById(main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item2);
+                        if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 1)
+                        {
+                            if (__instance == guessertarget || __instance == player) Suffix = null;
+                        }
+                        if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 1)
+                        {
+                            if (__instance == guessertarget) Suffix = "vote";
+                            if (__instance == player) Suffix = "shoot";
+                        }
+                        if (main.GuesserShootingItems[PlayerControl.LocalPlayer.PlayerId].Item1 == 2)
+                        {
+                            if (__instance == guessertarget) Suffix = "shoot";
+                            if (__instance == player) Suffix = "select";
+                        }
+                    }
 
                     //タスクが終わりそうなSnitchがいるとき、インポスターに警告が表示される
                     if (__instance.AmOwner && __instance.getCustomRole().isImpostor())

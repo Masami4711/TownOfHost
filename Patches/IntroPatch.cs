@@ -23,6 +23,8 @@ namespace TownOfHost
 
                 if (PlayerControl.LocalPlayer.isEvilWatcher() || PlayerControl.LocalPlayer.isNiceWatcher())
                     __instance.RoleBlurbText.text = getString("WatcherInfo");
+                if (PlayerControl.LocalPlayer.isEvilguesser() || PlayerControl.LocalPlayer.isNiceguesser())
+                    __instance.RoleBlurbText.text = getString("GuesserInfo");
                 else
                     __instance.RoleBlurbText.text = getString(role.ToString() + "Info");
             }, 0.01f, "Override Role Text");

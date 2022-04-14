@@ -66,6 +66,7 @@ namespace TownOfHost
         public static CustomOption CanMakeMadmateCount;
 
         public static CustomOption EvilWatcherChance;
+        public static CustomOption EvilguesserChance;
         public static CustomOption MayorAdditionalVote;
         public static CustomOption SabotageMasterSkillLimit;
         public static CustomOption SabotageMasterFixesDoors;
@@ -162,6 +163,15 @@ namespace TownOfHost
             else
                 IsEvilWatcher = false;
         }
+        public static bool IsEvilguesser = false;
+        public static void SetGuesserTeam(float EvilguesserRate)
+        {
+            EvilguesserRate = Options.EvilguesserChance.GetFloat();
+            if (UnityEngine.Random.Range(1, 100) < EvilguesserRate)
+                IsEvilguesser = true;
+            else
+                IsEvilguesser = false;
+        }
         private static bool IsLoaded = false;
 
         static Options()
@@ -244,6 +254,8 @@ namespace TownOfHost
             // Both
             SetupRoleOptions(30000, CustomRoles.Watcher);
             EvilWatcherChance = CustomOption.Create(30010, Color.white, "EvilWatcherChance", 0, 0, 100, 10, CustomRoleSpawnChances[CustomRoles.Watcher]);
+            SetupRoleOptions(40000, CustomRoles.Guesser);
+            EvilguesserChance = CustomOption.Create(40010, Color.white, "EvilguesserChance", 0, 0, 100, 10, CustomRoleSpawnChances[CustomRoles.Guesser]);
             // Crewmate
             SetupRoleOptions(20000, CustomRoles.Bait);
             SetupRoleOptions(20100, CustomRoles.Lighter);
@@ -269,7 +281,7 @@ namespace TownOfHost
             SheriffShotLimit = CustomOption.Create(20416, Color.white, "SheriffShotLimit", 15, 1, 15, 1, CustomRoleSpawnChances[CustomRoles.Sheriff]);
             SetupRoleOptions(20500, CustomRoles.Snitch);
             SetupRoleOptions(20600, CustomRoles.SpeedBooster);
-            SpeedBoosterUpSpeed = CustomOption.Create(20610, Color.white, "SpeedBoosterUpSpeed", 2f,0.25f,3f,0.25f, CustomRoleSpawnChances[CustomRoles.SpeedBooster]);
+            SpeedBoosterUpSpeed = CustomOption.Create(20610, Color.white, "SpeedBoosterUpSpeed", 2f, 0.25f, 3f, 0.25f, CustomRoleSpawnChances[CustomRoles.SpeedBooster]);
             // Other
             SetupRoleOptions(50500, CustomRoles.Arsonist);
             ArsonistDouseTime = CustomOption.Create(50510, Color.white, "ArsonistDouseTime", 3, 1, 10, 1, CustomRoleSpawnChances[CustomRoles.Arsonist]);

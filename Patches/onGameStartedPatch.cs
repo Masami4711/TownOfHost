@@ -27,6 +27,7 @@ namespace TownOfHost
             main.CursedPlayers = new Dictionary<byte, PlayerControl>();
             main.isCurseAndKill = new Dictionary<byte, bool>();
             main.AirshipMeetingTimer = new Dictionary<byte, float>();
+            main.GuesserShootingItems = new Dictionary<byte, (int, byte, byte, int)>();
             main.AirshipMeetingCheck = false;
             main.SKMadmateNowCount = 0;
             main.isCursed = false;
@@ -97,6 +98,7 @@ namespace TownOfHost
 
             //ウォッチャーの陣営抽選
             Options.SetWatcherTeam(Options.EvilWatcherChance.GetFloat());
+            Options.SetGuesserTeam(Options.EvilguesserChance.GetFloat());
 
             main.AllPlayerCustomRoles = new Dictionary<byte, CustomRoles>();
             main.AllPlayerCustomSubRoles = new Dictionary<byte, CustomRoles>();
@@ -313,6 +315,8 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.SchrodingerCat, Crewmates);
                 if (Options.IsEvilWatcher) AssignCustomRolesFromList(CustomRoles.Watcher, Impostors);
                 else AssignCustomRolesFromList(CustomRoles.Watcher, Crewmates);
+                if (Options.IsEvilguesser) AssignCustomRolesFromList(CustomRoles.Guesser, Impostors);
+                else AssignCustomRolesFromList(CustomRoles.Guesser, Crewmates);
                 if (main.RealOptionsData.NumImpostors > 1)
                     AssignCustomRolesFromList(CustomRoles.Egoist, Shapeshifters);
 
@@ -323,6 +327,10 @@ namespace TownOfHost
                         main.AllPlayerCustomRoles[pc.PlayerId] = CustomRoles.EvilWatcher;
                     if (pc.isWatcher() && !Options.IsEvilWatcher)
                         main.AllPlayerCustomRoles[pc.PlayerId] = CustomRoles.NiceWatcher;
+                    if (pc.isGuesser() && Options.IsEvilguesser)
+                        main.AllPlayerCustomRoles[pc.PlayerId] = CustomRoles.Evilguesser;
+                    if (pc.isGuesser() && !Options.IsEvilguesser)
+                        main.AllPlayerCustomRoles[pc.PlayerId] = CustomRoles.Niceguesser;
                 }
                 foreach (var pair in main.AllPlayerCustomRoles)
                 {
@@ -341,6 +349,7 @@ namespace TownOfHost
                 //BountyHunterのターゲットを初期化
                 main.BountyTargets = new Dictionary<byte, PlayerControl>();
                 main.BountyTimer = new Dictionary<byte, float>();
+                List<CustomRoles> GuesserRolesHelper = new List<CustomRoles>();
                 foreach (var pc in PlayerControl.AllPlayerControls)
                 {
                     if (pc.isSheriff())
@@ -370,6 +379,26 @@ namespace TownOfHost
                             main.isDoused.Add((pc.PlayerId, ar.PlayerId), false);
                         }
                     }
+                    if (pc.isNiceguesser() || pc.isEvilguesser())
+                    {
+                        main.GuesserShootingItems.Add(pc.PlayerId, (0, pc.PlayerId, pc.PlayerId, 0));
+                    }
+                    if (GuesserRolesHelper == null) GuesserRolesHelper.Add(pc.getCustomRole());
+                    if (GuesserRolesHelper != null)
+                    {
+                        bool IsEnable = false;
+                        foreach (var gr in GuesserRolesHelper)
+                        {
+                            if (pc.getCustomRole() == gr) IsEnable = true;
+                        }
+                        if (!IsEnable) GuesserRolesHelper.Add(pc.getCustomRole());
+                    }
+                }
+                int GuessorCount = 0;
+                foreach (var gr in GuesserRolesHelper)
+                {
+                    main.GuesserRoles.Add(GuessorCount, gr);
+                    GuessorCount++;
                 }
 
                 //役職の人数を戻す

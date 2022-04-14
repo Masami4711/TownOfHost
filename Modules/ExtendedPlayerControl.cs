@@ -282,6 +282,7 @@ namespace TownOfHost
                     goto DefaultKillcooldown;
                 case CustomRoles.Impostor:
                 case CustomRoles.Witch:
+                case CustomRoles.Evilguesser:
                     goto DefaultKillcooldown;
                 case CustomRoles.EvilWatcher:
                 case CustomRoles.NiceWatcher:
@@ -639,6 +640,9 @@ namespace TownOfHost
         public static bool isEvilWatcher(this PlayerControl target) { return target.getCustomRole() == CustomRoles.EvilWatcher; }
         public static bool isNiceWatcher(this PlayerControl target) { return target.getCustomRole() == CustomRoles.NiceWatcher; }
         public static bool isJester(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Jester; }
+        public static bool isGuesser(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Guesser; }
+        public static bool isEvilguesser(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Evilguesser; }
+        public static bool isNiceguesser(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Niceguesser; }
         public static bool isMadmate(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Madmate; }
         public static bool isSKMadmate(this PlayerControl target) { return target.getCustomRole() == CustomRoles.SKMadmate; }
         public static bool isBait(this PlayerControl target) { return target.getCustomRole() == CustomRoles.Bait; }

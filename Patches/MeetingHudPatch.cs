@@ -87,6 +87,68 @@ namespace TownOfHost
                             });
                         }
                     }
+                    if (isNiceguesser(ps.TargetPlayerId) || isEvilguesser(ps.TargetPlayerId))
+                    {
+                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 0)
+                        {
+                            foreach (var pc in PlayerControl.AllPlayerControls)
+                            {
+                                if (!pc.Data.IsDead && !pc.Data.Disconnected)
+                                {
+                                    main.GuesserShootingItems[ps.TargetPlayerId] = (1, pc.PlayerId, ps.VotedFor, 0);
+                                    break;
+                                }
+                            }
+                            return false;
+                        }
+                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 1)
+                        {
+                            if (ps.VotedFor == ps.TargetPlayerId)
+                            {
+                                main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                return false;
+                            }
+                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
+                            {
+                                main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, 0);
+                                return false;
+                            }
+                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3) return true;
+                        }
+                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 2)
+                        {
+                            int RoleKey = main.GuesserShootingItems[ps.TargetPlayerId].Item4;
+                            if (ps.VotedFor == ps.TargetPlayerId)
+                            {
+                                main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                return false;
+                            }
+                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
+                            {
+                                main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, RoleKey++);
+                                return false;
+                            }
+                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3)
+                            {
+                                var target = Utils.getPlayerById(main.GuesserShootingItems[ps.TargetPlayerId].Item3);
+                                var killer = Utils.getPlayerById(ps.TargetPlayerId);
+                                if (main.GuesserRoles[RoleKey] == target.getCustomRole())
+                                {
+                                    target.RpcMurderPlayer(killer);
+                                    PlayerState.setDeathReason(target.PlayerId, PlayerState.DeathReason.Kill);
+                                    main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                    return false;
+                                }
+                                if (main.GuesserRoles[RoleKey] != target.getCustomRole())
+                                {
+                                    killer.RpcMurderPlayer(killer);
+                                    PlayerState.setDeathReason(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                    return false;
+                                }
+                            }
+                        }
+                    }
                 }
                 states = statesList.ToArray();
 
@@ -140,6 +202,18 @@ namespace TownOfHost
             }
         }
         public static bool isMayor(byte id)
+        {
+            var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
+            if (player == null) return false;
+            return player.isMayor();
+        }
+        public static bool isNiceguesser(byte id)
+        {
+            var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
+            if (player == null) return false;
+            return player.isMayor();
+        }
+        public static bool isEvilguesser(byte id)
         {
             var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
             if (player == null) return false;

@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
@@ -81,6 +81,8 @@ namespace TownOfHost
         public static Dictionary<byte, int> DousedPlayerCount = new Dictionary<byte, int>();
         public static Dictionary<byte, (PlayerControl, float)> ArsonistTimer = new Dictionary<byte, (PlayerControl, float)>();
         public static Dictionary<byte, float> AirshipMeetingTimer = new Dictionary<byte, float>();
+        public static Dictionary<int, CustomRoles> GuesserRoles = new Dictionary<int, CustomRoles>();
+        public static Dictionary<byte, (int, byte, byte, int)> GuesserShootingItems = new Dictionary<byte, (int, byte, byte, int)>();
         public static bool AirshipMeetingCheck;
         public static Dictionary<byte, byte> SpeedBoostTarget = new Dictionary<byte, byte>();
         public static int AliveImpostorCount;
@@ -175,6 +177,9 @@ namespace TownOfHost
                 {CustomRoles.Watcher, "#800080"},
                 {CustomRoles.EvilWatcher, "#ff0000"},
                 {CustomRoles.NiceWatcher, "#800080"},
+                {CustomRoles.Guesser,"#ffff00"},
+                {CustomRoles.Evilguesser, "#ff0000"},
+                {CustomRoles.Niceguesser, "#ffff00"},
                 {CustomRoles.Arsonist, "#ff6633"},
                 {CustomRoles.Jester, "#ec62a5"},
                 {CustomRoles.Terrorist, "#00ff00"},
@@ -232,41 +237,44 @@ namespace TownOfHost
     }
     public enum CustomRoles
     {
-    //Default
+        //Default
         Crewmate = 0,
-    //Impostor(Vanilla)
+        //Impostor(Vanilla)
         Impostor,
         Shapeshifter,
-     //Impostor
+        //Impostor
         BountyHunter,
-        EvilWatcher, 
+        EvilWatcher,
+        Evilguesser,
         Mafia,
         SerialKiller,
         ShapeMaster,
         Vampire,
         Witch,
         Warlock,
-    //Madmate
+        //Madmate
         MadGuardian,
         Madmate,
         MadSnitch,
         SKMadmate,
-    //両陣営
+        //両陣営
         Watcher,
-    //Crewmate(Vanilla)
+        Guesser,
+        //Crewmate(Vanilla)
         Engineer,
         GuardianAngel,
         Scientist,
-     //Crewmate
+        //Crewmate
         Bait,
         Lighter,
         Mayor,
         NiceWatcher,
+        Niceguesser,
         SabotageMaster,
         Sheriff,
         Snitch,
         SpeedBooster,
-    //第三陣営
+        //第三陣営
         Arsonist,
         Egoist,
         Jester,
@@ -276,10 +284,10 @@ namespace TownOfHost
         MSchrodingerCat,//インポスター陣営のシュレディンガーの猫
         EgoSchrodingerCat,//エゴイスト陣営のシュレディンガーの猫
         Terrorist,
-    //HideAndSeak
+        //HideAndSeak
         Fox,
         Troll,
-     // Sub-roll after 500
+        // Sub-roll after 500
         NoSubRoleAssigned = 500,
     }
     //WinData
