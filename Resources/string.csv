@@ -86,7 +86,7 @@ MadGuardianInfoLong,"(Impostors):\nCrewmate, but they take the side of the Impos
 MadSnitchInfoLong,"(Impostors):\nCrew, but they side with the Impostor.\nThey cannot recognize the Impostor and each other,\nbut they can recognize each other when they complete all of their tasks.",(インポスター陣営):\nクルーだがインポスターの味方をする。\nインポスターと互いに認識できないが、タスクを全て完了させると互いに認識できるようになる。
 SKMadmateInfoLong,(Impostors):\nThe role that can be held by the person\nwho was closest to the person when impostor transformed.\nThere is no task.,(インポスター陣営):\n変身した際に一番近かった人がなれる役職。タスクはない。
 WatcherInfoLong,(Impostors or Crewmates):\nYou can see where everyone is voting.,(インポスターorクルーメイト陣営):\n全員の投票先を見ることができる。
-GuesserInfoLong,(Impostor or Crewmates):\nIn meeting time, you can also shoot your enemies. If you try to vote, you can see vote button and shoot button.\nIf you click vote button, you can vote to the target. If you click shoot button, you can see select button and shoot button.\nGuess and choose target' role by select button and kill the target by shoot button.\nIf your choice is right, you can kill the target. But if your choice is failure, you will suicide.,(インポスターorクルーメイト陣営):\nゲッサーは会議中に敵を撃つことができます。誰かに投票しようとすると、voteボタンとshootボタンが出てきます。\nvoteボタンを押すとそのまま投票できます。shootボタンを押すと今度はselectボタンとshootボタンが出てきます。\nターゲットの役職を考えて、serectボタンで選択してshootボタンでキルしましよう。選択した役職が当たっていればキルが実行され、外れていれば自爆します。
+GuesserInfoLong,(Impostor or Crewmates):\nIn meeting time you can also shoot your enemies. If you try to vote you can see vote button and shoot button.\nIf you click vote button you can vote to the target. If you click shoot button you can see select button and shoot button.\nGuess and choose target' role by select button and kill the target by shoot button.\nIf your choice is right you can kill the target. But if your choice is failure you will suicide.,(インポスターorクルーメイト陣営):\nゲッサーは会議中に敵を撃つことができます。誰かに投票しようとすると、voteボタンとshootボタンが出てきます。\nvoteボタンを押すとそのまま投票できます。shootボタンを押すと今度はselectボタンとshootボタンが出てきます。\nターゲットの役職を考えて、serectボタンで選択してshootボタンでキルしましよう。選択した役職が当たっていればキルが実行され、外れていれば自爆します。
 ArsonistInfoLong,"(Neutrals):\nWhen Arsonist tries to use kill button, he varnish oil to crewmates. \nWhen he finish varnishing to all crewmates, he burn the ship and win.",(第三陣営):\nキルボタンを使おうとすると、ターゲットに油を塗れる。\nすべてのクルーに油を塗ったら船を燃やして勝利する。
 JesterInfoLong,(Impostors):\nYou can win when you are exiled.\nDefeated when the match ends without being exiled or is killed.,(第三陣営):\n会議で追放された時に単独勝利できる。\n追放されず試合が終了orキルされると敗北。
 TerroristInfoLong,(Neutrals):\nThe player wins alone when killed or exiled with all of his tasks completed.,(第三陣営):\n自身のタスクを全て完了させた状態で\nキル・追放された時に単独勝利する。
@@ -131,7 +131,7 @@ CanMakeMadmateCount,Shapeshifter Can Make Madmate limit,マッドメイトを作
 MadSnitchTasks,MadSnitch Tasks,マッドスニッチのタスク数
 MadGuardianCanSeeWhoTriedToKill,MadGuardian Can See Who Tried To Kill,マッドガーディアンが自身の殺害未遂者を知ることができる
 EvilWatcherChance,EvilWatcher Chance,イビルウォッチャーになる確率
-EviliguesserChance,Eviliguesser change chance,イビルゲッサーになる確率
+EvilguesserChance,Eviliguesser change chance,イビルゲッサーになる確率
 SabotageMasterFixesDoors,SabotageMaster Can Fixes Multiple Doors,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが1度に複数のﾄﾞｱを開けることを許可する
 SabotageMasterFixesReactors,SabotageMaster Can Fixes Both Reactors,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが原子炉ﾒﾙﾄﾀﾞｳﾝに対して能力を
 SabotageMasterFixesOxygens,SabotageMaster Can Fixes Both O2,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが酸素妨害に対して能力を使える

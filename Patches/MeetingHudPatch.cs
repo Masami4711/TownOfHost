@@ -87,86 +87,6 @@ namespace TownOfHost
                             });
                         }
                     }
-                    if (isNiceguesser(ps.TargetPlayerId) || isEvilguesser(ps.TargetPlayerId))
-                    {
-                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 0)
-                        {
-                            foreach (var pc in PlayerControl.AllPlayerControls)
-                            {
-                                if (!pc.Data.IsDead && !pc.Data.Disconnected)
-                                {
-                                    main.GuesserShootingItems[ps.TargetPlayerId] = (1, pc.PlayerId, ps.VotedFor, 0);
-                                    Utils.NotifyRoles();
-                                    Logger.info("ゲッサーのターゲット："+ $"{ps.VotedFor}");
-                                    break;
-                                }
-                            }
-                            return false;
-                        }
-                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 1)
-                        {
-                            if (ps.VotedFor == ps.TargetPlayerId)
-                            {
-                                main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
-                                Utils.NotifyRoles();
-                                Logger.info("キャンセル");
-                                return false;
-                            }
-                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
-                            {
-                                main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, 0);
-                                Utils.NotifyRoles();
-                                Logger.info("shoot");
-                                return false;
-                            }
-                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3) {
-                                Utils.NotifyRoles();
-                                Logger.info("投票");
-                                return true;
-                            }
-                        }
-                        if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 2)
-                        {
-                            int RoleKey = main.GuesserShootingItems[ps.TargetPlayerId].Item4;
-                            if (ps.VotedFor == ps.TargetPlayerId)
-                            {
-                                main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
-                                Utils.NotifyRoles();
-                                Logger.info("キャンセル");
-                                return false;
-                            }
-                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
-                            {
-                                main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, RoleKey++);
-                                Utils.NotifyRoles();
-                                Logger.info("ロールの変更");
-                                return false;
-                            }
-                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3)
-                            {
-                                var target = Utils.getPlayerById(main.GuesserShootingItems[ps.TargetPlayerId].Item3);
-                                var killer = Utils.getPlayerById(ps.TargetPlayerId);
-                                if (main.GuesserRoles[RoleKey] == target.getCustomRole())
-                                {
-                                    target.RpcMurderPlayer(killer);
-                                    PlayerState.setDeathReason(target.PlayerId, PlayerState.DeathReason.Kill);
-                                    main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
-                                    Logger.info("キル成功");
-                                    Utils.NotifyRoles();
-                                    return false;
-                                }
-                                if (main.GuesserRoles[RoleKey] != target.getCustomRole())
-                                {
-                                    killer.RpcMurderPlayer(killer);
-                                    PlayerState.setDeathReason(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
-                                    main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
-                                    Logger.info("キル失敗");
-                                    Utils.NotifyRoles();
-                                    return false;
-                                }
-                            }
-                        }
-                    }
                 }
                 states = statesList.ToArray();
 
@@ -177,7 +97,7 @@ namespace TownOfHost
                 foreach (var data in VotingData)
                 {
                     Logger.info(data.Key + ": " + data.Value);
-                    if (data.Value > max)
+                    if (data.Value > max) 
                     {
                         Logger.info(data.Key + "番が最高値を更新(" + data.Value + ")");
                         exileId = data.Key;
@@ -200,6 +120,7 @@ namespace TownOfHost
                 foreach (var p in main.SpelledPlayer)
                 {
                     PlayerState.setDeathReason(p.PlayerId, PlayerState.DeathReason.Spell);
+                           
                     main.IgnoreReportPlayers.Add(p.PlayerId);
                     p.RpcMurderPlayer(p);
                     recall = true;
