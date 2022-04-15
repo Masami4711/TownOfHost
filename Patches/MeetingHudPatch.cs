@@ -96,6 +96,8 @@ namespace TownOfHost
                                 if (!pc.Data.IsDead && !pc.Data.Disconnected)
                                 {
                                     main.GuesserShootingItems[ps.TargetPlayerId] = (1, pc.PlayerId, ps.VotedFor, 0);
+                                    Utils.NotifyRoles();
+                                    Logger.info("ゲッサーのターゲット："+ $"{ps.VotedFor}");
                                     break;
                                 }
                             }
@@ -106,14 +108,22 @@ namespace TownOfHost
                             if (ps.VotedFor == ps.TargetPlayerId)
                             {
                                 main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                Utils.NotifyRoles();
+                                Logger.info("キャンセル");
                                 return false;
                             }
                             if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
                             {
                                 main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, 0);
+                                Utils.NotifyRoles();
+                                Logger.info("shoot");
                                 return false;
                             }
-                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3) return true;
+                            if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3) {
+                                Utils.NotifyRoles();
+                                Logger.info("投票");
+                                return true;
+                            }
                         }
                         if (main.GuesserShootingItems[ps.TargetPlayerId].Item1 == 2)
                         {
@@ -121,11 +131,15 @@ namespace TownOfHost
                             if (ps.VotedFor == ps.TargetPlayerId)
                             {
                                 main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                Utils.NotifyRoles();
+                                Logger.info("キャンセル");
                                 return false;
                             }
                             if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item2)
                             {
                                 main.GuesserShootingItems[ps.TargetPlayerId] = (2, main.GuesserShootingItems[ps.TargetPlayerId].Item2, main.GuesserShootingItems[ps.TargetPlayerId].Item3, RoleKey++);
+                                Utils.NotifyRoles();
+                                Logger.info("ロールの変更");
                                 return false;
                             }
                             if (ps.VotedFor == main.GuesserShootingItems[ps.TargetPlayerId].Item3)
@@ -137,6 +151,8 @@ namespace TownOfHost
                                     target.RpcMurderPlayer(killer);
                                     PlayerState.setDeathReason(target.PlayerId, PlayerState.DeathReason.Kill);
                                     main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                    Logger.info("キル成功");
+                                    Utils.NotifyRoles();
                                     return false;
                                 }
                                 if (main.GuesserRoles[RoleKey] != target.getCustomRole())
@@ -144,6 +160,8 @@ namespace TownOfHost
                                     killer.RpcMurderPlayer(killer);
                                     PlayerState.setDeathReason(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
                                     main.GuesserShootingItems[ps.TargetPlayerId] = (0, ps.TargetPlayerId, ps.TargetPlayerId, 0);
+                                    Logger.info("キル失敗");
+                                    Utils.NotifyRoles();
                                     return false;
                                 }
                             }
