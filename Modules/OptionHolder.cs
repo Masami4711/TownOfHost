@@ -309,8 +309,8 @@ namespace TownOfHost
                 .SetGameMode(CustomGameMode.HideAndSeek);
             KillDelay = CustomOption.Create(101001, Color.white, "HideAndSeekWaitingTime", 10, 0, 180, 5)
                 .SetGameMode(CustomGameMode.HideAndSeek);
-            IgnoreCosmetics = CustomOption.Create(101002, Color.white, "IgnoreCosmetics", false)
-                .SetGameMode(CustomGameMode.HideAndSeek);
+            //IgnoreCosmetics = CustomOption.Create(101002, Color.white, "IgnoreCosmetics", false)
+            //    .SetGameMode(CustomGameMode.HideAndSeek);
             IgnoreVent = CustomOption.Create(101003, Color.white, "IgnoreVent", false)
                 .SetGameMode(CustomGameMode.HideAndSeek);
 

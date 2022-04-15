@@ -397,7 +397,9 @@ namespace TownOfHost
                 //インポスターに対するSnitch警告
                 if (ShowSnitchWarning && seer.getCustomRole().isImpostor())
                     SelfMark += $"<color={getRoleColorCode(CustomRoles.Snitch)}>★</color>";
-
+                //呪われている場合
+                if (main.SpelledPlayer.Find(x => x.PlayerId == seer.PlayerId) != null && isMeeting)
+                    SelfMark += "<color=#ff0000>†</color>";
                 //Markとは違い、改行してから追記されます。
                 string SelfSuffix = "";
 
@@ -465,6 +467,7 @@ namespace TownOfHost
                     || seer.isArsonist()
                     || seer.isNiceguesser()
                     || seer.isEvilguesser()
+                    || main.SpelledPlayer.Count > 0
                 )
                 {
                     foreach (var target in PlayerControl.AllPlayerControls)
@@ -479,6 +482,9 @@ namespace TownOfHost
                         //Loversのハートマークなどを入れてください。
                         string Targetsuffix = "";
                         string TargetMark = "";
+                        //呪われている人
+                        if (main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null && isMeeting)
+                            TargetMark += "<color=#ff0000>†</color>";
                         //タスク完了直前のSnitchにマークを表示
                         if (target.isSnitch() && seer.getCustomRole().isImpostor())
                         {

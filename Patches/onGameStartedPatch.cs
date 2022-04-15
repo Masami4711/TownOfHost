@@ -14,6 +14,7 @@ namespace TownOfHost
 
             main.currentWinner = CustomWinner.Default;
             main.CustomWinTrigger = false;
+            main.AllPlayerKillCooldown = new Dictionary<byte, float>();
             main.BitPlayers = new Dictionary<byte, (byte, float)>();
             main.SerialKillerTimer = new Dictionary<byte, float>();
             main.WarlockTimer = new Dictionary<byte, float>();
@@ -21,7 +22,6 @@ namespace TownOfHost
             main.isDoused = new Dictionary<(byte, byte), bool>();
             main.DousedPlayerCount = new Dictionary<byte, int>();
             main.ArsonistTimer = new Dictionary<byte, (PlayerControl, float)>();
-            main.ArsonistKillCooldownCheck = true;
             main.BountyTargets = new Dictionary<byte, PlayerControl>();
             main.isTargetKilled = new Dictionary<byte, bool>();
             main.CursedPlayers = new Dictionary<byte, PlayerControl>();
@@ -38,9 +38,6 @@ namespace TownOfHost
 
             main.SpelledPlayer = new List<PlayerControl>();
             main.witchMeeting = false;
-            main.isBountyKillSuccess = false;
-            main.BountyTimerCheck = false;
-            main.BountyMeetingCheck = false;
             main.CheckShapeshift = new Dictionary<byte, bool>();
             main.SpeedBoostTarget = new Dictionary<byte, byte>();
 
@@ -64,10 +61,9 @@ namespace TownOfHost
                     Logger.info($"{pc.getRealName()} : 残り{main.SheriffShotLimit[pc.PlayerId]}発");
                 }
             }
+            main.VisibleTasksCount = true;
             if (__instance.AmHost)
             {
-
-                main.VisibleTasksCount = true;
 
                 RPC.SyncCustomSettingsRPC();
                 main.RefixCooldownDelay = 0;
@@ -216,8 +212,8 @@ namespace TownOfHost
                     }
                     if (Options.IgnoreCosmetics.GetBool())
                     {
-                        pc.RpcSetHat("");
-                        pc.RpcSetSkin("");
+                        //pc.RpcSetHat("");
+                        //pc.RpcSetSkin("");
                     }
                 }
                 //FoxCountとTrollCountを適切に修正する

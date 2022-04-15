@@ -67,6 +67,7 @@ namespace TownOfHost
         public static string TextCursor => TextCursorVisible ? "_" : "";
         public static bool TextCursorVisible;
         public static float TextCursorTimer;
+        public static Dictionary<byte, float> AllPlayerKillCooldown = new Dictionary<byte, float>();
         public static Dictionary<byte, (byte, float)> BitPlayers = new Dictionary<byte, (byte, float)>();
         public static Dictionary<byte, float> SerialKillerTimer = new Dictionary<byte, float>();
         public static Dictionary<byte, float> BountyTimer = new Dictionary<byte, float>();
@@ -89,11 +90,7 @@ namespace TownOfHost
         public static int SKMadmateNowCount;
         public static bool witchMeeting;
         public static bool isCursed;
-        public static bool ArsonistKillCooldownCheck;
         public static bool isShipStart;
-        public static bool BountyMeetingCheck;
-        public static bool isBountyKillSuccess;
-        public static bool BountyTimerCheck;
         public static Dictionary<byte, bool> CheckShapeshift = new Dictionary<byte, bool>();
         public static byte ExiledJesterID;
         public static byte WonTerroristID;
