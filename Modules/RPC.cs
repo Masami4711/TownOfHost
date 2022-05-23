@@ -34,7 +34,7 @@ namespace TownOfHost
         SetLoversPlayers,
         SetExecutionerTarget,
         RemoveExecutionerTarget,
-        SendFireWorksState,
+        SendBomberState,
     }
     public enum Sounds
     {
@@ -204,8 +204,8 @@ namespace TownOfHost
                     byte Key = reader.ReadByte();
                     Main.ExecutionerTarget.Remove(Key);
                     break;
-                case CustomRPC.SendFireWorksState:
-                    FireWorks.ReceiveRPC(reader);
+                case CustomRPC.SendBomberState:
+                    Bomber.ReceiveRPC(reader);
                     break;
             }
         }
@@ -334,7 +334,7 @@ namespace TownOfHost
             {
                 Main.AllPlayerCustomSubRoles[targetId] = role;
             }
-            if (role == CustomRoles.FireWorks) FireWorks.Add(targetId);
+            if (role == CustomRoles.Bomber) Bomber.Add(targetId);
             HudManager.Instance.SetHudActive(true);
         }
         public static void AddNameColorData(byte seerId, byte targetId, string color)

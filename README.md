@@ -53,7 +53,7 @@
 | ------------------------------------------------------------------ | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | [BountyHunter/バウンティハンター](#BountyHunterバウンティハンター) | [Bait/ベイト](#Baitベイト)                                                 | [Arsonist/アーソニスト](#Arsonistアーソニスト)                             |
 | [Evil Watcher/イビルウォッチャー](#Watcherウォッチャー)            | [Dictator/ディクテーター](#Dictatorディクテーター)                         | [Egoist/エゴイスト](#Egoistエゴイスト)                                     |
-| [FireWorks/花火職人](#FireWorks花火職人)                           | [Doctor/ドクター](#Doctorドクター)                                         | [Executioner/エクスキューショナー](#Executionerエクスキューショナー)       |
+| [Bomber/ボマー](#Bomberボマー)                           | [Doctor/ドクター](#Doctorドクター)                                         | [Executioner/エクスキューショナー](#Executionerエクスキューショナー)       |
 | [Mare/メアー](#Mareメアー)                                         | [Lighter/ライター](#Lighterライター)                                       | [Jester/ジェスター](#Jesterジェスター)                                     |
 | [Puppeteer/パペッティア](#Puppeteerパペッティア)                   | [Mayor/メイヤー](#Mayorメイヤー)                                           | [Lovers/恋人](#Lovers恋人)                                                 |
 | [SerialKiller/シリアルキラー](#SerialKillerシリアルキラー)         | [Nice Watcher/ナイスウォッチャー](#Watcherウォッチャー)                    | [Opportunist/オポチュニスト](#Opportunistオポチュニスト)                   |
@@ -87,7 +87,7 @@
 | バウンティハンターがターゲット以外をキルした時のクールダウン(s) |
 | バウンティハンター以外のキルクールダウン(s)                     |
 
-### FireWorks/花火職人
+### Bomber/ボマー
 
 陣営 : インポスター<br>
 判定 : シェイプシフター<br>

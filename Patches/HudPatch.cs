@@ -74,9 +74,9 @@ namespace TownOfHost
                 LowerInfoText.text = GetString("WitchCurrentMode") + ":" + GetString(ModeLang);
                 LowerInfoText.enabled = true;
             }
-            else if (player.Is(CustomRoles.FireWorks))
+            else if (player.Is(CustomRoles.Bomber))
             {
-                var stateText = FireWorks.GetStateText(player);
+                var stateText = Bomber.GetStateText(player);
                 LowerInfoText.text = stateText;
                 LowerInfoText.enabled = true;
             }
@@ -106,7 +106,7 @@ namespace TownOfHost
             switch (player.GetCustomRole())
             {
                 case CustomRoles.Madmate:
-                case CustomRoles.SKMadmate:
+                case CustomRoles.Traitor:
                 case CustomRoles.Jester:
                     TaskTextPrefix += FakeTasksText;
                     break;

@@ -18,14 +18,14 @@ namespace TownOfHost
                 CustomRoles.EvilWatcher or
                 CustomRoles.TimeThief or
                 CustomRoles.Mafia or
-                CustomRoles.FireWorks or
+                CustomRoles.Bomber or
                 CustomRoles.Sniper;
         }
         public static bool IsMadmate(this CustomRoles role)
         {
             return
                 role is CustomRoles.Madmate or
-                CustomRoles.SKMadmate or
+                CustomRoles.Traitor or
                 CustomRoles.MadGuardian or
                 CustomRoles.MadSnitch or
                 CustomRoles.MSchrodingerCat;

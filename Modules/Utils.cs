@@ -148,7 +148,7 @@ namespace TownOfHost
                     if (cRole == CustomRoles.Opportunist) hasTasks = false;
                     if (cRole == CustomRoles.Sheriff) hasTasks = false;
                     if (cRole == CustomRoles.Madmate) hasTasks = false;
-                    if (cRole == CustomRoles.SKMadmate) hasTasks = false;
+                    if (cRole == CustomRoles.Traitor) hasTasks = false;
                     if (cRole == CustomRoles.Terrorist && ForRecompute) hasTasks = false;
                     if (cRole == CustomRoles.Executioner) hasTasks = false;
                     if (cRole == CustomRoles.Impostor) hasTasks = false;
@@ -534,9 +534,9 @@ namespace TownOfHost
                     string BountyTargetName = seer.GetBountyTarget().GetRealName(isMeeting);
                     SelfSuffix = $"<size={fontSize}>Target:{BountyTargetName}</size>";
                 }
-                if (seer.Is(CustomRoles.FireWorks))
+                if (seer.Is(CustomRoles.Bomber))
                 {
-                    string stateText = FireWorks.GetStateText(seer);
+                    string stateText = Bomber.GetStateText(seer);
                     SelfSuffix = $"{stateText}";
                 }
                 if (seer.Is(CustomRoles.Witch))

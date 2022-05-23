@@ -550,7 +550,7 @@ namespace TownOfHost
             {
                 CustomRoles.Mafia => Main.AliveImpostorCount <= 1 && canUse,
                 CustomRoles.Mare => Utils.IsActive(SystemTypes.Electrical),
-                CustomRoles.FireWorks => FireWorks.CanUseKillButton(pc),
+                CustomRoles.Bomber => Bomber.CanUseKillButton(pc),
                 CustomRoles.Sniper => Sniper.CanUseKillButton(pc),
                 _ => canUse,
             };

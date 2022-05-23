@@ -15,7 +15,7 @@ Shapeshifter,Shapeshifter,シェイプシフター
 # 特殊インポスター役職
 BountyHunter,BountyHunter,バウンティハンター
 Mare,Mare,メアー
-FireWorks,FireWorks,花火職人
+Bomber,Bomber,ボマー
 SerialKiller,SerialKiller,シリアルキラー
 ShapeMaster,ShapeMaster,シェイプマスター
 Vampire,Vampire,ヴァンパイア
@@ -31,7 +31,7 @@ Sniper,Sniper,スナイパー
 Madmate,Madmate,マッドメイト
 MadGuardian,MadGuardian,マッドガーディアン
 MadSnitch,MadSnitch,マッドスニッチ
-SKMadmate,SideKickMadmate,サイドキックマッドメイト
+Traitor,Traitor,トレイター
 
 # 両陣営可能役職
 Watcher,Watcher,ウォッチャー
@@ -78,7 +78,7 @@ TeamImpostor,Team Impostor,インポスター陣営
 # 特殊インポスター役職
 BountyHunterInfo,Hunt your bounty down,標的を確実に仕留めよう
 MareInfo,Kill in the dark world.,闇の世界で暗殺せよ
-FireWorksInfo,FireWorksInfo,最後に一華咲かせよう
+BomberInfo,BomberInfo,最後に一華咲かせよう
 SerialKillerInfo,Keep killng to win,殺人衝動が抑えられない
 ShapeMasterInfo,Shapeshift and confuse your enemies,変身して敵を混乱させよう
 VampireInfo,Kill the Crewmates with your bites,クルーを噛んで全滅させよう
@@ -95,7 +95,7 @@ SniperInfo,I'll shoot,狙い撃つぜ
 MadmateInfo,Help the Impostors,インポスターの援助をしよう
 MadGuardianInfo,Finish your tasks to help the Impostors,タスクを済ませ、インポスターの援助をしよう
 MadSnitchInfo,Finish your tasks to help the Impostors,タスクを済ませ、インポスターの援助をしよう
-SKMadmateInfo,You are Sidekick,サイドキックにされた
+TraitorInfo,You are Sidekick,サイドキックにされた
 
 # 両陣営可能役職
 WatcherInfo,Pay close attention to the crew's votes,みんなの投票に目を光らせよう
@@ -134,7 +134,7 @@ HASTrollInfo,Die to win,自爆しよう
 
 # 特殊インポスター役職
 BountyHunterInfoLong,"(Impostors):\nThe first time you try to kill someone, a target is displayed.\nWhen you kill the displayed target, your killcool is halved.\nIf you kill someone else, your killcool is keep standard.",(インポスター陣営):\n標的をキルすると次のｷﾙｸｰﾙが半分になる。\n標的以外をキルするとｷﾙｸｰﾙは通常になる。
-FireWorksInfoLong,"(Impostors):\nFireworks can be set in up to 3 places by shapeshift.\n After setting everything, you can detonate all at once by shapeshift when you are the last impostor.\nYou can't kill while the fireworks are set.",(インポスター陣営):\n変身することで花火を最大3か所に設置可能。\nすべて設置した後、インポスター最後の生き残りになった時に再度変身することで一斉起爆できる。\n花火が設置されている間はキルできない。
+BomberInfoLong,"(Impostors):\nBomber can be set in up to 3 places by shapeshift.\n After setting everything, you can detonate all at once by shapeshift when you are the last impostor.\nYou can't kill while the bomber are set.",(インポスター陣営):\n変身することで花火を最大3か所に設置可能。\nすべて設置した後、インポスター最後の生き残りになった時に再度変身することで一斉起爆できる。\n花火が設置されている間はキルできない。
 SerialKillerInfoLong,"(Impostors):\nThe kill cool time is shorter than that of other Impostors,\nbut if the kill is not made before the shapeshift's cool time expires, will suicide.",(インポスター陣営):\nキルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。
 ShapeMasterInfoLong,"(Impostors):\nImpostors specializing in shape-shifting.\nThere is no cooldown, but the transformation lasts only 10 seconds.",(インポスター陣営):\nシェイプシフトに特化したｲﾝﾎﾟｽﾀ-。\nクールダウンはないが変身は10秒間しかできない。
 MareInfoLong,"(Impostors):\nYou can't only kill during a power outage.\nBut,when killed,the next kill cool is halved.\nand,The movement speed will also be faster. And name is displayed in red",(インポスター陣営):\n停電の時だけキルができるインポスター。\nキルに成功すると次のキルクールが半分になる。\n移動速度も停電中は早くなるが名前が赤くなる。
@@ -150,7 +150,7 @@ SniperInfoLong,"(Impostors):\nSniper distant enemies.\nShoot one enemy on the ex
 MadmateInfoLong,"(Impostors):\nCrewmate, but they take the side of the Impostor.\nImpostor and are unrecognizable to each other. Can use vent, no tasks.",(インポスター陣営):\nクルーだがインポスターの味方をする。\nインポスターと互いに認識できない。\nベントが使え、タスクはない。
 MadGuardianInfoLong,"(Impostors):\nCrewmate, but they take the side of the Impostor.\nUnrecognizable to the Impostor and each other.\nShields are granted when all tasks are completed.",(インポスター陣営):\nクルーだがインポスターの味方をする。\nインポスターと互いに認識できない。\nタスクを全て完了させるとｼｰﾙﾄﾞが付与される。
 MadSnitchInfoLong,"(Impostors):\nCrew, but they side with the Impostor.\nThey cannot recognize the Impostor and each other,\nbut they can recognize each other when they complete all of their tasks.",(インポスター陣営):\nクルーだがインポスターの味方をする。\nインポスターと互いに認識できないが、タスクを全て完了させると互いに認識できるようになる。
-SKMadmateInfoLong,(Impostors):\nThe role that can be held by the person\nwho was closest to the person when impostor transformed.\nThere is no task.,(インポスター陣営):\n変身した際に一番近かった人がなれる役職。タスクはない。
+TraitorInfoLong,(Impostors):\nThe role that can be held by the person\nwho was closest to the person when impostor transformed.\nThere is no task.,(インポスター陣営):\n変身した際に一番近かった人がなれる役職。タスクはない。
 
 # 両陣営可能役職
 WatcherInfoLong,(Impostors or Crewmates):\nYou can see where everyone is voting.,(インポスターorクルーメイト陣営):\n全員の投票先を見ることができる。
@@ -216,7 +216,7 @@ VoteMode,VoteMode,投票モード
 WhenSkipVote,When Skip Vote,スキップ時
 WhenNonVote,When Non-Vote,無投票時
 Default,Default,デフォルト
-Suicide,Suicide,切腹
+Suicide,Suicide,自殺
 SelfVote,SelfVote,自投票
 Skip,Skip,スキップ
 
@@ -284,8 +284,8 @@ ArsonistDouseTime,Arsonist Douse Time,アーソニストの塗り時間
 ArsonistCooldown,Arsonist Cooldown,アーソニストのクールダウン
 CanTerroristSuicideWin,Can Terrorist Suicide Win,テロリストの自殺勝ち
 ShapeMasterShapeshiftDuration,ShapeMaster Shapeshift Duration,シェイプマスターの変身持続時間
-FireWorksMaxCount,FireWorks Max Count,花火の所持数
-FireWorksRadius,FireWorks Radius,花火の爆発半径
+BomberMaxCount,Bomber Max Count,花火の所持数
+BomberRadius,Bomber Radius,花火の爆発半径
 SniperBulletCount,Sniper Bullet Count,スナイパーの所持弾数
 SniperPrecisionShooting,Sniper Precision Shooting,スナイパー精密射撃モード
 NumberOfLovers,"Number Of Lovers(x2members)",ラバーズの組数(x2人数)
@@ -350,9 +350,9 @@ updateFailed,Update failed.,アップデートに失敗しました。
 onSetPublicNoLatest,Public rooms cannot be made except for the latest version.\nPlease update.,最新版以外で公開ルームにはできません。\nアップデートをしてください。
 CanNotJoinPublicRoomNoLatest,Public rooms cannot join except for the latest version.\nPlease update.,最新版以外で公開ルームには参加できません。\nアップデートをしてください。
 EnterVentToWin,Enter Vent to Win!!,ベントに入って勝利しろ!!
-FireworksPutPhase,Put {0} Fireworks,あと{0}個置け
-FireworksWaitPhase,Wait for that time...,時を待て...
-FireworksReadyFirePhase,Redy To Fire!,打ち上げろ！
+BomberPutPhase,Put {0} Bomber,あと{0}個置け
+BomberWaitPhase,Wait for that time...,時を待て...
+BomberReadyFirePhase,Redy To Fire!,打ち上げろ！
 StandardHAS,Standard Hide And Seek,スタンダードモードでかくれんぼ
 commandError,Error:%1$,エラー:%1$
 InvalidArgs,Invalid Args,無効な引数

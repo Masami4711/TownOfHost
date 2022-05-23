@@ -135,7 +135,7 @@ namespace TownOfHost
                         Logger.Info(killer?.Data?.PlayerName + "はMafiaですが、他のインポスターがいないのでキルが許可されました。", "CheckMurder");
                     }
                     break;
-                case CustomRoles.FireWorks:
+                case CustomRoles.Bomber:
                     if (!killer.CanUseKillButton())
                     {
                         Main.BlockKilling[killer.PlayerId] = false;
@@ -178,7 +178,7 @@ namespace TownOfHost
                     break;
 
                 //==========マッドメイト系役職==========//
-                case CustomRoles.SKMadmate:
+                case CustomRoles.Traitor:
                     //キル可能職がサイドキックされた場合
                     Main.BlockKilling[killer.PlayerId] = false;
                     return false;
@@ -408,16 +408,16 @@ namespace TownOfHost
                     Main.CursedPlayers[shapeshifter.PlayerId] = null;
                 }
             }
-            var canMakeSKMadmateRoles = !shapeshifter.Is(CustomRoles.Warlock) && !shapeshifter.Is(CustomRoles.FireWorks) && !shapeshifter.Is(CustomRoles.Sniper);
+            var canMakeTraitorRoles = !shapeshifter.Is(CustomRoles.Warlock) && !shapeshifter.Is(CustomRoles.Bomber) && !shapeshifter.Is(CustomRoles.Sniper);
 
-            if (Options.CanMakeMadmateCount.GetFloat() > Main.SKMadmateNowCount && canMakeSKMadmateRoles && shapeshifting)
+            if (Options.CanMakeMadmateCount.GetFloat() > Main.TraitorNowCount && canMakeTraitorRoles && shapeshifting)
             {//変身したとき一番近い人をマッドメイトにする処理
                 Vector2 shapeshifterPosition = shapeshifter.transform.position;//変身者の位置
                 Dictionary<PlayerControl, float> mpdistance = new();
                 float dis;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
-                    if (!p.Data.IsDead && p.Data.Role.Role != RoleTypes.Shapeshifter && !p.Is(RoleType.Impostor) && !p.Is(CustomRoles.SKMadmate))
+                    if (!p.Data.IsDead && p.Data.Role.Role != RoleTypes.Shapeshifter && !p.Is(RoleType.Impostor) && !p.Is(CustomRoles.Traitor))
                     {
                         dis = Vector2.Distance(shapeshifterPosition, p.transform.position);
                         mpdistance.Add(p, dis);
@@ -427,14 +427,14 @@ namespace TownOfHost
                 {
                     var min = mpdistance.OrderBy(c => c.Value).FirstOrDefault();//一番値が小さい
                     PlayerControl targetm = min.Key;
-                    targetm.RpcSetCustomRole(CustomRoles.SKMadmate);
-                    Logger.Info($"Make SKMadmate:{targetm.name}", "Shapeshift");
-                    Main.SKMadmateNowCount++;
+                    targetm.RpcSetCustomRole(CustomRoles.Traitor);
+                    Logger.Info($"Make Traitor:{targetm.name}", "Shapeshift");
+                    Main.TraitorNowCount++;
                     Utils.CustomSyncAllSettings();
                     Utils.NotifyRoles();
                 }
             }
-            if (shapeshifter.Is(CustomRoles.FireWorks)) FireWorks.ShapeShiftState(shapeshifter, shapeshifting);
+            if (shapeshifter.Is(CustomRoles.Bomber)) Bomber.ShapeShiftState(shapeshifter, shapeshifting);
             if (shapeshifter.Is(CustomRoles.Sniper)) Sniper.ShapeShiftCheck(shapeshifter, shapeshifting);
 
             //変身解除のタイミングがずれて名前が直せなかった時のために強制書き換え
@@ -1103,7 +1103,7 @@ namespace TownOfHost
                         return true;
                     }
                 if (__instance.myPlayer.Is(CustomRoles.Sheriff) ||
-                __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
+                __instance.myPlayer.Is(CustomRoles.Traitor) ||
                 __instance.myPlayer.Is(CustomRoles.Arsonist)
                 )
                 {

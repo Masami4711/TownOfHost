@@ -56,7 +56,7 @@ Note that if a player other than the host plays with this mod installed, the fol
 | ----------------------------- | --------------------------------- | --------------------------------- |
 | [BountyHunter](#BountyHunter) | [Bait](#Bait)                     | [Arsonist](#Arsonist)             |
 | [Evil Watcher](#Watcher)      | [Dictator](#Dictator)             | [Egoist](#Egoist)                 |
-| [FireWorks](#FireWorks)       | [Doctor](#Doctor)                 | [Executioner](#Executioner)       |
+| [Bomber](#Bomber)       | [Doctor](#Doctor)                 | [Executioner](#Executioner)       |
 | [Mare](#Mare)                 | [Lighter](#Lighter)               | [Jester](#Jester)                 |
 | [Puppeteer](#Puppeteer)       | [Mayor](#Mayor)                   | [Lovers](#Lovers)                 |
 | [SerialKiller](#SerialKiller) | [Nice Watcher](#Watcher)          | [Opportunist](#Opportunist)       |
@@ -88,23 +88,23 @@ If they kill the player who is not their target, they will keep their next kill 
 | Cooldown time after killing anything other than the target(s) |
 | Kill cooldown time other than BountyHunter(s)                 |
 
-### FireWorks
+### Bomber
 
 Team : Impostors<br>
 Decision : Shapeshifter<br>
 
-The FireWorks can set off fireworks and kill a lot. <br>
-You Install up to 3 fireworks at the timing of shape-shift.  <br>
-After Install all the fireworks, you can set off all fireworks at once at the timing of the shape-shift when you becomes the last Imposter.  <br>
-You can't kill until the fireworks are Installing and Set off fireworks. <br>
-Even if you get caught up in fireworks, you win if you annihilate the enemy. <br>
+The Bomber can set off bomber and kill a lot. <br>
+You Install up to 3 bomber at the timing of shape-shift.  <br>
+After Install all the bomber, you can set off all bomber at once at the timing of the shape-shift when you becomes the last Imposter.  <br>
+You can't kill until the bomber are Installing and Set off bomber. <br>
+Even if you get caught up in bomber, you win if you annihilate the enemy. <br>
 
 #### Settings
 
 | Settings Name       |
 | ------------------- |
-| FireWorks Max Count |
-| FireWorks Radius    |
+| Bomber Max Count |
+| Bomber Radius    |
 
 ### Mare
 

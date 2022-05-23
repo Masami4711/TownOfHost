@@ -87,7 +87,7 @@ namespace TownOfHost
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
         public static Dictionary<byte, int> TimeThiefKillCount = new();
         public static int AliveImpostorCount;
-        public static int SKMadmateNowCount;
+        public static int TraitorNowCount;
         public static bool witchMeeting;
         public static bool isCursed;
         public static bool isShipStart;
@@ -188,12 +188,12 @@ namespace TownOfHost
                 {CustomRoles.SerialKiller, "#ff0000"},
                 {CustomRoles.Mare, "#ff0000"},
                 {CustomRoles.Puppeteer, "#ff0000"},
-                {CustomRoles.FireWorks, "#ff0000"},
+                {CustomRoles.Bomber, "#ff0000"},
                 {CustomRoles.TimeThief, "#ff0000"},
                 {CustomRoles.Sniper, "#ff0000"},
                 //マッドメイト系役職
                 {CustomRoles.Madmate, "#ff0000"},
-                {CustomRoles.SKMadmate, "#ff0000"},
+                {CustomRoles.Traitor, "#ff0000"},
                 {CustomRoles.MadGuardian, "#ff0000"},
                 {CustomRoles.MadSnitch, "#ff0000"},
                 {CustomRoles.MSchrodingerCat, "#ff0000"}, //シュレディンガーの猫の派生
@@ -268,7 +268,7 @@ namespace TownOfHost
         //Impostor
         BountyHunter,
         EvilWatcher,
-        FireWorks,
+        Bomber,
         Mafia,
         SerialKiller,
         ShapeMaster,
@@ -283,7 +283,7 @@ namespace TownOfHost
         MadGuardian,
         Madmate,
         MadSnitch,
-        SKMadmate,
+        Traitor,
         MSchrodingerCat,//インポスター陣営のシュレディンガーの猫
         //両陣営
         Watcher,
