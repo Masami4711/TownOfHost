@@ -73,59 +73,59 @@ namespace TownOfHost
             if (!AmongUsClient.Instance.AmHost) return true;
             if (Options.CurrentGameMode == CustomGameMode.HideAndSeek && systemType == SystemTypes.Sabotage) return false;
 
-            //SabotageMaster
-            if (player.Is(CustomRoles.SabotageMaster))
+            //Mechanic
+            if (player.Is(CustomRoles.Mechanic))
             {
                 switch (systemType)
                 {
                     case SystemTypes.Reactor:
-                        if (!Options.SabotageMasterFixesReactors.GetBool()) break;
-                        if (Options.SabotageMasterSkillLimit.GetFloat() > 0 && Options.SabotageMasterUsedSkillCount >= Options.SabotageMasterSkillLimit.GetFloat()) break;
+                        if (!Options.MechanicFixesReactors.GetBool()) break;
+                        if (Options.MechanicSkillLimit.GetFloat() > 0 && Options.MechanicUsedSkillCount >= Options.MechanicSkillLimit.GetFloat()) break;
                         if (amount is 64 or 65)
                         {
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 67);
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 66);
-                            Options.SabotageMasterUsedSkillCount++;
+                            Options.MechanicUsedSkillCount++;
                         }
                         if (amount is 16 or 17)
                         {
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 19);
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 18);
-                            Options.SabotageMasterUsedSkillCount++;
+                            Options.MechanicUsedSkillCount++;
                         }
                         break;
                     case SystemTypes.Laboratory:
-                        if (!Options.SabotageMasterFixesReactors.GetBool()) break;
-                        if (Options.SabotageMasterSkillLimit.GetFloat() > 0 && Options.SabotageMasterUsedSkillCount >= Options.SabotageMasterSkillLimit.GetFloat()) break;
+                        if (!Options.MechanicFixesReactors.GetBool()) break;
+                        if (Options.MechanicSkillLimit.GetFloat() > 0 && Options.MechanicUsedSkillCount >= Options.MechanicSkillLimit.GetFloat()) break;
                         if (amount is 64 or 65)
                         {
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 67);
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Laboratory, 66);
-                            Options.SabotageMasterUsedSkillCount++;
+                            Options.MechanicUsedSkillCount++;
                         }
                         break;
                     case SystemTypes.LifeSupp:
-                        if (!Options.SabotageMasterFixesOxygens.GetBool()) break;
-                        if (Options.SabotageMasterSkillLimit.GetFloat() > 0 && Options.SabotageMasterUsedSkillCount >= Options.SabotageMasterSkillLimit.GetFloat()) break;
+                        if (!Options.MechanicFixesOxygens.GetBool()) break;
+                        if (Options.MechanicSkillLimit.GetFloat() > 0 && Options.MechanicUsedSkillCount >= Options.MechanicSkillLimit.GetFloat()) break;
                         if (amount is 64 or 65)
                         {
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 67);
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.LifeSupp, 66);
-                            Options.SabotageMasterUsedSkillCount++;
+                            Options.MechanicUsedSkillCount++;
                         }
                         break;
                     case SystemTypes.Comms:
-                        if (!Options.SabotageMasterFixesComms.GetBool()) break;
-                        if (Options.SabotageMasterSkillLimit.GetFloat() > 0 && Options.SabotageMasterUsedSkillCount >= Options.SabotageMasterSkillLimit.GetFloat()) break;
+                        if (!Options.MechanicFixesComms.GetBool()) break;
+                        if (Options.MechanicSkillLimit.GetFloat() > 0 && Options.MechanicUsedSkillCount >= Options.MechanicSkillLimit.GetFloat()) break;
                         if (amount is 16 or 17)
                         {
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 19);
                             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 18);
                         }
-                        Options.SabotageMasterUsedSkillCount++;
+                        Options.MechanicUsedSkillCount++;
                         break;
                     case SystemTypes.Doors:
-                        if (!Options.SabotageMasterFixesDoors.GetBool()) break;
+                        if (!Options.MechanicFixesDoors.GetBool()) break;
                         if (DoorsProgressing == true) break;
 
                         int mapId = PlayerControl.GameOptions.MapId;
@@ -206,11 +206,11 @@ namespace TownOfHost
     {
         public static void Postfix(SwitchSystem __instance, [HarmonyArgument(0)] PlayerControl player, [HarmonyArgument(1)] byte amount)
         {
-            if (player.Is(CustomRoles.SabotageMaster))
+            if (player.Is(CustomRoles.Mechanic))
             {
-                if (!Options.SabotageMasterFixesElectrical.GetBool()) return;
-                if (Options.SabotageMasterSkillLimit.GetFloat() > 0 &&
-                    Options.SabotageMasterUsedSkillCount >= Options.SabotageMasterSkillLimit.GetFloat())
+                if (!Options.MechanicFixesElectrical.GetBool()) return;
+                if (Options.MechanicSkillLimit.GetFloat() > 0 &&
+                    Options.MechanicUsedSkillCount >= Options.MechanicSkillLimit.GetFloat())
                 {
                     return;
                 }
@@ -219,7 +219,7 @@ namespace TownOfHost
                 {
                     __instance.ActualSwitches = 0;
                     __instance.ExpectedSwitches = 0;
-                    Options.SabotageMasterUsedSkillCount++;
+                    Options.MechanicUsedSkillCount++;
                 }
             }
         }

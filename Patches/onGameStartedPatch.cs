@@ -49,7 +49,7 @@ namespace TownOfHost
             Main.targetArrows = new();
 
             Options.UsedButtonCount = 0;
-            Options.SabotageMasterUsedSkillCount = 0;
+            Options.MechanicUsedSkillCount = 0;
             Main.RealOptionsData = PlayerControl.GameOptions.DeepCopy();
             Main.BlockKilling = new Dictionary<byte, bool>();
             Main.SelfGuard = new();
@@ -283,7 +283,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.Mayor, Options.MayorHasPortableButton.GetBool() ? Engineers : Crewmates);
                 AssignCustomRolesFromList(CustomRoles.Opportunist, Crewmates);
                 AssignCustomRolesFromList(CustomRoles.Snitch, Crewmates);
-                AssignCustomRolesFromList(CustomRoles.SabotageMaster, Crewmates);
+                AssignCustomRolesFromList(CustomRoles.Mechanic, Crewmates);
                 AssignCustomRolesFromList(CustomRoles.Mafia, Shapeshifters);
                 AssignCustomRolesFromList(CustomRoles.Terrorist, Engineers);
                 AssignCustomRolesFromList(CustomRoles.Executioner, Crewmates);

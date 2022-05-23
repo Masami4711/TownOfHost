@@ -210,7 +210,7 @@ namespace TownOfHost
                 { CustomRoles.Doctor,"doc" },
                 { CustomRoles.Lighter,"li" },
                 { CustomRoles.Mayor,"my" },
-                { CustomRoles.SabotageMaster,"sa" },
+                { CustomRoles.Mechanic,"mec" },
                 { CustomRoles.Sheriff,"sh" },
                 { CustomRoles.Snitch,"sn" },
                 { CustomRoles.SpeedBooster,"sb" },

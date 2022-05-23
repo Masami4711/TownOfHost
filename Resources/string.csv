@@ -41,7 +41,7 @@ NiceWatcher,Nice Watcher,ナイスウォッチャー
 Bait,Bait,ベイト
 Lighter,Lighter,ライター
 Mayor,Mayor,メイヤー
-SabotageMaster,SabotageMaster,サボタージュマスター
+Mechanic,Mechanic,メカニック
 Sheriff,Sheriff,シェリフ
 Arsonist,Arsonist,アーソニスト
 Snitch,Snitch,スニッチ
@@ -104,7 +104,7 @@ WatcherInfo,Pay close attention to the crew's votes,みんなの投票に目を�
 BaitInfo,Bait your enemies,敵を罠にはめよう
 LighterInfo,Let's light it all up,すべてを照らそう
 MayorInfo,Your vote counts twice,自分の票が何倍もの力を持っている
-SabotageMasterInfo,Fix sabotages faster,より早くサボタージュを直そう
+MechanicInfo,Fix sabotages faster,より早くサボタージュを直そう
 SheriffInfo,Shoot the Impostors,インポスターを撃ち抜け
 SnitchInfo,Finish your tasks to find the Impostors,タスクを早く済ませよう
 SpeedBoosterInfo,Let's them run.,走らせろ
@@ -159,7 +159,7 @@ WatcherInfoLong,(Impostors or Crewmates):\nYou can see where everyone is voting.
 BaitInfoLong,"(Crewmates):\nWhen killed,Force the murder who killed it to self-report.",(クルーメイト陣営):\nキルされた時に、自身をキルした人に\n強制的にセルフレポートさせる事ができる。
 LighterInfoLong,"(Crewmates):\nFinishing a task can expand one's view.",(クルーメイト陣営):\nタスクを終わらせると、自分の視界を広げることができる。
 MayorInfoLong,(Crewmates):\nCan have multiple votes for a meeting and put them all together into one person or skip. (with settings),(クルーメイト陣営):\n会議の票を複数持ち、まとめて一人または\nスキップに入れることができる。(設定有)
-SabotageMasterInfoLong,"(Crewmates):\nReactor, O2, and communication interference can be repaired by one person.\nPower outages can all be fixed by touching a single lever.\nOpening a door opens all doors in that room.",(クルーメイト陣営):\nリアクター・O2・通信妨害を一人で修理可能。\n停電は一箇所のレバーに触れる事で全て直る。\nドアを開けるとその部屋の全てのドアが開く。
+MechanicInfoLong,"(Crewmates):\nReactor, O2, and communication interference can be repaired by one person.\nPower outages can all be fixed by touching a single lever.\nOpening a door opens all doors in that room.",(クルーメイト陣営):\nリアクター・O2・通信妨害を一人で修理可能。\n停電は一箇所のレバーに触れる事で全て直る。\nドアを開けるとその部屋の全てのドアが開く。
 SheriffInfoLong,(Crewmates):\nThe Impostor camp can be killed.\n*Third camp can be set to be killable.\nKilling Crewmates is suicide. There is no task.,(クルーメイト陣営):\nインポスター陣営をキルすることができる。\n※第三陣営をキル可能にする設定有。\nｸﾙｰﾒｲﾄをキルすると自殺する。タスクはない。
 SnitchInfoLong,"(Crewmates):\nAs soon as a task is completed, the color of the Impostor's name is displayed in red,\nand conversely, when the number of his own tasks decreases,\na star is displayed next to his name and the Impostor is exposed.",(クルーメイト陣営):\nタスク完了と同時にインポスターの名前の色が\n赤く表示され逆に自身のタスクが少なくなると\n名前の横に★が表示されｲﾝﾎﾟｽﾀｰに暴かれる。
 LoversInfoLong,"(Neutrals),\nRandomly to 2 from all players,Third camp that is cast in duplicate with other positions.\nWin if the match ends with both lovers alive.\nWhen one of your lovers dies, the other dies too.\nDefeated when the crewmate's task is completed.",(第三陣営):\n全プレイヤーの中からランダムで2人に他の役職と重複して配役される第三陣営。\n恋人が2人とも生き残っている状態で試合終了すれば勝利。\n恋人の片方が死んだときにもう片方も死ぬ。クルーメイトのタスクが完了すると敗北。
@@ -240,7 +240,7 @@ BHDefaultKillCooldown,Default Kill Cooldown,デフォルトのキルクール
 DefaultShapeshiftCooldown,Default Shapeshift Cooldown,デフォルトの変身クールダウン
 VampireKillDelay,Vampire Kill Delay(s),ヴァンパイアの殺害までの時間(秒)
 BlackOutMareSpeed,BlackOut MareSpeed,停電時のメアーの移動速度
-SabotageMasterSkillLimit,SabotageMaster Fixes Sabotage Limit(Ignore Closing Doors),ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰがｻﾎﾞﾀｰｼﾞｭに対して能力を使用できる回数(ﾄﾞｱ閉鎖は除く)
+MechanicSkillLimit,Mechanic Fixes Sabotage Limit(Ignore Closing Doors),メカニックがｻﾎﾞﾀｰｼﾞｭに対して能力を使用できる回数(ﾄﾞｱ閉鎖は除く)
 CanMakeMadmateCount,Shapeshifter Can Make Madmate limit,マッドメイトを作れる人数
 MadSnitchCanVent,MadSnitch Can Use Vent,マッドスニッチがベントを使える
 MadSnitchTasks,MadSnitch Tasks,マッドスニッチのタスク数
@@ -251,11 +251,11 @@ MadmateHasImpostorVision,Madmate vision is as long as Impostor one,マッドメ�
 MadmateVentCooldown,Madmate Vent Cooldown,マッドメイト系役職のベントクールダウン
 MadmateVentMaxTime,Madmate In Vent Max Time,マッドメイト系役職のベント内での最大時間
 EvilWatcherChance,EvilWatcher Chance,イビルウォッチャーになる確率
-SabotageMasterFixesDoors,SabotageMaster Can Fixes Multiple Doors,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが1度に複数のﾄﾞｱを開けることを許可する
-SabotageMasterFixesReactors,SabotageMaster Can Fixes Both Reactors,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが原子炉ﾒﾙﾄﾀﾞｳﾝに対して能力を
-SabotageMasterFixesOxygens,SabotageMaster Can Fixes Both O2,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが酸素妨害に対して能力を使える
-SabotageMasterFixesCommunications,SabotageMaster Can Fixes Both Communications In MIRA HQ,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰがMIRA HQの通信妨害に対して能力を使える
-SabotageMasterFixesElectrical,SabotageMaster Can Fixes Lights Out All At Once,ｻﾎﾞﾀｰｼﾞｭﾏｽﾀｰが停電に対して能力を使える
+MechanicFixesDoors,Mechanic Can Fixes Multiple Doors,メカニックが1度に複数のﾄﾞｱを開けることを許可する
+MechanicFixesReactors,Mechanic Can Fixes Both Reactors,メカニックが原子炉ﾒﾙﾄﾀﾞｳﾝに対して能力を
+MechanicFixesOxygens,Mechanic Can Fixes Both O2,メカニックが酸素妨害に対して能力を使える
+MechanicFixesCommunications,Mechanic Can Fixes Both Communications In MIRA HQ,メカニックがMIRA HQの通信妨害に対して能力を使える
+MechanicFixesElectrical,Mechanic Can Fixes Lights Out All At Once,メカニックが停電に対して能力を使える
 SheriffKillCooldown,Sheriff Kill Cooldown,シェリフのキルクール
 SheriffCanKillArsonist,Sheriff Can kill Arsonist,シェリフがアーソニストをキルできる
 SheriffCanKillJester,Sheriff Can Kill Jester,シェリフがジェスターをキルできる

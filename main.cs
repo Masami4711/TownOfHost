@@ -202,7 +202,7 @@ namespace TownOfHost
                 //特殊クルー役職
                 {CustomRoles.NiceWatcher, "#800080"}, //ウォッチャーの派生
                 {CustomRoles.Bait, "#00f7ff"},
-                {CustomRoles.SabotageMaster, "#0000ff"},
+                {CustomRoles.Mechanic, "#0000ff"},
                 {CustomRoles.Snitch, "#b8fb4f"},
                 {CustomRoles.Mayor, "#204d42"},
                 {CustomRoles.Sheriff, "#f8cd46"},
@@ -296,7 +296,7 @@ namespace TownOfHost
         Lighter,
         Mayor,
         NiceWatcher,
-        SabotageMaster,
+        Mechanic,
         Sheriff,
         Snitch,
         SpeedBooster,

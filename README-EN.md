@@ -60,7 +60,7 @@ Note that if a player other than the host plays with this mod installed, the fol
 | [Mare](#Mare)                 | [Lighter](#Lighter)               | [Jester](#Jester)                 |
 | [Puppeteer](#Puppeteer)       | [Mayor](#Mayor)                   | [Lovers](#Lovers)                 |
 | [SerialKiller](#SerialKiller) | [Nice Watcher](#Watcher)          | [Opportunist](#Opportunist)       |
-| [ShapeMaster](#ShapeMaster)   | [SabotageMaster](#SabotageMaster) | [Terrorist](#Terrorist)           |
+| [ShapeMaster](#ShapeMaster)   | [Mechanic](#Mechanic) | [Terrorist](#Terrorist)           |
 | [Sniper](#Sniper)             | [Sheriff](#Sheriff)               | [SchrodingerCat](#SchrodingerCat) |
 | [TimeThief](#TimeThief)       | [Snitch](#Snitch)                 |                                   |
 | [Vampire](#Vampire)           | [SpeedBooster](#SpeedBooster)     |                                   |
@@ -349,12 +349,12 @@ The Mayors have multiple votes, which can be grouped together and put into a sin
 | Mayor Has Portable Button           |
 | Mayor Number Of Use Button |
 
-### SabotageMaster
+### Mechanic
 
 Team : Crewmates<br>
 Decision : Crewmate<br>
 
-The SabotageMasters can fix sabotage faster.<br>
+The Mechanics can fix sabotage faster.<br>
 Communications in MIRA HQ, reactor and O2 can both be fixed by fixing one of them.<br>
 Lights can be fixed by touching a single lever.<br>
 Opening a door in Polus or The Airship will open all the doors in that room.<br>
@@ -363,12 +363,12 @@ Opening a door in Polus or The Airship will open all the doors in that room.<br>
 
 | Settings Name                                             |
 | --------------------------------------------------------- |
-| SabotageMaster Fixes Sabotage Limit(Ignore Closing Doors) |
-| SabotageMaster Can Fixes Multiple Doors                   |
-| SabotageMaster Can Fixes Both Reactors                    |
-| SabotageMaster Can Fixes Both O2                          |
-| SabotageMaster Can Fixes Both Communications In MIRA HQ   |
-| SabotageMaster Can Fixes Lights Out All At Once           |
+| Mechanic Fixes Sabotage Limit(Ignore Closing Doors) |
+| Mechanic Can Fixes Multiple Doors                   |
+| Mechanic Can Fixes Both Reactors                    |
+| Mechanic Can Fixes Both O2                          |
+| Mechanic Can Fixes Both Communications In MIRA HQ   |
+| Mechanic Can Fixes Lights Out All At Once           |
 
 ### Sheriff
 
