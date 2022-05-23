@@ -134,7 +134,7 @@ HASTrollInfo,Die to win,自爆しよう
 
 # 特殊インポスター役職
 BountyHunterInfoLong,"(Impostors):\nThe first time you try to kill someone, a target is displayed.\nWhen you kill the displayed target, your killcool is halved.\nIf you kill someone else, your killcool is keep standard.",(インポスター陣営):\n標的をキルすると次のｷﾙｸｰﾙが半分になる。\n標的以外をキルするとｷﾙｸｰﾙは通常になる。
-BomberInfoLong,"(Impostors):\nBomber can be set in up to 3 places by shapeshift.\n After setting everything, you can detonate all at once by shapeshift when you are the last impostor.\nYou can't kill while the bomber are set.",(インポスター陣営):\n変身することで花火を最大3か所に設置可能。\nすべて設置した後、インポスター最後の生き残りになった時に再度変身することで一斉起爆できる。\n花火が設置されている間はキルできない。
+BomberInfoLong,"(Impostors):\nBomber can be set in up to 3 places by shapeshift.\n After setting everything, you can detonate all at once by shapeshift when you are the last impostor.\nYou can't kill while the bomber are set.",(インポスター陣営):\n変身することで爆弾を最大3か所に設置可能。\nすべて設置した後、インポスター最後の生き残りになった時に再度変身することで一斉起爆できる。\n爆弾が設置されている間はキルできない。
 SerialKillerInfoLong,"(Impostors):\nThe kill cool time is shorter than that of other Impostors,\nbut if the kill is not made before the shapeshift's cool time expires, will suicide.",(インポスター陣営):\nキルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。
 ShapeMasterInfoLong,"(Impostors):\nImpostors specializing in shape-shifting.\nThere is no cooldown, but the transformation lasts only 10 seconds.",(インポスター陣営):\nシェイプシフトに特化したｲﾝﾎﾟｽﾀ-。\nクールダウンはないが変身は10秒間しかできない。
 MareInfoLong,"(Impostors):\nYou can't only kill during a power outage.\nBut,when killed,the next kill cool is halved.\nand,The movement speed will also be faster. And name is displayed in red",(インポスター陣営):\n停電の時だけキルができるインポスター。\nキルに成功すると次のキルクールが半分になる。\n移動速度も停電中は早くなるが名前が赤くなる。
@@ -284,8 +284,8 @@ ArsonistDouseTime,Arsonist Douse Time,アーソニストの塗り時間
 ArsonistCooldown,Arsonist Cooldown,アーソニストのクールダウン
 CanTerroristSuicideWin,Can Terrorist Suicide Win,テロリストの自殺勝ち
 ShapeMasterShapeshiftDuration,ShapeMaster Shapeshift Duration,シェイプマスターの変身持続時間
-BomberMaxCount,Bomber Max Count,花火の所持数
-BomberRadius,Bomber Radius,花火の爆発半径
+BomberMaxCount,Bomber Max Count,爆弾の所持数
+BomberRadius,Bomber Radius,爆弾の爆発半径
 SniperBulletCount,Sniper Bullet Count,スナイパーの所持弾数
 SniperPrecisionShooting,Sniper Precision Shooting,スナイパー精密射撃モード
 NumberOfLovers,"Number Of Lovers(x2members)",ラバーズの組数(x2人数)
@@ -307,12 +307,12 @@ DeathReason.Vote,Exiled,追放
 DeathReason.Suicide,Suicide,自爆
 DeathReason.Spell,Spelled,呪殺
 DeathReason.Bite,Bitten,噛殺
-DeathReason.LoversSuicide,LoversSuicide,恋人心中
+DeathReason.LoversSuicide,LoversSuicide,後追い
 DeathReason.Bombed,Bombed,爆死
 DeathReason.Misfire,Misfire,誤爆
 DeathReason.Torched,Torched,焼殺
 DeathReason.Sniped,Sniped,狙撃
-DeathReason.Disconnected,Disconnected,回線切断
+DeathReason.Disconnected,Disconnected,切断
 DeathReason.etc,etc,その他
 Alive,Alive,生存
 Win,Wins,勝利
@@ -352,7 +352,7 @@ CanNotJoinPublicRoomNoLatest,Public rooms cannot join except for the latest vers
 EnterVentToWin,Enter Vent to Win!!,ベントに入って勝利しろ!!
 BomberPutPhase,Put {0} Bomber,あと{0}個置け
 BomberWaitPhase,Wait for that time...,時を待て...
-BomberReadyFirePhase,Redy To Fire!,打ち上げろ！
+BomberReadyFirePhase,Fire!,爆破だ！
 StandardHAS,Standard Hide And Seek,スタンダードモードでかくれんぼ
 commandError,Error:%1$,エラー:%1$
 InvalidArgs,Invalid Args,無効な引数

@@ -93,7 +93,7 @@ namespace TownOfHost
             {
                 case BomberState.Initial:
                 case BomberState.SettingBomber:
-                    Logger.Info("花火を一個設置", "Bomber");
+                    Logger.Info("爆弾を一個設置", "Bomber");
                     bomberPosition[pc.PlayerId].Add(pc.transform.position);
                     nowBomberCount[pc.PlayerId]--;
                     if (nowBomberCount[pc.PlayerId] == 0)
@@ -102,7 +102,7 @@ namespace TownOfHost
                         state[pc.PlayerId] = BomberState.SettingBomber;
                     break;
                 case BomberState.ReadyFire:
-                    Logger.Info("花火を爆破", "Bomber");
+                    Logger.Info("爆弾を爆破", "Bomber");
                     bool suicide = false;
                     foreach (PlayerControl target in PlayerControl.AllPlayerControls)
                     {
