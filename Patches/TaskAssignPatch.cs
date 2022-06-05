@@ -68,20 +68,15 @@ namespace TownOfHost
 
             //参考:ShipStatus.Begin
             //不要な割り当て済みのタスクを削除する処理
-            TasksList.Clear();
+            var NumExileCommonTask = Main.RealOptionsData.NumCommonTasks - numCommonTasks;
+            if (NumExileCommonTask > 0) TasksList.RemoveRange(NumExileCommonTask, TasksList.Count - NumExileCommonTask);
+            else TasksList.Clear();
 
             //割り当て済みのタスクが入れられるHashSet
             //同じタスクが複数割り当てられるのを防ぐ
             Il2CppSystem.Collections.Generic.HashSet<TaskTypes> usedTaskTypes = new();
             int start2 = 0;
             int start3 = 0;
-            int start4 = 0;
-
-            //割り当て可能な通常タスクのリスト
-            Il2CppSystem.Collections.Generic.List<NormalPlayerTask> CommonTasks = new();
-            foreach (var task in ShipStatus.Instance.CommonTasks)
-                CommonTasks.Add(task);
-            Shuffle<NormalPlayerTask>(CommonTasks);
 
             //割り当て可能なロングタスクのリスト
             Il2CppSystem.Collections.Generic.List<NormalPlayerTask> LongTasks = new();
@@ -98,20 +93,13 @@ namespace TownOfHost
             //実際にAmong Us側で使われているタスクを割り当てる関数を使う。
             ShipStatus.Instance.AddTasksFromList(
                 ref start2,
-                numCommonTasks,
-                TasksList,
-                usedTaskTypes,
-                CommonTasks
-            );
-            ShipStatus.Instance.AddTasksFromList(
-                ref start3,
                 NumLongTasks,
                 TasksList,
                 usedTaskTypes,
                 LongTasks
             );
             ShipStatus.Instance.AddTasksFromList(
-                ref start4,
+                ref start3,
                 NumShortTasks,
                 TasksList,
                 usedTaskTypes,
