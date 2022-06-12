@@ -192,11 +192,11 @@ namespace TownOfHost
                 {
                     //==========インポスター役職==========//
                     case CustomRoles.BountyHunter: //キルが発生する前にここの処理をしないとバグる
-                                                   //killer.RpcGuardAndKill(target);
                         if (target == killer.GetBountyTarget())
                         {//ターゲットをキルした場合
-                            Main.AllPlayerKillCooldown[killer.PlayerId] = Options.BountySuccessKillCooldown.GetFloat() * 2;
-                            Utils.CustomSyncAllSettings();//キルクール処理を同期
+                            Main.AllPlayerKillCooldown[killer.PlayerId] = Options.BountySuccessKillCooldown.GetFloat();
+                            killer.RpcResetAbilityCooldown();
+                            killer.CustomSyncSettings();//キルクール処理を同期
                             Main.isTargetKilled[killer.PlayerId] = true;
                             Logger.Info($"{killer?.Data?.PlayerName}:ターゲットをキル", "BountyHunter");
                             Main.BountyTimer[killer.PlayerId] = 0f; //タイマーリセット
@@ -205,20 +205,21 @@ namespace TownOfHost
                         {
                             Main.AllPlayerKillCooldown[killer.PlayerId] = Options.BountyFailureKillCooldown.GetFloat();
                             Logger.Info($"{killer?.Data?.PlayerName}:ターゲット以外をキル", "BountyHunter");
-                            Utils.CustomSyncAllSettings();//キルクール処理を同期
+                            killer.CustomSyncSettings();//キルクール処理を同期
                         }
                         break;
                     case CustomRoles.SerialKiller:
-                        killer.RpcMurderPlayer(target);
-                        killer.RpcGuardAndKill(target);
+                        killer.RpcResetAbilityCooldown();
                         Main.SerialKillerTimer[killer.PlayerId] = 0f;
-                        Main.AllPlayerKillCooldown[killer.PlayerId] = Options.SerialKillerCooldown.GetFloat() * 2;
+                        Main.AllPlayerKillCooldown[killer.PlayerId] = Options.SerialKillerCooldown.GetFloat();
                         killer.CustomSyncSettings();
                         break;
                     case CustomRoles.Vampire:
                         if (!target.Is(CustomRoles.Bait))
                         { //キルキャンセル&自爆処理
                             Utils.CustomSyncAllSettings();
+                            Main.AllPlayerKillCooldown[killer.PlayerId] = Main.RealOptionsData.killCooldown * 2; //Options.BHDefaultKillCooldown.GetFloat() * 2;
+                            killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                             killer.RpcGuardAndKill(target);
                             Main.BitPlayers.Add(target.PlayerId, (killer.PlayerId, 0f));
                             return false;
@@ -256,17 +257,19 @@ namespace TownOfHost
                         break;
                     case CustomRoles.Puppeteer:
                         Main.PuppeteerList[target.PlayerId] = killer.PlayerId;
-                        Main.AllPlayerKillCooldown[killer.PlayerId] = Options.BHDefaultKillCooldown.GetFloat() * 2;
+                        Main.AllPlayerKillCooldown[killer.PlayerId] = Main.RealOptionsData.killCooldown * 2; //Options.BHDefaultKillCooldown.GetFloat() * 2;
                         killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                         killer.RpcGuardAndKill(target);
                         return false;
                     case CustomRoles.TimeThief:
                         Main.TimeThiefKillCount[killer.PlayerId]++;
                         killer.RpcSetTimeThiefKillCount();
-                        if (Main.DiscussionTime > 0)
-                            Main.DiscussionTime -= Options.TimeThiefDecreaseDiscussionTime.GetInt();
-                        else
-                            Main.VotingTime -= Options.TimeThiefDecreaseVotingTime.GetInt();
+                        Main.DiscussionTime -= Options.TimeThiefDecreaseMeetingTime.GetInt();
+                        if (Main.DiscussionTime < 0)
+                        {
+                            Main.VotingTime += Main.DiscussionTime;
+                            Main.DiscussionTime = 0;
+                        }
                         Utils.CustomSyncAllSettings();
                         break;
 
@@ -374,8 +377,6 @@ namespace TownOfHost
             }
             if (target.Is(CustomRoles.TimeThief))
                 target.ResetThiefVotingTime();
-            if (Main.isDeadDoused.TryGetValue(target.PlayerId, out bool value) && !value)
-                target.RemoveDousePlayer();
 
 
             foreach (var pc in PlayerControl.AllPlayerControls)
@@ -407,7 +408,7 @@ namespace TownOfHost
             {
                 if (Main.CursedPlayers[shapeshifter.PlayerId] != null)//呪われた人がいるか確認
                 {
-                    if (!shapeshifting && !Main.CursedPlayers[shapeshifter.PlayerId].Data.IsDead)//変身解除の時に反応しない
+                    if (shapeshifting && !Main.CursedPlayers[shapeshifter.PlayerId].Data.IsDead)//変身解除の時に反応しない
                     {
                         var cp = Main.CursedPlayers[shapeshifter.PlayerId];
                         Vector2 cppos = cp.transform.position;//呪われた人の位置
@@ -466,7 +467,7 @@ namespace TownOfHost
             {
                 new LateTask(() =>
                 {
-                    Utils.NotifyRoles(force: true);
+                    Utils.NotifyRoles(NoCache: true);
                 },
                 1.2f, "ShapeShiftNotify");
             }
@@ -477,6 +478,7 @@ namespace TownOfHost
     {
         public static bool Prefix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
         {
+            if (GameStates.IsMeeting) return false;
             Logger.Info($"{__instance.GetNameWithRole()} => {target?.GetNameWithRole() ?? "null"}", "ReportDeadBody");
             if (Options.StandardHAS.GetBool() && target != null && __instance == target.Object) return true; //[StandardHAS] ボタンでなく、通報者と死体が同じなら許可
             if (Options.CurrentGameMode == CustomGameMode.HideAndSeek || Options.StandardHAS.GetBool()) return false;
@@ -502,7 +504,7 @@ namespace TownOfHost
 
             if (Options.SyncButtonMode.GetBool() && target == null)
             {
-                Logger.Info("最大:" + Options.SyncedButtonCount + ", 現在:" + Options.UsedButtonCount, "ReportDeadBody");
+                Logger.Info("最大:" + Options.SyncedButtonCount.GetInt() + ", 現在:" + Options.UsedButtonCount, "ReportDeadBody");
                 if (Options.SyncedButtonCount.GetFloat() <= Options.UsedButtonCount)
                 {
                     Logger.Info("使用可能ボタン回数が最大数を超えているため、ボタンはキャンセルされました。", "ReportDeadBody");
@@ -644,6 +646,7 @@ namespace TownOfHost
                             Main.isCursed = false;//変身クールを１秒に変更
                             Utils.CustomSyncAllSettings();
                             Main.WarlockTimer.Remove(player.PlayerId);
+                            player.RpcResetAbilityCooldown();
                         }
                         else Main.WarlockTimer[player.PlayerId] = Main.WarlockTimer[player.PlayerId] + Time.fixedDeltaTime;//時間をカウント
                     }
@@ -661,13 +664,12 @@ namespace TownOfHost
                     }
                     else
                     {
-                        if (Main.BountyTimer[player.PlayerId] >= (Options.BountyTargetChangeTime.GetFloat() + Options.BountyFailureKillCooldown.GetFloat()) || Main.isTargetKilled[player.PlayerId])//時間経過でターゲットをリセットする処理
+                        if (Main.BountyTimer[player.PlayerId] >= Options.BountyTargetChangeTime.GetFloat() || Main.isTargetKilled[player.PlayerId])//時間経過でターゲットをリセットする処理
                         {
                             Main.BountyTimer[player.PlayerId] = 0f;
-                            Main.AllPlayerKillCooldown[player.PlayerId] = 10;
                             Logger.Info($"{player.GetNameWithRole()}:ターゲットリセット", "BountyHunter");
-                            Utils.CustomSyncAllSettings();//ここでの処理をキルクールの変更の処理と同期
-                            player.RpcGuardAndKill(player);//タイマー（変身クールダウン）のリセットと、名前の変更のためのKill
+                            player.CustomSyncSettings();//ここでの処理をキルクールの変更の処理と同期
+                            player.RpcResetAbilityCooldown(); ;//タイマー（変身クールダウン）のリセットと
                             player.ResetBountyTarget();//ターゲットの選びなおし
                             Utils.NotifyRoles();
                         }
@@ -708,7 +710,6 @@ namespace TownOfHost
                     }
                     else
                     {
-                        var ArsonistDic = Main.DousedPlayerCount[player.PlayerId];
                         var ar_target = Main.ArsonistTimer[player.PlayerId].Item1;//塗られる人
                         var ar_time = Main.ArsonistTimer[player.PlayerId].Item2;//塗った時間
                         if (!ar_target.IsAlive())
@@ -722,14 +723,7 @@ namespace TownOfHost
                             player.RpcGuardAndKill(ar_target);//通知とクールリセット
                             Main.ArsonistTimer.Remove(player.PlayerId);//塗が完了したのでDictionaryから削除
                             Main.isDoused[(player.PlayerId, ar_target.PlayerId)] = true;//塗り完了
-                            Main.DousedPlayerCount[player.PlayerId] = (ArsonistDic.Item1 + 1, ArsonistDic.Item2);//塗った人数を増やす
-                            Logger.Info($"{player.GetNameWithRole()} : {Main.DousedPlayerCount[player.PlayerId]}", "Arsonist");
-                            player.RpcSendDousedPlayerCount();
-                            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetDousedPlayer, SendOption.Reliable, -1);//RPCによる同期
-                            writer.Write(player.PlayerId);
-                            writer.Write(ar_target.PlayerId);
-                            writer.Write(true);
-                            AmongUsClient.Instance.FinishRpcImmediately(writer);
+                            player.RpcSetDousedPlayer(ar_target, true);
                             Utils.NotifyRoles();//名前変更
                             RPC.ResetCurrentDousingTarget(player.PlayerId);
                         }
@@ -777,7 +771,7 @@ namespace TownOfHost
                         {
                             var min = targetDistance.OrderBy(c => c.Value).FirstOrDefault();//一番値が小さい
                             PlayerControl target = Utils.GetPlayerById(min.Key);
-                            if (min.Value <= 1.75f)
+                            if (min.Value <= 1.75f && player.CanMove && target.CanMove)
                             {
                                 RPC.PlaySoundRPC(Main.PuppeteerList[player.PlayerId], Sounds.KillSound);
                                 player.RpcMurderPlayer(target);
@@ -794,7 +788,7 @@ namespace TownOfHost
                     foreach (var pc in PlayerControl.AllPlayerControls)
                     {
                         if (pc.Is(CustomRoles.Vampire) || pc.Is(CustomRoles.Warlock))
-                            Main.AllPlayerKillCooldown[pc.PlayerId] = Options.BHDefaultKillCooldown.GetFloat() * 2;
+                            Main.AllPlayerKillCooldown[pc.PlayerId] = Main.RealOptionsData.killCooldown * 2; //Options.BHDefaultKillCooldown.GetFloat() * 2;
                     }
 
                 if (__instance.AmOwner) Utils.ApplySuffix();
@@ -968,7 +962,7 @@ namespace TownOfHost
                     }
 
                     //矢印オプションありならタスクが終わったスニッチはインポスター/キル可能な第三陣営の方角がわかる
-                    if (!GameStates.IsMeeting && Options.SnitchEnableTargetArrow.GetBool() && target.Is(CustomRoles.Snitch))
+                    if (GameStates.IsInTask && Options.SnitchEnableTargetArrow.GetBool() && target.Is(CustomRoles.Snitch))
                     {
                         var TaskState = target.GetPlayerTaskState();
                         if (TaskState.IsTaskFinished)
@@ -1157,30 +1151,30 @@ namespace TownOfHost
         {
             if (AmongUsClient.Instance.AmHost)
             {
-                if (Main.DousedPlayerCount.ContainsKey(__instance.myPlayer.PlayerId) && AmongUsClient.Instance.IsGameStarted)
-                    if (__instance.myPlayer.IsDouseDone())
+                if (AmongUsClient.Instance.IsGameStarted &&
+                    __instance.myPlayer.IsDouseDone())
+                {
+                    foreach (var pc in PlayerControl.AllPlayerControls)
                     {
-                        foreach (var pc in PlayerControl.AllPlayerControls)
+                        if (!pc.Data.IsDead)
                         {
-                            if (!pc.Data.IsDead)
+                            if (pc != __instance.myPlayer)
                             {
-                                if (pc != __instance.myPlayer)
-                                {
-                                    //生存者は焼殺
-                                    pc.RpcMurderPlayer(pc);
-                                    PlayerState.SetDeathReason(pc.PlayerId, PlayerState.DeathReason.Torched);
-                                    PlayerState.SetDead(pc.PlayerId);
-                                }
-                                else
-                                    RPC.PlaySoundRPC(pc.PlayerId, Sounds.KillSound);
+                                //生存者は焼殺
+                                pc.RpcMurderPlayer(pc);
+                                PlayerState.SetDeathReason(pc.PlayerId, PlayerState.DeathReason.Torched);
+                                PlayerState.SetDead(pc.PlayerId);
                             }
+                            else
+                                RPC.PlaySoundRPC(pc.PlayerId, Sounds.KillSound);
                         }
-                        MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ArsonistWin, Hazel.SendOption.Reliable, -1);
-                        writer.Write(__instance.myPlayer.PlayerId);
-                        AmongUsClient.Instance.FinishRpcImmediately(writer);
-                        RPC.ArsonistWin(__instance.myPlayer.PlayerId);
-                        return true;
                     }
+                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ArsonistWin, Hazel.SendOption.Reliable, -1);
+                    writer.Write(__instance.myPlayer.PlayerId);
+                    AmongUsClient.Instance.FinishRpcImmediately(writer);
+                    RPC.ArsonistWin(__instance.myPlayer.PlayerId);
+                    return true;
+                }
                 if (__instance.myPlayer.Is(CustomRoles.Sheriff) ||
                 __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
                 __instance.myPlayer.Is(CustomRoles.Arsonist) ||
