@@ -69,8 +69,17 @@ namespace TownOfHost
 
             //参考:ShipStatus.Begin
             //不要な割り当て済みのタスクを削除する処理
-            var NumExileCommonTask = Main.RealOptionsData.NumCommonTasks - numCommonTasks;
-            if (NumExileCommonTask > 0) TasksList.RemoveRange(NumExileCommonTask, TasksList.Count - NumExileCommonTask);
+            TasksList.RemoveRange(Main.RealOptionsData.NumCommonTasks, TasksList.Count - Main.RealOptionsData.NumCommonTasks);//ショート、ロング削除
+            var NumExileCommonTask = Main.RealOptionsData.NumCommonTasks - numCommonTasks;//コモンの減らす数
+            if (NumExileCommonTask > 0)
+            {
+                var rand = new System.Random();
+                for (var i = 0; i < NumExileCommonTask; i++)
+                {
+                    int NumCommonTasksLeft = TasksList.Count;
+                    TasksList.RemoveAt(rand.Next(NumCommonTasksLeft));
+                }
+            }
 
             //割り当て済みのタスクが入れられるHashSet
             //同じタスクが複数割り当てられるのを防ぐ
