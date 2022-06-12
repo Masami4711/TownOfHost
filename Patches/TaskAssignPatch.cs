@@ -56,7 +56,7 @@ namespace TownOfHost
                                                          // falseの時、タスクの内容が変更される前にReturnされる。
 
             int numCommonTasks = (int)data.numCommonTasks.GetFloat(); // 割り当てるコモンタスクの数
-            if (numCommonTasks > Main.RealOptionsData.NumCommonTasks) numCommonTasks = Main.RealOptionsData.NumCommonTasks;
+            if (numCommonTasks > Main.RealOptionsData.NumCommonTasks) numCommonTasks = Main.RealOptionsData.NumCommonTasks;//デフォルト以下に刈込み
             int NumLongTasks = (int)data.numLongTasks.GetFloat(); // 割り当てるロングタスクの数
             int NumShortTasks = (int)data.numShortTasks.GetFloat(); // 割り当てるショートタスクの数
 
