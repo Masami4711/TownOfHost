@@ -60,7 +60,7 @@ namespace TownOfHost
         public static CustomOption BountyTargetChangeTime;
         public static CustomOption BountySuccessKillCooldown;
         public static CustomOption BountyFailureKillCooldown;
-        //public static CustomOption BHDefaultKillCooldown;
+        public static float DefaultKillCooldown;
         public static CustomOption SerialKillerCooldown;
         public static CustomOption SerialKillerLimit;
         public static CustomOption TimeThiefDecreaseMeetingTime;
@@ -281,7 +281,6 @@ namespace TownOfHost
             InsiderCanSeeMadmate = CustomOption.Create(2812, Color.white, "InsiderCanSeeMadmate", false, CustomRoleSpawnChances[CustomRoles.Insider]);
             InsiderCanSeeMadmateKillCount = CustomOption.Create(2813, Color.white, "InsiderCanSeeMadmateKillCount", 3, 0, 12, 1, InsiderCanSeeMadmate);
 
-            //BHDefaultKillCooldown = CustomOption.Create(5010, Color.white, "BHDefaultKillCooldown", 30, 1, 999, 1, null, true);
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
             CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);
 
