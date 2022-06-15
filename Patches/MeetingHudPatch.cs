@@ -301,7 +301,7 @@ namespace TownOfHost
                     pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                 }
                 //インサイダーからの味方の能力表示
-                bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeRolesOfImpostors.GetBool();
+                bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                 if (seer.Is(CustomRoles.BountyHunter) && Main.BountyTargets[seer.PlayerId] == target)
                 {
@@ -382,7 +382,7 @@ namespace TownOfHost
                     var RoleTextData = Utils.GetRoleText(pc);
                     //インサイダー設定
                     bool InsiderVision = Main.VisibleTasksCount && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
-                    && ((Options.InsiderCanSeeRolesOfImpostors.GetBool() && pc.GetCustomRole().IsImpostor()) //味方インポスターの視認
+                    && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && pc.GetCustomRole().IsImpostor()) //味方インポスターの視認
                     || (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() && pc.Data.IsDead) //死者全員の視認
                     || (pc.Data.IsDead && (Main.IsKilledByInsider.Find(x => x.PlayerId == pc.PlayerId) != null)) //自分がキルした相手のみ
                     );

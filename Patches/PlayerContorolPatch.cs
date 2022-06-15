@@ -829,7 +829,7 @@ namespace TownOfHost
                     //}
                     //インサイダー設定
                     bool InsiderVision = Main.VisibleTasksCount && !__instance.AmOwner && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
-                    && ((Options.InsiderCanSeeRolesOfImpostors.GetBool() && __instance.GetCustomRole().IsImpostor()) //味方インポスター
+                    && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && __instance.GetCustomRole().IsImpostor()) //味方インポスター
                     || (PlayerControl.LocalPlayer.Data.IsDead //死んでいる場合
                     && (Options.GhostCanSeeOtherRoles.GetBool() //幽霊から全員見える設定
                     || (__instance.Data.IsDead ////相手が死んでいる
@@ -940,7 +940,7 @@ namespace TownOfHost
                     }
 
                     //インサイダーからの味方の能力表示
-                    bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeRolesOfImpostors.GetBool();
+                    bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                     if (seer.Is(CustomRoles.BountyHunter) && Main.BountyTargets[seer.PlayerId] == target)
                     {

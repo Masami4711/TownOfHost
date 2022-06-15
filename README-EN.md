@@ -270,12 +270,12 @@ They can see all impostors' roles and statuses.<br>
 Other roles whose they killed on their own are visible to them as well.<br>
 In Addition, a certain times of kill shows them Madmate.<br>
 
-| Settings Name                         |
-| ------------------------------------- |
-| Insider Can See Roles Of Impostors    |
-| Insider Can See Whole Roles Of Ghosts |
-| Insider Can See Madmate               |
-| Insider's Kill Count To See Madmate   |
+| Settings Name                             |
+| ----------------------------------------- |
+| Insider Can See Abilities Of Impostors    |
+| Insider Can See Whole Roles Of Ghosts     |
+| Insider Can See Madmate                   |
+| Insider's Kill Count To See Madmate       |
 ### Madmate
 
 Team : Impostors<br>

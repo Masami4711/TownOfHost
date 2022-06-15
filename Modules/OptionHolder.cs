@@ -68,7 +68,7 @@ namespace TownOfHost
         public static CustomOption VampireKillDelay;
         public static CustomOption BlackOutMareSpeed;
         public static CustomOption ShapeMasterShapeshiftDuration;
-        public static CustomOption InsiderCanSeeRolesOfImpostors;
+        public static CustomOption InsiderCanSeeAbilitiesOfImpostors;
         public static CustomOption InsiderCanSeeWholeRolesOfGhosts;
         public static CustomOption InsiderCanSeeMadmate;
         public static CustomOption InsiderCanSeeMadmateKillCount;
@@ -276,10 +276,10 @@ namespace TownOfHost
             TimeThiefDecreaseMeetingTime = CustomOption.Create(2410, Color.white, "TimeThiefDecreaseMeetingTime", 20, 0, 100, 1, CustomRoleSpawnChances[CustomRoles.TimeThief]);
             TimeThiefLowerLimitVotingTime = CustomOption.Create(2411, Color.white, "TimeThiefLowerLimitVotingTime", 10, 1, 300, 1, CustomRoleSpawnChances[CustomRoles.TimeThief]);
             SetupRoleOptions(2800, CustomRoles.Insider);
-            InsiderCanSeeRolesOfImpostors = CustomOption.Create(2810, Color.white, "InsiderCanSeeRolesOfImpostors", true, CustomRoleSpawnChances[CustomRoles.Insider]);
+            InsiderCanSeeAbilitiesOfImpostors = CustomOption.Create(2810, Color.white, "InsiderCanSeeAbilitiesOfImpostors", true, CustomRoleSpawnChances[CustomRoles.Insider]);
             InsiderCanSeeWholeRolesOfGhosts = CustomOption.Create(2811, Color.white, "InsiderCanSeeWholeRolesOfGhosts", false, CustomRoleSpawnChances[CustomRoles.Insider]);
             InsiderCanSeeMadmate = CustomOption.Create(2812, Color.white, "InsiderCanSeeMadmate", false, CustomRoleSpawnChances[CustomRoles.Insider]);
-            InsiderCanSeeMadmateKillCount = CustomOption.Create(2813, Color.white, "InsiderCanSeeMadmateKillCount", 3, 0, 12, 1, InsiderCanSeeMadmate);
+            InsiderCanSeeMadmateKillCount = CustomOption.Create(2813, Color.white, "InsiderCanSeeMadmateKillCount", 2, 0, 12, 1, InsiderCanSeeMadmate);
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
             CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);

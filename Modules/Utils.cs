@@ -684,7 +684,7 @@ namespace TownOfHost
                             }
                         }
                         //インサイダーからの味方の能力表示
-                        bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeRolesOfImpostors.GetBool();
+                        bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                         if (seer.Is(CustomRoles.BountyHunter) && Main.BountyTargets[seer.PlayerId] == target)
                         {
@@ -724,7 +724,7 @@ namespace TownOfHost
                         //インサイダーの表示処理
                         bool InsiderVision = seer.Is(CustomRoles.Insider) && target != seer //前提条件
                             && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool())//死んでいるかつ設定有効な場合は全員
-                            || (Options.InsiderCanSeeRolesOfImpostors.GetBool() && target.GetCustomRole().IsImpostor()) //味方インポスター
+                            || (Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && target.GetCustomRole().IsImpostor()) //味方インポスター
                             || (target.Data.IsDead //幽霊の役職
                             && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() //幽霊全員が見える場合
                             || (Main.IsKilledByInsider.Find(x => x.PlayerId == target.PlayerId) != null))) //自分がキルした相手のみ
