@@ -961,7 +961,7 @@ namespace TownOfHost
                     }
                     if (target.Is(CustomRoles.Criminal) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || (seer == target && seer.Is(CustomRoles.Criminal))))
                     {
-                        Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Criminal)}>★</color>";
+                        Mark += target.Data.IsDead ? "<color=#000000>★</color>" : $"<color={Utils.GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
                     }
 
 

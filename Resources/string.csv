@@ -306,7 +306,7 @@ ScapegoatLooksRedForSnitch,Scapegoat Looks Red For Snitch,スニッチから赤�
 RealizeScapegoatWhileLiving,Realize Scapegoat While Living,生存中にスケープゴートと分かる
 ScapegoatTaskCountToRealize,Task Count To Realize Scapegoat,スケープゴートと分かるタスク数
 AssignCriminalOnlyToImpostor,Assign Criminal Only To Impostor,インポスターのみに割り当てる
-CriminalCanDeceiveSnitch,CriminalCanDeceiveSnitch,スニッチを欺ける
+CriminalCanDeceiveSnitch,Criminal Can Deceive Snitch,スニッチを欺ける
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定

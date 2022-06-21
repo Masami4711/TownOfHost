@@ -307,7 +307,7 @@ namespace TownOfHost
                 if (target.Is(CustomRoles.Criminal) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) //前提条件 && （幽霊視点
                     || (seer == target && seer.Is(CustomRoles.Criminal)) || target.Data.IsDead)) // || 本人視点 || 本人死亡）
                 {
-                    pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Criminal)}>★</color>";
+                    pva.NameText.text += target.Data.IsDead ? "<color=#000000>★</color>" : $"<color={Utils.GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
                 }
                 if (seer.GetCustomRole().IsImpostor() && //LocalPlayerがImpostor
                     target.Is(CustomRoles.Egoist) //変更対象がEgoist
