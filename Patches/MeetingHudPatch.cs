@@ -19,26 +19,6 @@ namespace TownOfHost
                     if (pva == null) continue;
                     PlayerControl pc = Utils.GetPlayerById(pva.TargetPlayerId);
                     if (pc == null) continue;
-
-                    //役職表示系
-                    var RoleTextMeetingTransform = pva.NameText.transform.Find("RoleTextMeeting");
-                    TMPro.TextMeshPro RoleTextMeeting = null;
-                    if (RoleTextMeetingTransform != null) RoleTextMeeting = RoleTextMeetingTransform.GetComponent<TMPro.TextMeshPro>();
-                    if (RoleTextMeeting != null)
-                    {
-                        var RoleTextData = Utils.GetRoleText(pc);
-                        //インサイダー設定
-                        bool InsiderVision = Main.VisibleTasksCount && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
-                        && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && pc.GetCustomRole().IsImpostor()) //味方インポスターの視認
-                        || (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() && pc.Data.IsDead) //死者全員の視認
-                        || (pc.Data.IsDead && (Main.IsKilledByInsider.Find(x => x.PlayerId == pc.PlayerId) != null)) //自分がキルした相手のみ
-                        );
-                        RoleTextMeeting.text = RoleTextData.Item1;
-                        if (Main.VisibleTasksCount) RoleTextMeeting.text += Utils.GetProgressText(pc);
-                        RoleTextMeeting.color = RoleTextData.Item2;
-                        RoleTextMeeting.enabled = pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
-                            (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderVision;
-                    }
                     //死んでいないディクテーターが投票済み
                     if (pc.Is(CustomRoles.Dictator) && pva.DidVote && pc.PlayerId != pva.VotedFor && pva.VotedFor < 253 && !pc.Data.IsDead)
                     {
@@ -227,14 +207,26 @@ namespace TownOfHost
         {
             foreach (var pva in __instance.playerStates)
             {
+                var pc = Utils.GetPlayerById(pva.TargetPlayerId);
+                if (pc == null) continue;
+                var RoleTextData = Utils.GetRoleText(pc);
                 var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = "RoleTextMeeting";
+                roleTextMeeting.text = RoleTextData.Item1;
+                if (Main.VisibleTasksCount) roleTextMeeting.text += Utils.GetProgressText(pc);
+                roleTextMeeting.color = RoleTextData.Item2;
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
-                roleTextMeeting.enabled = false;
+                //インサイダー設定
+                bool InsiderVision = Main.VisibleTasksCount && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
+                && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && pc.GetCustomRole().IsImpostor()) //味方インポスターの視認
+                || (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() && pc.Data.IsDead) //死者全員の視認
+                || (pc.Data.IsDead && (Main.IsKilledByInsider.Find(x => x.PlayerId == pc.PlayerId) != null)) //自分がキルした相手のみ
+                );
+                roleTextMeeting.enabled = pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
+                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderVision;
             }
             if (Options.SyncButtonMode.GetBool())
             {
@@ -396,6 +388,7 @@ namespace TownOfHost
                 {
                     var player = Utils.GetPlayerById(x.TargetPlayerId);
                     player.RpcExileV2();
+                    PlayerState.SetDeathReason(player.PlayerId, PlayerState.DeathReason.Execusion);
                     PlayerState.SetDead(player.PlayerId);
                     Logger.Info($"{player.GetNameWithRole()}を処刑しました", "Execution");
                 });
