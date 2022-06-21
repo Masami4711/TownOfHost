@@ -632,7 +632,6 @@ namespace TownOfHost
                     || seer.Is(CustomRoles.Doctor) //seerがドクター
                     || seer.Is(CustomRoles.Puppeteer)
                     || IsActive(SystemTypes.Electrical)
-                    || seer.Is(CustomRoles.Insider)
                     || NoCache
                     || ForceLoop
                 )
@@ -729,16 +728,8 @@ namespace TownOfHost
                         }
 
 
-                        //インサイダーの表示処理
-                        bool InsiderVision = seer.Is(CustomRoles.Insider) && target != seer //前提条件
-                            && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool())//死んでいるかつ設定有効な場合は全員
-                            || (Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && target.GetCustomRole().IsImpostor()) //味方インポスター
-                            || (target.Data.IsDead //幽霊の役職
-                            && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() //幽霊全員が見える場合
-                            || (Main.IsKilledByInsider.Find(x => x.PlayerId == target.PlayerId) != null))) //自分がキルした相手のみ
-                            );
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderVision ? $"<size={fontSize}><color={target.GetRoleColorCode()}>{target.GetRoleName()}</color>{TargetTaskText}</size>\r\n" : "";
+                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderCanSeeOtherRole(seer, target) ? $"<size={fontSize}><color={target.GetRoleColorCode()}>{target.GetRoleName()}</color>{TargetTaskText}</size>\r\n" : "";
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isMeeting);
@@ -891,6 +882,18 @@ namespace TownOfHost
             }
 
             return (doused, all);
+        }
+        public static bool InsiderCanSeeOtherRole(PlayerControl Insider, PlayerControl Target)
+        {
+            if (!Insider.Is(CustomRoles.Insider)) return false;
+            if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false;
+            if (Insider == Target) return false;
+            if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false;
+            if (Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && Target.GetCustomRole().IsImpostor()) return true;
+            if (Target.Data.IsDead)
+                if (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool()) return true;
+                else if (Main.IsKilledByInsider.Find(x => x.PlayerId == Target.PlayerId) != null) return true;
+            return false;
         }
     }
 }

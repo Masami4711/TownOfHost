@@ -814,19 +814,10 @@ namespace TownOfHost
                     //    var hasRole = main.AllPlayerCustomRoles.TryGetValue(__instance.PlayerId, out var role);
                     //    if (hasRole) RoleTextData = Utils.GetRoleTextHideAndSeek(__instance.Data.Role.Role, role);
                     //}
-                    //インサイダー設定
-                    bool InsiderVision = Main.VisibleTasksCount && !__instance.AmOwner && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
-                    && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && __instance.GetCustomRole().IsImpostor()) //味方インポスター
-                    || (PlayerControl.LocalPlayer.Data.IsDead //死んでいる場合
-                    && (Options.GhostCanSeeOtherRoles.GetBool() //幽霊から全員見える設定
-                    || (__instance.Data.IsDead ////相手が死んでいる
-                    && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() //幽霊全員見える場合
-                    || (Main.IsKilledByInsider.Find(x => x.PlayerId == __instance.PlayerId) != null))))) //自分がキルしている場合
-                    );
                     RoleText.text = RoleTextData.Item1;
                     RoleText.color = RoleTextData.Item2;
                     if (__instance.AmOwner) RoleText.enabled = true; //自分ならロールを表示
-                    else if (InsiderVision) RoleText.enabled = true; //インサイダーの表示
+                    else if (Utils.InsiderCanSeeOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
                     else if (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) RoleText.enabled = true; //他プレイヤーでVisibleTasksCountが有効なおかつ自分が死んでいるならロールを表示
                     else RoleText.enabled = false; //そうでなければロールを非表示
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)

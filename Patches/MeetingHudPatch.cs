@@ -219,14 +219,8 @@ namespace TownOfHost
                 roleTextMeeting.color = RoleTextData.Item2;
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
-                //インサイダー設定
-                bool InsiderVision = Main.VisibleTasksCount && PlayerControl.LocalPlayer.Is(CustomRoles.Insider) //前提条件
-                && ((Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && pc.GetCustomRole().IsImpostor()) //味方インポスターの視認
-                || (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() && pc.Data.IsDead) //死者全員の視認
-                || (pc.Data.IsDead && (Main.IsKilledByInsider.Find(x => x.PlayerId == pc.PlayerId) != null)) //自分がキルした相手のみ
-                );
                 roleTextMeeting.enabled = pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
-                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderVision;
+                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Utils.InsiderCanSeeOtherRole(PlayerControl.LocalPlayer, pc);
             }
             if (Options.SyncButtonMode.GetBool())
             {
