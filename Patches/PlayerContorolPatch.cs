@@ -279,14 +279,14 @@ namespace TownOfHost
                         Utils.CustomSyncAllSettings();
                         break;
                     case CustomRoles.Insider:
-                        if ((Main.IsKilledByInsider.Find(x => x.PlayerId == target.PlayerId) == null) && !target.Is(CustomRoles.SchrodingerCat) && !(target.Is(CustomRoles.MadGuardian) && target.GetPlayerTaskState().IsTaskFinished))
+                        if (!Main.IsKilledByInsider.ContainsKey(target.PlayerId) && !target.Is(CustomRoles.SchrodingerCat) && !(target.Is(CustomRoles.MadGuardian) && target.GetPlayerTaskState().IsTaskFinished))
                         {
                             float Norma = Options.InsiderCanSeeMadmateKillCount.GetFloat();
                             Main.InsiderKillCount[killer.PlayerId]++;
                             if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{Main.InsiderKillCount[killer.PlayerId]}/{Norma}キル", "Insider");
                             killer.RpcSetInsiderKillCount();
-                            Main.IsKilledByInsider.Add(target);
-                            RPC.RpcInsiderKill(target.PlayerId);
+                            Main.IsKilledByInsider.Add(target.PlayerId, killer);
+                            RPC.RpcInsiderKill(killer.PlayerId, target.PlayerId);
                         }
                         Utils.NotifyRoles();
                         break;

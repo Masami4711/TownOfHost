@@ -195,7 +195,9 @@ namespace TownOfHost
                     FireWorks.ReceiveRPC(reader);
                     break;
                 case CustomRPC.InsiderKill:
-                    Main.IsKilledByInsider.Add(Utils.GetPlayerById(reader.ReadByte()));
+                    byte insiderId = reader.ReadByte();
+                    byte insiderTargetId = reader.ReadByte();
+                    Main.IsKilledByInsider.Add(insiderTargetId, Utils.GetPlayerById(insiderId));
                     break;
                 case CustomRPC.SetInsiderKillCount:
                     byte InsiderId = reader.ReadByte();
@@ -397,9 +399,10 @@ namespace TownOfHost
             writer.Write(player);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
-        public static void RpcInsiderKill(byte player)
+        public static void RpcInsiderKill(byte insider, byte player)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.InsiderKill, Hazel.SendOption.Reliable, -1);
+            writer.Write(insider);
             writer.Write(player);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }

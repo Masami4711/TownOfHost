@@ -44,7 +44,7 @@ namespace TownOfHost
             Main.InsiderKillCount = new Dictionary<byte, float>();
 
             Main.SpelledPlayer = new List<PlayerControl>();
-            Main.IsKilledByInsider = new List<PlayerControl>();
+            Main.IsKilledByInsider = new Dictionary<byte, PlayerControl>();
             Main.witchMeeting = false;
             Main.CheckShapeshift = new Dictionary<byte, bool>();
             Main.SpeedBoostTarget = new Dictionary<byte, byte>();

@@ -308,7 +308,7 @@ namespace TownOfHost
                 else if (!seer.Data.IsDead && seer.Is(CustomRoles.Insider)
                     && target.Is(CustomRoles.Lovers) && target.Data.IsDead
                     && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool()
-                    || Main.IsKilledByInsider.Find(x => x.PlayerId == target.PlayerId) != null))
+                    || (Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var insider) && seer == insider)))
                 {
                     pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                 }

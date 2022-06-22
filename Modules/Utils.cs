@@ -221,14 +221,10 @@ namespace TownOfHost
                 case CustomRoles.Insider:
                     if (Options.InsiderCanSeeMadmate.GetBool())
                     {
-                        float Norma = Options.InsiderCanSeeMadmateKillCount.GetFloat();
-                        if (Main.InsiderKillCount.TryGetValue(playerId, out var KillCount))
-                        {
-                            if (KillCount < Norma) ProgressText += $" <color=#ff0000>({KillCount}/{Norma})</color>";
-                            else ProgressText += $"<color=#ff0000>★</color>";
-                        }
-                        else ProgressText += "Invalid";
-
+                        int KillCount = InsiderKillCount(GetPlayerById(playerId));
+                        int Norma = Options.InsiderCanSeeMadmateKillCount.GetInt();
+                        if (KillCount < Norma) ProgressText += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>({KillCount}/{Norma})</color>";
+                        else ProgressText += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>★</color>";
                     }
                     break;
                 default:
@@ -673,7 +669,7 @@ namespace TownOfHost
                         }
                         //インサイダーからのラバーズ表示
                         else if (seer.Is(CustomRoles.Insider) && !seer.Data.IsDead && target.Data.IsDead && !seer.Is(CustomRoles.Lovers) && target.Is(CustomRoles.Lovers)
-                            && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() || (Main.IsKilledByInsider.Find(x => x.PlayerId == target.PlayerId) != null)))
+                            && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() || (Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var insider) && seer == insider)))
                         {
                             TargetMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                         }
@@ -892,8 +888,18 @@ namespace TownOfHost
             if (Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && Target.GetCustomRole().IsImpostor()) return true;
             if (Target.Data.IsDead)
                 if (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool()) return true;
-                else if (Main.IsKilledByInsider.Find(x => x.PlayerId == Target.PlayerId) != null) return true;
+                else if (Main.IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true;
             return false;
+        }
+        public static int InsiderKillCount(PlayerControl Insider)
+        {
+            int KillCount = 0;
+            foreach (var target in PlayerControl.AllPlayerControls)
+            {
+                if (!Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var killer)) continue;
+                if (Insider == killer) KillCount += 1;
+            }
+            return KillCount;
         }
     }
 }
