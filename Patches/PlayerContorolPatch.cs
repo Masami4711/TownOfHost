@@ -918,35 +918,41 @@ namespace TownOfHost
                     //インサイダーからの味方の能力表示
                     bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
-                    if (seer.Is(CustomRoles.BountyHunter) && Main.BountyTargets[seer.PlayerId] == target)
-                    {
-                        Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⊕</color>";
-                    }
-                    else if (InsiderCanSeeImpostorAbility)
+                    if (seer.Is(CustomRoles.BountyHunter) || InsiderCanSeeImpostorAbility)
                     {
                         foreach (var kvp in Main.BountyTargets)
                         {
-                            bool TargetIsTargeted = target.PlayerId == kvp.Value.PlayerId;
-                            if (TargetIsTargeted)
+                            if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Value.PlayerId)
                             {
                                 Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⊕</color>";
                             }
                         }
                     }
 
-                    if (((seer.Is(CustomRoles.Puppeteer) && Main.PuppeteerList.ContainsValue(seer.PlayerId))
-                        || InsiderCanSeeImpostorAbility)
-                        && Main.PuppeteerList.ContainsKey(target.PlayerId))
+                    // if (((seer.Is(CustomRoles.Puppeteer) && Main.PuppeteerList.ContainsValue(seer.PlayerId))
+                    //     || InsiderCanSeeImpostorAbility)
+                    //     && Main.PuppeteerList.ContainsKey(target.PlayerId))
+                    // {
+                    //     Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
+                    // }
+                    if (seer.Is(CustomRoles.Puppeteer) || InsiderCanSeeImpostorAbility)
                     {
-                        Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
-                    }
-                    foreach (var kvp in Main.BitPlayers)
-                    {
-                        bool SeerBite = seer.PlayerId == kvp.Value.Item1;
-                        if (((seer.Is(CustomRoles.Vampire) && SeerBite) || InsiderCanSeeImpostorAbility)
-                            && Main.BitPlayers.ContainsKey(target.PlayerId) && !target.Data.IsDead)
+                        foreach (var kvp in Main.PuppeteerList)
                         {
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>×</color>";
+                            if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key)
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
+                            }
+                        }
+                    }
+                    if (seer.Is(CustomRoles.Vampire) || InsiderCanSeeImpostorAbility)
+                    {
+                        foreach (var kvp in Main.BitPlayers)
+                        {
+                            if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key && !target.Data.IsDead)
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>×</color>";
+                            }
                         }
                     }
                     if (Sniper.IsEnable() && target.AmOwner)
