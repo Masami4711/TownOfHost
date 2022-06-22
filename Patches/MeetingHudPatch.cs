@@ -271,8 +271,8 @@ namespace TownOfHost
                 bool LocalPlayerKnowsMadmate = false;
                 if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool())
                 {
-                    Main.InsiderKillCount.TryGetValue(seer.PlayerId, out var KillCount);
-                    LocalPlayerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetFloat();
+                    int KillCount = Utils.InsiderKillCount(seer);
+                    LocalPlayerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt();
                 }
 
                 if (LocalPlayerKnowsMadmate)

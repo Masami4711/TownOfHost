@@ -31,7 +31,6 @@ namespace TownOfHost
         SendFireWorksState,
         SetCurrentDousingTarget,
         InsiderKill,
-        SetInsiderKillCount,
         setPlayerKIlledByInsider,
     }
     public enum Sounds
@@ -198,14 +197,6 @@ namespace TownOfHost
                     byte insiderId = reader.ReadByte();
                     byte insiderTargetId = reader.ReadByte();
                     Main.IsKilledByInsider.Add(insiderTargetId, Utils.GetPlayerById(insiderId));
-                    break;
-                case CustomRPC.SetInsiderKillCount:
-                    byte InsiderId = reader.ReadByte();
-                    float KillCount = reader.ReadSingle();
-                    if (Main.InsiderKillCount.ContainsKey(InsiderId))
-                        Main.InsiderKillCount[InsiderId] = KillCount;
-                    else
-                        Main.InsiderKillCount.Add(InsiderId, Options.InsiderCanSeeMadmateKillCount.GetFloat());
                     break;
                 case CustomRPC.SetCurrentDousingTarget:
                     byte arsonistId = reader.ReadByte();

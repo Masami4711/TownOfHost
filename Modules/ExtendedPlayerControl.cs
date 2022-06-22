@@ -573,13 +573,6 @@ namespace TownOfHost
             writer.Write(Main.TimeThiefKillCount[player.PlayerId]);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
-        public static void RpcSetInsiderKillCount(this PlayerControl player)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetInsiderKillCount, Hazel.SendOption.Reliable, -1);
-            writer.Write(player.PlayerId);
-            writer.Write(Main.InsiderKillCount[player.PlayerId]);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
         public static bool CanUseKillButton(this PlayerControl pc)
         {
             bool canUse =

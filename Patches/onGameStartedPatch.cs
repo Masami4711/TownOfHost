@@ -41,7 +41,6 @@ namespace TownOfHost
 
             Main.SheriffShotLimit = new Dictionary<byte, float>();
             Main.TimeThiefKillCount = new Dictionary<byte, int>();
-            Main.InsiderKillCount = new Dictionary<byte, float>();
 
             Main.SpelledPlayer = new List<PlayerControl>();
             Main.IsKilledByInsider = new Dictionary<byte, PlayerControl>();
@@ -414,9 +413,7 @@ namespace TownOfHost
                     }
                     if (pc.Is(CustomRoles.Insider))
                     {
-                        Main.InsiderKillCount[pc.PlayerId] = 0;
-                        pc.RpcSetInsiderKillCount();
-                        if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{pc.GetNameWithRole()} : 現在{Main.InsiderKillCount[pc.PlayerId]}/{Options.InsiderCanSeeMadmateKillCount.GetFloat()}キル", "Insider");
+                        if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{pc.GetNameWithRole()} : 現在{Utils.InsiderKillCount(pc)}/{Options.InsiderCanSeeMadmateKillCount.GetInt()}キル", "Insider");
                     }
                     //通常モードでかくれんぼをする人用
                     if (Options.StandardHAS.GetBool())

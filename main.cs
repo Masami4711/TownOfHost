@@ -87,7 +87,6 @@ namespace TownOfHost
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
         public static Dictionary<byte, int> TimeThiefKillCount = new();
         public static Dictionary<byte, PlayerControl> IsKilledByInsider = new();
-        public static Dictionary<byte, float> InsiderKillCount;
         public static int AliveImpostorCount;
         public static int SKMadmateNowCount;
         public static bool witchMeeting;

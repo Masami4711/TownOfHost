@@ -594,8 +594,8 @@ namespace TownOfHost
 
                 if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool())
                 {
-                    Main.InsiderKillCount.TryGetValue(seer.PlayerId, out var KillCount);
-                    SeerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetFloat();
+                    int KillCount = InsiderKillCount(seer);
+                    SeerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt();
                 }
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む

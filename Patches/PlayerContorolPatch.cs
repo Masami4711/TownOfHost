@@ -281,12 +281,10 @@ namespace TownOfHost
                     case CustomRoles.Insider:
                         if (!Main.IsKilledByInsider.ContainsKey(target.PlayerId) && !target.Is(CustomRoles.SchrodingerCat) && !(target.Is(CustomRoles.MadGuardian) && target.GetPlayerTaskState().IsTaskFinished))
                         {
-                            float Norma = Options.InsiderCanSeeMadmateKillCount.GetFloat();
-                            Main.InsiderKillCount[killer.PlayerId]++;
-                            if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{Main.InsiderKillCount[killer.PlayerId]}/{Norma}キル", "Insider");
-                            killer.RpcSetInsiderKillCount();
+                            float Norma = Options.InsiderCanSeeMadmateKillCount.GetInt();
                             Main.IsKilledByInsider.Add(target.PlayerId, killer);
                             RPC.RpcInsiderKill(killer.PlayerId, target.PlayerId);
+                            if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{Utils.InsiderKillCount(killer)}/{Norma}キル", "Insider");
                         }
                         Utils.NotifyRoles();
                         break;
@@ -882,8 +880,8 @@ namespace TownOfHost
                     }
                     if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool() && target.GetCustomRole().IsMadmate()) //seerがインサイダー
                     {
-                        Main.InsiderKillCount.TryGetValue(seer.PlayerId, out var KillCount);
-                        if (KillCount >= Options.InsiderCanSeeMadmateKillCount.GetFloat()) RealName = $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>{RealName}</color>";
+                        int KillCount = Utils.InsiderKillCount(seer);
+                        if (KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt()) RealName = $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>{RealName}</color>";
                     }
 
 
