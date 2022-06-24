@@ -225,7 +225,7 @@ namespace TownOfHost
                         int KillCount = InsiderKillCount(GetPlayerById(playerId));
                         int Norma = Options.InsiderCanSeeMadmateKillCount.GetInt();
                         if (KillCount < Norma) ProgressText += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>({KillCount}/{Norma})</color>";
-                        else ProgressText += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>★</color>";
+                        else ProgressText += $" <color={GetRoleColorCode(CustomRoles.Impostor)}>★</color>";
                     }
                     break;
                 default:
