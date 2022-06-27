@@ -524,7 +524,8 @@ namespace TownOfHost
                 if (seer.Is(CustomRoles.Lovers)) SelfMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                 //スケープゴートに警告マーク
                 if (seer.Is(CustomRoles.Scapegoat) && (seer.Data.IsDead || (Options.RealizeScapegoatWhileLiving.GetBool()
-                    && (seer.Is(CustomRoles.Sheriff) || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()))))
+                    && (seer.Is(CustomRoles.Sheriff) || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
+                    || seer.GetPlayerTaskState().IsTaskFinished))))
                     SelfMark += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
                 //クリミナルにマーク
                 if (seer.Is(CustomRoles.Criminal)) SelfMark += seer.Data.IsDead ? "<color=#000000>★</color>" : $"<color={GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";

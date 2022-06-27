@@ -961,7 +961,8 @@ namespace TownOfHost
                     }
                     if (target.Is(CustomRoles.Scapegoat) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || (seer == target && seer.Is(CustomRoles.Scapegoat)
                         && (seer.Data.IsDead || (Options.RealizeScapegoatWhileLiving.GetBool() && (seer.Is(CustomRoles.Sheriff) //本人死亡 || 設定有効 && (シェリフ
-                        || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat())))))) // || タスク完了）
+                        || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
+                        || seer.GetPlayerTaskState().IsTaskFinished)))))) // || タスク完了）
                     {
                         Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
                     }

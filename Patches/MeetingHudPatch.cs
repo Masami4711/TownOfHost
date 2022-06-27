@@ -300,7 +300,8 @@ namespace TownOfHost
                 if (target.Is(CustomRoles.Scapegoat) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) //前提条件 && （幽霊視点
                     || (seer == target && seer.Is(CustomRoles.Scapegoat) //ここから本人視点
                     && (seer.Data.IsDead || (Options.RealizeScapegoatWhileLiving.GetBool() && (seer.Is(CustomRoles.Sheriff) //本人死亡 || 設定有効 && (シェリフ
-                    || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat())))))) // || タスク完了)
+                    || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
+                    || seer.GetPlayerTaskState().IsTaskFinished)))))) // || タスク完了)
                 {
                     pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
                 }
