@@ -520,7 +520,7 @@ namespace TownOfHost
                 switch (subrole)
                 {
                     case CustomRoles.Scapegoat:
-                        return player.Is(CustomRoles.Crewmate) || (!Options.AssignScapegoatOnlyToCrewmate.GetBool() && !player.Is(CustomRoles.Sheriff) && IsCrewmate) || (Options.AssignScapegoatToSheriffAsWell.GetBool() && player.Is(CustomRoles.Sheriff));
+                        return player.Is(CustomRoles.Crewmate) || (!Options.AssignScapegoatOnlyToCrewmate.GetBool() && !player.Is(CustomRoles.Sheriff) && IsCrewmate) || (Options.AssignScapegoatAsWellToSheriff.GetBool() && player.Is(CustomRoles.Sheriff));
                     case CustomRoles.Criminal:
                         return player.Is(CustomRoles.Impostor) || (!Options.AssignCriminalOnlyToImpostor.GetBool() && player.GetCustomRole().IsImpostor());
                     default:

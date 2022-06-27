@@ -668,12 +668,12 @@ Create and idea by 雅巳<br>
 An attribute additionally assigned to Crewmates.<br>
 They can be killed by sheriff despite their innocences.<br>
 Snitch will mistakenly reveal them as Impostors (optional).<br>
-They can know if they're Scapegoat or not after finishing some tasks (except for Sheriff).<br>
+They can know if they're Scapegoats or not after finishing some tasks (except for Sheriff).<br>
 
 | Settings Name                       |
 | ----------------------------------- |
 | Assign Scapegoat Only To Crewmate   |
-| Assign Scapegoat To Sheriff As Well |
+| Assign Scapegoat As Well To Sheriff |
 | Scapegoat Looks Red For Snitch      |
 | Realize Scapegoat While Living      |
 | Task Count To Realize Scapegoat     |

@@ -302,7 +302,7 @@ NumberOfLovers,"Number Of Lovers(x2members)",ラバーズの組数(x2人数)
 TimeThiefDecreaseMeetingTime,TimeThief Decrease Meeting Time,減少する会議時間
 TimeThiefLowerLimitVotingTime,TimeThief Lower Limit Voting Time,投票時間の下限
 AssignScapegoatOnlyToCrewmate,Assign Scapegoat Only To Crewmate,クルーメイトのみに割り当てる
-AssignScapegoatToSheriffAsWell,Assign Scapegoat To Sheriff As Well,シェリフにも割り当てる
+AssignScapegoatAsWellToSheriff,Assign Scapegoat As Well To Sheriff,シェリフにも割り当てる
 ScapegoatLooksRedForSnitch,Scapegoat Looks Red For Snitch,スニッチから赤く表示される
 RealizeScapegoatWhileLiving,Realize Scapegoat While Living,生存中にスケープゴートと分かる
 ScapegoatTaskCountToRealize,Task Count To Realize Scapegoat,スケープゴートと分かるタスク数

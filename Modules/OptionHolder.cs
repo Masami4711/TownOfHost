@@ -118,7 +118,7 @@ namespace TownOfHost
         public static CustomOption RealizeScapegoatWhileLiving;
         public static CustomOption ScapegoatTaskCountToRealize;
         public static CustomOption AssignScapegoatOnlyToCrewmate;
-        public static CustomOption AssignScapegoatToSheriffAsWell;
+        public static CustomOption AssignScapegoatAsWellToSheriff;
         public static CustomOption ScapegoatLooksRedForSnitch;
         public static CustomOption AssignCriminalOnlyToImpostor;
         public static CustomOption CriminalCanDeceiveSnitch;
@@ -377,7 +377,7 @@ namespace TownOfHost
                 .SetGameMode(CustomGameMode.Standard);
             SetupRoleOptions(80100, CustomRoles.Scapegoat);
             AssignScapegoatOnlyToCrewmate = CustomOption.Create(80110, Color.white, "AssignScapegoatOnlyToCrewmate", true, CustomRoleSpawnChances[CustomRoles.Scapegoat]);
-            AssignScapegoatToSheriffAsWell = CustomOption.Create(80111, Color.white, "AssignScapegoatToSheriffAsWell", false, CustomRoleSpawnChances[CustomRoles.Scapegoat]);
+            AssignScapegoatAsWellToSheriff = CustomOption.Create(80111, Color.white, "AssignScapegoatAsWellToSheriff", false, CustomRoleSpawnChances[CustomRoles.Scapegoat]);
             ScapegoatLooksRedForSnitch = CustomOption.Create(80112, Color.white, "ScapegoatLooksRedForSnitch", false, CustomRoleSpawnChances[CustomRoles.Scapegoat]);
             RealizeScapegoatWhileLiving = CustomOption.Create(80113, Color.white, "RealizeScapegoatWhileLiving", true, CustomRoleSpawnChances[CustomRoles.Scapegoat]);
             ScapegoatTaskCountToRealize = CustomOption.Create(80114, Color.white, "ScapegoatTaskCountToRealize", 4, 0, 15, 1, RealizeScapegoatWhileLiving);
