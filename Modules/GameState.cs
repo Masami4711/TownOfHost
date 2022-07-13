@@ -65,6 +65,7 @@ namespace TownOfHost
             Revenge,
             Execution,
             Disconnected,
+            Fell,
             etc = -1
         }
     }
