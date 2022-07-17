@@ -184,6 +184,7 @@ namespace TownOfHost
         public static CustomOption ColorNameMode;
         public static CustomOption GhostCanSeeOtherRoles;
         public static CustomOption GhostCanSeeOtherVotes;
+        public static CustomOption StrongRandomGenerator;
         public static readonly string[] suffixModes =
         {
             "SuffixMode.None",
@@ -462,6 +463,8 @@ namespace TownOfHost
             GhostCanSeeOtherRoles = CustomOption.Create(100603, Color.white, "GhostCanSeeOtherRoles", true)
                 .SetGameMode(CustomGameMode.All);
             GhostCanSeeOtherVotes = CustomOption.Create(100604, Color.white, "GhostCanSeeOtherVotes", true)
+                .SetGameMode(CustomGameMode.All);
+            StrongRandomGenerator = CustomOption.Create(100605, Color.white, "StrongRandomGenerator", true)
                 .SetGameMode(CustomGameMode.All);
 
             IsLoaded = true;
