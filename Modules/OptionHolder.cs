@@ -69,6 +69,10 @@ namespace TownOfHost
         public static CustomOption VampireKillDelay;
         public static CustomOption BlackOutMareSpeed;
         public static CustomOption ShapeMasterShapeshiftDuration;
+        public static CustomOption NekoKabochaRevengeCrewmate;
+        public static CustomOption NekoKabochaRevengeNeutral;
+        // public static CustomOption NekoKabochaRevengeImpostor; //スパイが入ったら
+        public static CustomOption NekoKabochaRevengeExile;
         public static CustomOption DefaultShapeshiftCooldown;
         public static CustomOption CanMakeMadmateCount;
         public static CustomOption MadGuardianCanSeeWhoTriedToKill;
@@ -285,6 +289,10 @@ namespace TownOfHost
             TimeThiefLowerLimitVotingTime = CustomOption.Create(2411, Color.white, "TimeThiefLowerLimitVotingTime", 10, 1, 300, 1, CustomRoleSpawnChances[CustomRoles.TimeThief]);
             TimeThiefReturnStolenTimeUponDeath = CustomOption.Create(2412, Color.white, "TimeThiefReturnStolenTimeUponDeath", true, CustomRoleSpawnChances[CustomRoles.TimeThief]);
             SetupRoleOptions(3000, CustomRoles.NekoKabocha);
+            NekoKabochaRevengeCrewmate = CustomOption.Create(3010, Color.white, "NekoKabochaRevengeCrewmate", true, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            NekoKabochaRevengeNeutral = CustomOption.Create(3011, Color.white, "NekoKabochaRevengeNeutral", true, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            // NekoKabochaRevengeImpostor = CustomOption.Create(3012, Color.white, "NekoKabochaRevengeImpostor", true, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            NekoKabochaRevengeExile = CustomOption.Create(3013, Color.white, "NekoKabochaRevengeExile", false, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
             CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);

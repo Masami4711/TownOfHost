@@ -94,6 +94,7 @@ AfterMafiaInfo,Kill all Crewmates,サボを活用して皆殺しにしよう
 PuppeteerInfo,Manipulate your enemies and kill all Crewmates,敵を操って皆殺しにしよう
 TimeThiefInfo,Let's kill the enemies and take away meeting time,敵を殺し、会議時間を奪おう
 SniperInfo,I'll shoot,狙い撃つぜ
+NekoKabochaInfo,You will never die alone,独りでは絶対に死ねない
 LastImpostorInfo,You are the last one,残ったのはあなただけ
 
 # マッドメイト系役職
@@ -150,6 +151,7 @@ MafiaInfoLong,"(Impostors):\nInitially, kill is blocked.\nAfter all of his frien
 PuppeteerInfoLong,"(Impostors):\nIt allows the target of the kill to kill the next Crewmate that the target approaches.\nIf the target is the one that is triggered at the moment the target is killed, the effect is reflected on the target.\nIt is not possible to perform a normal kill.",(インポスター陣営):\nキルした対象に、対象が次に近づいたクルーをキルさせる事ができる。\n対象がキルした相手がキルされた瞬間に発動するものであった場合、対象にその効果が反映される。\n普通のキルを行うことはできない。
 TimeThiefInfoLong,"(Impostors):\nEach kill decreases the meeting time.\nIf the time thief is exiled or killed, the lost meeting time is returned.",(インポスター陣営):\nキルを行うと会議時間が減少する。\nタイムシーフが追放または殺害されると、失われた会議時間が返ってきます。
 SniperInfoLong,"(Impostors):\nSniper distant enemies.\nShoot one enemy on the extension of the point released from the shapeshifted point.\nYou can't kill until you shoot all bullet.",(インポスター陣営):\n遠くの敵を狙撃できるインポスター。\nシェイプシフトした地点から解除した地点の延長線上の敵を一人撃ち抜く。\n撃ちきるまで通常キル出来ない。
+NekoKabochaInfoLong,"(Impostors):\nAn Impostor capable of revenge-killing their killer.",(インポスター陣営):\nキルや追放された時にプレイヤーを道連れにする。どの状況で道連れするかは設定で変更可能
 
 # マッドメイト系役職
 MadmateInfoLong,"(Impostors):\nCrewmate, but they take the side of the Impostor.\nImpostor and are unrecognizable to each other. Can use vent, no tasks.",(インポスター陣営):\nクルーだがインポスターの味方をする。\nインポスターと互いに認識できない。\nベントが使え、タスクはない。
@@ -302,6 +304,10 @@ NumberOfLovers,"Number Of Lovers(x2members)",ラバーズの組数(x2人数)
 TimeThiefDecreaseMeetingTime,TimeThief Decrease Meeting Time,減少する会議時間
 TimeThiefLowerLimitVotingTime,TimeThief Lower Limit Voting Time,投票時間の下限
 TimeThiefReturnStolenTimeUponDeath,Return Stolen Time Upon Death,死亡後に盗んだ時間を返す
+NekoKabochaRevengeCrewmate,Take Revenge On Crew Killer,クルーに殺されたら、道連れにする
+NekoKabochaRevengeNeutral,Take Revenge On Neutral Killer,その他陣営に殺されたら、道連れにする
+NekoKabochaRevengeImpostor,Take Revenge On Impostor Killer,インポスターに殺されたら、道連れにする
+NekoKabochaRevengeExile,Take Revenge When Exiled,追放されたら、ランダムに道連れにする
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定
