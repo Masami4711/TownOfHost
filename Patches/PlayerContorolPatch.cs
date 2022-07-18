@@ -361,6 +361,19 @@ namespace TownOfHost
             }
             if (target.Is(CustomRoles.Trapper) && !killer.Is(CustomRoles.Trapper))
                 killer.TrapperKilled(target);
+            if (target.Is(CustomRoles.NekoKabocha))
+            {
+                Logger.Info(target?.Data?.PlayerName + "はNeko-Kabochaだった", "MurderPlayer");
+                if (killer != target
+                && ((killer.GetCustomRole().IsCrewmate() && Options.NekoKabochaRevengeCrewmate.GetBool())
+                /*|| (killer.GetCustomRole().IsNeutral() && Options.NekoKabochaRevengeNeutral.GetBool())*/
+                || (killer.GetCustomRole().IsImpostor() && Options.NekoKabochaRevengeImpostor.GetBool())))
+                {
+                    PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Revenge);
+                    killer.RpcMurderPlayer(killer);
+                }
+
+            }
             if (Main.ExecutionerTarget.ContainsValue(target.PlayerId))
             {
                 List<byte> RemoveExecutionerKey = new();
