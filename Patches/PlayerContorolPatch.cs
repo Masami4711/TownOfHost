@@ -280,6 +280,11 @@ namespace TownOfHost
                         }
                         Utils.CustomSyncAllSettings();
                         break;
+                    case CustomRoles.Conquistador:
+                        Main.ConquistadorKillCount[killer.PlayerId]++;
+                        killer.RpcSetConquistadorKillCount();
+                        Utils.CustomSyncAllSettings();
+                        break;
 
                     //==========マッドメイト系役職==========//
 

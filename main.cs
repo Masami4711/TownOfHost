@@ -87,6 +87,7 @@ namespace TownOfHost
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
         public static Dictionary<byte, int> TimeThiefKillCount = new();
+        public static Dictionary<byte, int> ConquistadorKillCount = new();
         public static Dictionary<byte, bool> ConquestMode = new();
         public static Dictionary<byte, int> ConquestLimit = new();
         public static Dictionary<byte, int> Password = new();

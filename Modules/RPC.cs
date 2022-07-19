@@ -19,6 +19,8 @@ namespace TownOfHost
         SetKillOrSpell,
         SetSheriffShotLimit,
         SetTimeThiefKillCount,
+        SetConquistadorKillCount,
+        SetPassword,
         SetDousedPlayer,
         AddNameColorData,
         RemoveNameColorData,
@@ -146,6 +148,22 @@ namespace TownOfHost
                         Main.TimeThiefKillCount[TimeThiefId] = TimeThiefKillCount;
                     else
                         Main.TimeThiefKillCount.Add(TimeThiefId, 0);
+                    break;
+                case CustomRPC.SetConquistadorKillCount:
+                    byte ConquistadorId = reader.ReadByte();
+                    int ConquistadorKillCount = reader.ReadInt32();
+                    if (Main.ConquistadorKillCount.ContainsKey(ConquistadorId))
+                        Main.ConquistadorKillCount[ConquistadorId] = ConquistadorKillCount;
+                    else
+                        Main.ConquistadorKillCount.Add(ConquistadorId, 0);
+                    break;
+                case CustomRPC.SetPassword:
+                    byte pwplayerId = reader.ReadByte();
+                    int Password = reader.ReadInt32();
+                    if (Main.Password.ContainsKey(pwplayerId))
+                        Main.Password[pwplayerId] = Password;
+                    else
+                        Main.Password.Add(pwplayerId, 0);
                     break;
                 case CustomRPC.SetDousedPlayer:
                     byte ArsonistId = reader.ReadByte();

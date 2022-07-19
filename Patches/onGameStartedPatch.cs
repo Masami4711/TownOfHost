@@ -41,6 +41,8 @@ namespace TownOfHost
 
             Main.SheriffShotLimit = new Dictionary<byte, float>();
             Main.TimeThiefKillCount = new Dictionary<byte, int>();
+            Main.ConquistadorKillCount = new Dictionary<byte, int>();
+            Main.Password = new Dictionary<byte, int>();
 
             Main.SpelledPlayer = new List<PlayerControl>();
             Main.witchMeeting = false;
@@ -329,6 +331,13 @@ namespace TownOfHost
                     {
                         Main.TimeThiefKillCount[pc.PlayerId] = 0;
                         pc.RpcSetTimeThiefKillCount();
+                    }
+                    if (pc.Is(CustomRoles.Conquistador))
+                    {
+                        Main.ConquistadorKillCount[pc.PlayerId] = 0;
+                        pc.RpcSetConquistadorKillCount();
+                        Main.Password[pc.PlayerId] = 9999;
+                        pc.RpcSetPassword();
                     }
                     //通常モードでかくれんぼをする人用
                     if (Options.IsStandardHAS)

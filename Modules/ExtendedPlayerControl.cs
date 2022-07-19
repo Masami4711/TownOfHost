@@ -592,6 +592,22 @@ namespace TownOfHost
             writer.Write(Main.TimeThiefKillCount[player.PlayerId]);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
+        public static void RpcSetConquistadorKillCount(this PlayerControl player)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetConquistadorKillCount, Hazel.SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.Write(Main.ConquistadorKillCount[player.PlayerId]);
+            Logger.Info($"{Utils.GetPlayerById(player.PlayerId)}{Main.ConquistadorKillCount[player.PlayerId]}", "ConquistadorKillCount");
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+        public static void RpcSetPassword(this PlayerControl player)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetPassword, Hazel.SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.Write(Main.Password[player.PlayerId]);
+            Logger.Info($"{Utils.GetPlayerById(player.PlayerId)}{Main.Password[player.PlayerId]}", "Password");
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
         public static bool CanUseKillButton(this PlayerControl pc)
         {
             bool canUse =
