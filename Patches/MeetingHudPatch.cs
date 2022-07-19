@@ -266,7 +266,7 @@ namespace TownOfHost
                     if (target != null && ((target.GetCustomRole().IsImpostor() && !ExcludeCriminal) || IncludeScapegoat)) //変更先がインポスター
                     {
                         //変更対象の名前を赤くする
-                        pva.NameText.text = "<color=#ff0000>" + pva.NameText.text + "</color>";
+                        pva.NameText.text = Helpers.ColorString(Color.red, pva.NameText.text);
                     }
                     bool EgoistOption = target.Is(CustomRoles.Egoist) && Options.SnitchCanFindNeutralKiller.GetBool();
                     if (target != null && EgoistOption) //変更先がインポスター
@@ -315,14 +315,14 @@ namespace TownOfHost
                 )
                 {
                     //変更対象の名前をエゴイスト色にする
-                    pva.NameText.text = $"<color={Utils.GetRoleColorCode(CustomRoles.Egoist)}>{pva.NameText.text}</color>";
+                    pva.NameText.text = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), pva.NameText.text);
                 }
                 if (seer.Is(CustomRoles.EgoSchrodingerCat) && //LocalPlayerがEgoSchrodingerCat
                     target.Is(CustomRoles.Egoist) //変更対象がEgoist
                 )
                 {
                     //変更対象の名前をエゴイスト色にする
-                    pva.NameText.text = $"<color={Utils.GetRoleColorCode(CustomRoles.Egoist)}>{pva.NameText.text}</color>";
+                    pva.NameText.text = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), pva.NameText.text);
                 }
 
                 if (seer.Is(CustomRoles.Arsonist) && //seerがアーソニストの時
@@ -336,7 +336,7 @@ namespace TownOfHost
                 //自分自身の名前の色を変更
                 if (target != null && target.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
                 {
-                    pva.NameText.text = $"<color={seer.GetRoleColorCode()}>{pva.NameText.text}</color>"; //名前の色を変更
+                    pva.NameText.text = Helpers.ColorString(seer.GetRoleColor(), pva.NameText.text);//名前の色を変更
                 }
                 foreach (var ExecutionerTarget in Main.ExecutionerTarget)
                 {
