@@ -50,6 +50,35 @@ namespace TownOfHost
             if (AmongUsClient.Instance.AmHost)
             {
                 Main.isChatCommand = true;
+                // if ((PlayerControl.LocalPlayer.Is(CustomRoles.EvilGuesser) || PlayerControl.LocalPlayer.Is(CustomRoles.NiceGuesser)) && args[0] == "/shoot" && !PlayerControl.LocalPlayer.Data.IsDead)
+                // {
+                //     foreach (var pc in PlayerControl.AllPlayerControls)
+                //     {
+                //         subArgs = args.Length < 2 ? "" : args[1];
+                //         if (subArgs == $"{pc.name}" && Main.GuesserShootLimit[PlayerControl.LocalPlayer.PlayerId] != 0)
+                //         {
+                //             subArgs = args.Length < 3 ? "" : args[2];
+                //             Logger.Info($"{subArgs}", "guesser");
+                //             Logger.Info($"{pc.GetCustomRole()}", "guesser");
+                //             if (subArgs == $"{pc.GetCustomRole()}")
+                //             {
+                //                 if (pc.GetCustomRole() == CustomRoles.Crewmate && !Options.CanShootAsNomalCrewmate.GetBool()) return false;
+                //                 PlayerControl.LocalPlayer.RpcMurderPlayer(pc);
+                //                 Main.GuesserShootLimit[PlayerControl.LocalPlayer.PlayerId]--;
+                //                 Main.AfterMeetingDeathPlayers.TryAdd(pc.PlayerId, PlayerState.DeathReason.Kill);
+                //             }
+                //             else
+                //             {
+                //                 PlayerControl.LocalPlayer.RpcMurderPlayer(PlayerControl.LocalPlayer);
+                //                 Main.AfterMeetingDeathPlayers.TryAdd(PlayerControl.LocalPlayer.PlayerId, PlayerState.DeathReason.Misfire);
+                //             }
+                //         }
+                //         else if (subArgs == "")
+                //         {
+                //             Utils.ShowActiveRoles();
+                //         }
+                //     }
+                // }
                 switch (args[0])
                 {
                     case "/win":
@@ -232,6 +261,7 @@ namespace TownOfHost
                 //Impostor役職
                 { (CustomRoles)(-1), $"== {GetString("Impostor")} ==" }, //区切り用
                 { CustomRoles.BountyHunter, "bo" },
+                { CustomRoles.Conquistador, "cq" },
                 { CustomRoles.FireWorks, "fw" },
                 { CustomRoles.Mare, "ma" },
                 { CustomRoles.Mafia, "mf" },

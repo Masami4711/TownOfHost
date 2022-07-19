@@ -87,6 +87,9 @@ namespace TownOfHost
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
         public static Dictionary<byte, int> TimeThiefKillCount = new();
+        public static Dictionary<byte, bool> ConquestMode = new();
+        public static Dictionary<byte, int> ConquestLimit = new();
+        public static Dictionary<byte, int> Password = new();
         public static int AliveImpostorCount;
         public static int SKMadmateNowCount;
         public static bool witchMeeting;
@@ -276,6 +279,7 @@ namespace TownOfHost
         Mare,
         Puppeteer,
         TimeThief,
+        Conquistador,
         LastImpostor,
         //Madmate
         MadGuardian,
