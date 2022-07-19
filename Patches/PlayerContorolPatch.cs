@@ -363,7 +363,7 @@ namespace TownOfHost
                 killer.TrapperKilled(target);
             if (target.Is(CustomRoles.NekoKabocha))
             {
-                Logger.Info(target?.Data?.PlayerName + "はNeko-Kabochaだった", "MurderPlayer");
+                Logger.Info(target?.Data?.PlayerName + "はNekoKabochaだった", "MurderPlayer");
                 if (killer != target
                 && ((killer.GetCustomRole().IsCrewmate() && Options.NekoKabochaRevengeCrewmate.GetBool())
                 /*|| (killer.GetCustomRole().IsNeutral() && Options.NekoKabochaRevengeNeutral.GetBool())*/
