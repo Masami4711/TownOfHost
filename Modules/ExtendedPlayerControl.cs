@@ -358,12 +358,14 @@ namespace TownOfHost
                                 if (targetplayers.Count >= 1)
                                 {
                                     PlayerControl target = targetplayers[rand.Next(0, targetplayers.Count)];
-                                    //Logger.SendInGame("スピードブースターの相手:"+target.cosmetics.nameText.text);
+                                    Logger.Info("スピードブースト先:" + target.cosmetics.nameText.text, "SpeedBooster");
                                     Main.SpeedBoostTarget.Add(player.PlayerId, target.PlayerId);
                                 }
                                 else
                                 {
                                     Main.SpeedBoostTarget.Add(player.PlayerId, 255);
+                                    Logger.SendInGame("スピードブースト先がnullです。\nログを保存し、バグ報告チケットを作成してください。");
+                                    Logger.Warn("スピードブースト先がnullです。", "SpeedBooster");
                                 }
                             }
                             if (Main.SpeedBoostTarget.ContainsValue(player.PlayerId))
@@ -640,9 +642,11 @@ namespace TownOfHost
         public static void ExiledSchrodingerCatTeamChange(this PlayerControl player)
         {
             var rand = new System.Random();
-            System.Collections.Generic.List<CustomRoles> RandSchrodinger = new();
-            RandSchrodinger.Add(CustomRoles.CSchrodingerCat);
-            RandSchrodinger.Add(CustomRoles.MSchrodingerCat);
+            List<CustomRoles> RandSchrodinger = new()
+            {
+                CustomRoles.CSchrodingerCat,
+                CustomRoles.MSchrodingerCat
+            };
             foreach (var pc in PlayerControl.AllPlayerControls)
                 if (CustomRoles.Egoist.IsEnable() && pc.Is(CustomRoles.Egoist) && !pc.Data.IsDead)
                     RandSchrodinger.Add(CustomRoles.EgoSchrodingerCat);
@@ -697,7 +701,7 @@ namespace TownOfHost
         public static bool IsDouseDone(this PlayerControl player)
         {
             if (!player.Is(CustomRoles.Arsonist)) return false;
-            var count = Utils.getDousedPlayerCount(player.PlayerId);
+            var count = Utils.GetDousedPlayerCount(player.PlayerId);
             return count.Item1 == count.Item2;
         }
         public static bool CanMakeMadmate(this PlayerControl player)
