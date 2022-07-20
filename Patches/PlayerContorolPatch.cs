@@ -167,6 +167,9 @@ namespace TownOfHost
 
                 //==========マッドメイト系役職==========//
                 case CustomRoles.MadGuardian:
+                case CustomRoles.MadScientist:
+                    if (!(target.Is(CustomRoles.MadGuardian)
+                    || (target.Is(CustomRoles.MadScientist) && Options.MadScientistGuardImpostorKill.GetBool()))) break;
                     //killerがキルできないインポスター判定役職の場合はスキップ
                     if (killer.Is(CustomRoles.Arsonist) //アーソニスト
                     ) break;
@@ -177,7 +180,9 @@ namespace TownOfHost
                     {
                         int dataCountBefore = NameColorManager.Instance.NameColors.Count;
                         NameColorManager.Instance.RpcAdd(killer.PlayerId, target.PlayerId, "#ff0000");
-                        if (Options.MadGuardianCanSeeWhoTriedToKill.GetBool())
+                        bool CanSeeWhoTriedToKill = (target.Is(CustomRoles.MadGuardian) && Options.MadGuardianCanSeeWhoTriedToKill.GetBool())
+                                                    || (target.Is(CustomRoles.MadScientist) && Options.MadScientistCanSeeWhoTriedToKill.GetBool());
+                        if (CanSeeWhoTriedToKill)
                             NameColorManager.Instance.RpcAdd(target.PlayerId, killer.PlayerId, "#ff0000");
 
                         Main.BlockKilling[killer.PlayerId] = false;

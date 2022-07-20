@@ -389,7 +389,7 @@ namespace TownOfHost
                     }
                     break;
                 case CustomRoles.MadScientist:
-                    opt.RoleOptions.ScientistCooldown = 0f;
+                    opt.RoleOptions.ScientistCooldown = 0;
                     opt.RoleOptions.ScientistBatteryCharge = Options.MadScientistBatteryDuration.GetFloat();
                     break;
 

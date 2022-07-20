@@ -258,7 +258,7 @@ MadScientistBatteryDuration,MadScientist Battery Duration,充電持続時間
 MadScientistCanSeeDeathReason,MadScientist Can See Cause Of Death,死因が分かる
 MadScientistCanSeeKillFlash,MadScientist Can See Kill Flash,キルフラッシュが見える
 MadScientistNoticeImpostor,Show Impostors After MadScientist Finishes Tasks,インポスターが分かる
-MadScientistGuardImpostorKill,Guard Impostor Kill After Madmate Finishes Tasks,インポスターによるキルをガードする
+MadScientistGuardImpostorKill,Guard Impostor Kill After MadScientist Finishes Tasks,インポスターによるキルをガードする
 MadScientistCanSeeWhoTriedToKill,MadScientist Can See Who Tried To Kill,自身の殺害未遂者を知ることができる
 MadScientistTasks,MadScientist Tasks,マッドサイエンティストのタスク数
 MadGuardianCanSeeWhoTriedToKill,MadGuardian Can See Who Tried To Kill,マッドガーディアンが自身の殺害未遂者を知ることができる
