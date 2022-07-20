@@ -73,6 +73,7 @@ namespace TownOfHost
         // public static CustomOption NekoKabochaRevengeNeutral;
         public static CustomOption NekoKabochaRevengeImpostor;
         public static CustomOption NekoKabochaRevengeExile;
+        public static CustomOption RandomRevengeIncludeTeamImpostor;
         public static CustomOption DefaultShapeshiftCooldown;
         public static CustomOption CanMakeMadmateCount;
         public static CustomOption MadGuardianCanSeeWhoTriedToKill;
@@ -293,6 +294,7 @@ namespace TownOfHost
             // NekoKabochaRevengeNeutral = CustomOption.Create(3011, Color.white, "NekoKabochaRevengeNeutral", true, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
             NekoKabochaRevengeImpostor = CustomOption.Create(3012, Color.white, "NekoKabochaRevengeImpostor", true, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
             NekoKabochaRevengeExile = CustomOption.Create(3013, Color.white, "NekoKabochaRevengeExile", false, CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RandomRevengeIncludeTeamImpostor = CustomOption.Create(3014, Color.white, "RandomRevengeIncludeTeamImpostor", false, NekoKabochaRevengeExile);
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
             CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);

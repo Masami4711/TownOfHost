@@ -189,7 +189,7 @@ namespace TownOfHost
                 // }
                 if (exiledplayer.Is(CustomRoles.NekoKabocha))
                 {
-                    TargetList.Add(candidate);
+                    if (!candidate.GetCustomRole().IsImpostorTeam() || Options.RandomRevengeIncludeTeamImpostor.GetBool()) TargetList.Add(candidate);
                     continue;
                 }
             }

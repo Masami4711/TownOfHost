@@ -308,6 +308,7 @@ NekoKabochaRevengeCrewmate,Take Revenge On Crew Killer,クルーに殺された�
 NekoKabochaRevengeNeutral,Take Revenge On Neutral Killer,その他陣営に殺されたら、道連れにする
 NekoKabochaRevengeImpostor,Take Revenge On Impostor Killer,インポスターに殺されたら、道連れにする
 NekoKabochaRevengeExile,Take Revenge When Exiled,追放されたら、ランダムに道連れにする
+RandomRevengeIncludeTeamImpostor,Random Revenge Include Team Impostor,インポスター陣営もランダムに道連れにする
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定
