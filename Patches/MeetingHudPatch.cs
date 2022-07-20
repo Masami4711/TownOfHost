@@ -322,8 +322,10 @@ namespace TownOfHost
                     target.PlayerId == ExecutionerTarget.Value) //targetがValue
                         pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Executioner)}>♦</color>";
                 }
-                if ((seer.Is(CustomRoles.Doctor) || (seer.Is(CustomRoles.MadScientist) && Options.MadScientistCanSeeDeathReason.GetBool())) && //LocalPlayerがDoctor
-                target.Data.IsDead) //変更対象が死人
+                if ((seer.Is(CustomRoles.Doctor) //LocalPlayerがDoctor
+                || (seer.Is(CustomRoles.MadScientist) && Options.MadScientistCanSeeDeathReason.GetBool())
+                || (seer.Data.IsDead && Options.GhostCanSeeDeathReason.GetBool()))
+                && seer != target && target.Data.IsDead) //変更対象が死人
                     pva.NameText.text = $"{pva.NameText.text}(<color={Utils.GetRoleColorCode(CustomRoles.Doctor)}>{Utils.GetVitalText(target.PlayerId)}</color>)";
             }
         }
