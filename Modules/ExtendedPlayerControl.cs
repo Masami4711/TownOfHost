@@ -352,8 +352,8 @@ namespace TownOfHost
                     Mare.ApplyGameOptions(opt, player.PlayerId);
                     break;
                 case CustomRoles.MadScientist:
-                    opt.RoleOptions.ScientistCooldown = 0;
-                    opt.RoleOptions.ScientistBatteryCharge = Options.MadScientistBatteryDuration.GetFloat();
+                    opt.RoleOptions.ScientistCooldown = 0f;
+                    opt.RoleOptions.ScientistBatteryCharge = -1f;
                     break;
 
 
