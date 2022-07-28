@@ -54,6 +54,7 @@ namespace TownOfHost
         public static Dictionary<CustomRoles, String> roleColors;
         //これ変えたらmod名とかの色が変わる
         public static string modColor = "#00bfff";
+        public static PermutedCongruentialGenerator rnd { get { return RandomGenerator.Instance; } }
         public static bool IsFixedCooldown => CustomRoles.Vampire.IsEnable();
         public static float RefixCooldownDelay = 0f;
         public static int BeforeFixMeetingCooldown = 10;
