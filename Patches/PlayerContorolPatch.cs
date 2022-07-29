@@ -326,7 +326,7 @@ namespace TownOfHost
                 Logger.Info(target?.Data?.PlayerName + "はNekoKabochaだった", "MurderPlayer");
                 if (killer != target
                 && ((killer.GetCustomRole().IsCrewmate() && Options.NekoKabochaRevengeCrewmate.GetBool())
-                /*|| (killer.GetCustomRole().IsNeutral() && Options.NekoKabochaRevengeNeutral.GetBool())*/
+                || (killer.GetCustomRole().IsNeutral() && Options.NekoKabochaRevengeNeutral.GetBool())
                 || (killer.GetCustomRole().IsImpostor() && Options.NekoKabochaRevengeImpostor.GetBool())))
                 {
                     PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Revenge);
