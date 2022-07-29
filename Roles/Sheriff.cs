@@ -117,6 +117,16 @@ namespace TownOfHost
         public static string GetShotLimit(byte playerId) => Helpers.ColorString(Color.yellow, ShotLimit.TryGetValue(playerId, out var shotLimit) ? $"({shotLimit})" : "Invalid");
         public static bool CanBeKilledBySheriff(this PlayerControl player)
         {
+            var cSubRole = player.GetCustomSubRole();
+            switch (cSubRole)
+            {
+                case CustomRoles.Scapegoat:
+                    return true;
+                case CustomRoles.Criminal:
+                    return false;
+                default:
+                    break;
+            }
             var cRole = player.GetCustomRole();
             return cRole switch
             {
