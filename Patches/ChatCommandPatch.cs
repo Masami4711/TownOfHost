@@ -237,7 +237,7 @@ namespace TownOfHost
                 { CustomRoles.Mafia, "mf" },
                 { CustomRoles.NekoKabocha, "nk" },
                 { CustomRoles.SerialKiller, "sk" },
-                { CustomRoles.ShapeMaster, "sha" },
+                //{ CustomRoles.ShapeMaster, "sha" },
                 { CustomRoles.TimeThief, "tt"},
                 { CustomRoles.Sniper, "snp" },
                 { CustomRoles.Puppeteer, "pup" },
