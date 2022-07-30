@@ -224,7 +224,7 @@ namespace TownOfHost
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
                 roleTextMeeting.enabled = pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
-                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Utils.InsiderCanSeeOtherRole(PlayerControl.LocalPlayer, pc);
+                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, pc);
             }
             if (Options.SyncButtonMode.GetBool())
             {
@@ -276,12 +276,7 @@ namespace TownOfHost
                     }
                 }
 
-                bool LocalPlayerKnowsMadmate = false;
-                if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool())
-                {
-                    int KillCount = Utils.InsiderKillCount(seer);
-                    LocalPlayerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt();
-                }
+                bool LocalPlayerKnowsMadmate = Insider.InsiderKnowsMadmate(seer);
 
                 if (LocalPlayerKnowsMadmate)
                 {
@@ -315,13 +310,12 @@ namespace TownOfHost
                 //インサイダーが死んだラバーズを見られる
                 else if (!seer.Data.IsDead && seer.Is(CustomRoles.Insider)
                     && target.Is(CustomRoles.Lovers) && target.Data.IsDead
-                    && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool()
-                    || (Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var insider) && seer == insider)))
+                    && Insider.InsiderKnowsOtherRole(seer, target))
                 {
                     pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                 }
                 //インサイダーからの味方の能力表示
-                bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                 if (seer.Is(CustomRoles.BountyHunter) && Main.BountyTargets[seer.PlayerId] == target)
                 {

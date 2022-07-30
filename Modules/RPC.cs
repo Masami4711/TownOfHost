@@ -184,9 +184,7 @@ namespace TownOfHost
                     FireWorks.ReceiveRPC(reader);
                     break;
                 case CustomRPC.InsiderKill:
-                    byte insiderId = reader.ReadByte();
-                    byte insiderTargetId = reader.ReadByte();
-                    Main.IsKilledByInsider.Add(insiderTargetId, Utils.GetPlayerById(insiderId));
+                    Insider.ReceiveRPC(reader);
                     break;
                 case CustomRPC.SetCurrentDousingTarget:
                     byte arsonistId = reader.ReadByte();
@@ -397,13 +395,6 @@ namespace TownOfHost
         public static void RpcDoSpell(byte player)
         {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.DoSpell, Hazel.SendOption.Reliable, -1);
-            writer.Write(player);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
-        public static void RpcInsiderKill(byte insider, byte player)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.InsiderKill, Hazel.SendOption.Reliable, -1);
-            writer.Write(insider);
             writer.Write(player);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }

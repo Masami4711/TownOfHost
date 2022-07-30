@@ -39,7 +39,6 @@ namespace TownOfHost
             Main.ResetCamPlayerList = new();
 
             Main.SpelledPlayer = new List<PlayerControl>();
-            Main.IsKilledByInsider = new Dictionary<byte, PlayerControl>();
             Main.witchMeeting = false;
             Main.CheckShapeshift = new Dictionary<byte, bool>();
             Main.SpeedBoostTarget = new Dictionary<byte, byte>();
@@ -104,6 +103,7 @@ namespace TownOfHost
             TimeThief.Init();
             Mare.Init();
             Sheriff.Init();
+            Insider.Init();
         }
     }
     [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.SelectRoles))]
@@ -329,7 +329,7 @@ namespace TownOfHost
                     }
                     if (pc.Is(CustomRoles.Insider))
                     {
-                        if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{pc.GetNameWithRole()} : 現在{Utils.InsiderKillCount(pc)}/{Options.InsiderCanSeeMadmateKillCount.GetInt()}キル", "Insider");
+                        Insider.Add(pc);
                     }
                     //通常モードでかくれんぼをする人用
                     if (Options.IsStandardHAS)

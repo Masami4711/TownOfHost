@@ -121,7 +121,7 @@ namespace TownOfHost
                             var sniperId = Sniper.GetSniper(target.PlayerId);
                             NameColorManager.Instance.RpcAdd(sniperId, target.PlayerId, $"{Utils.GetRoleColorCode(CustomRoles.SchrodingerCat)}");
                         }
-                        else if (killer.GetBountyTarget() == target)
+                        else if (killer.Is(CustomRoles.BountyHunter) && killer.GetBountyTarget() == target)
                             killer.ResetBountyTarget();//ターゲットの選びなおし
                         else
                         {
@@ -250,14 +250,7 @@ namespace TownOfHost
                         TimeThief.OnCheckMurder(killer);
                         break;
                     case CustomRoles.Insider:
-                        if (!Main.IsKilledByInsider.ContainsKey(target.PlayerId) && !target.Is(CustomRoles.SchrodingerCat) && !(target.Is(CustomRoles.MadGuardian) && target.GetPlayerTaskState().IsTaskFinished))
-                        {
-                            float Norma = Options.InsiderCanSeeMadmateKillCount.GetInt();
-                            Main.IsKilledByInsider.Add(target.PlayerId, killer);
-                            RPC.RpcInsiderKill(killer.PlayerId, target.PlayerId);
-                            if (Options.InsiderCanSeeMadmate.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{Utils.InsiderKillCount(killer)}/{Norma}キル", "Insider");
-                        }
-                        Utils.NotifyRoles();
+                        Insider.OnCheckMurder(killer, target);
                         break;
 
                     //==========マッドメイト系役職==========//
@@ -779,7 +772,7 @@ namespace TownOfHost
                     RoleText.text = RoleTextData.Item1;
                     RoleText.color = RoleTextData.Item2;
                     if (__instance.AmOwner) RoleText.enabled = true; //自分ならロールを表示
-                    else if (Utils.InsiderCanSeeOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
+                    else if (Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
                     else if (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) RoleText.enabled = true; //他プレイヤーでVisibleTasksCountが有効なおかつ自分が死んでいるならロールを表示
                     else RoleText.enabled = false; //そうでなければロールを非表示
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
@@ -843,10 +836,9 @@ namespace TownOfHost
                         var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                         RealName = ncd.OpenTag + RealName + ncd.CloseTag;
                     }
-                    if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool() && target.GetCustomRole().IsMadmate()) //seerがインサイダー
+                    if (Insider.InsiderKnowsMadmate(seer) && target.GetCustomRole().IsMadmate()) //seerがインサイダー
                     {
-                        int KillCount = Utils.InsiderKillCount(seer);
-                        if (KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt()) RealName = $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>{RealName}</color>";
+                        RealName = $"<color={Utils.GetRoleColorCode(CustomRoles.Madmate)}>{RealName}</color>";
                     }
 
 
@@ -881,7 +873,7 @@ namespace TownOfHost
                     }
 
                     //インサイダーからの味方の能力表示
-                    bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                    bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                     if (seer.Is(CustomRoles.BountyHunter) || InsiderCanSeeImpostorAbility)
                     {

@@ -62,10 +62,6 @@ namespace TownOfHost
         public static CustomOption BountyFailureKillCooldown;
         public static float DefaultKillCooldown = PlayerControl.GameOptions.KillCooldown;
         public static CustomOption VampireKillDelay;
-        public static CustomOption InsiderCanSeeAbilitiesOfImpostors;
-        public static CustomOption InsiderCanSeeWholeRolesOfGhosts;
-        public static CustomOption InsiderCanSeeMadmate;
-        public static CustomOption InsiderCanSeeMadmateKillCount;
         public static CustomOption DefaultShapeshiftCooldown;
         public static CustomOption CanMakeMadmateCount;
         public static CustomOption MadGuardianCanSeeWhoTriedToKill;
@@ -268,11 +264,7 @@ namespace TownOfHost
             SetupRoleOptions(2000, CustomRoles.Puppeteer);
             Mare.SetupCustomOption();
             TimeThief.SetupCustomOption();
-            SetupRoleOptions(2800, CustomRoles.Insider);
-            InsiderCanSeeAbilitiesOfImpostors = CustomOption.Create(2810, Color.white, "InsiderCanSeeAbilitiesOfImpostors", true, CustomRoleSpawnChances[CustomRoles.Insider]);
-            InsiderCanSeeWholeRolesOfGhosts = CustomOption.Create(2811, Color.white, "InsiderCanSeeWholeRolesOfGhosts", false, CustomRoleSpawnChances[CustomRoles.Insider]);
-            InsiderCanSeeMadmate = CustomOption.Create(2812, Color.white, "InsiderCanSeeMadmate", false, CustomRoleSpawnChances[CustomRoles.Insider]);
-            InsiderCanSeeMadmateKillCount = CustomOption.Create(2813, Color.white, "InsiderCanSeeMadmateKillCount", 2, 0, 12, 1, InsiderCanSeeMadmate);
+            Insider.SetupCustomOption();
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
             CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);

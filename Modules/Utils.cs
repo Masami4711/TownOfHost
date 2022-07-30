@@ -215,13 +215,7 @@ namespace TownOfHost
                     ProgressText += $" {FireWorks.GetFireWorksCount(playerId)}";
                     break;
                 case CustomRoles.Insider:
-                    if (Options.InsiderCanSeeMadmate.GetBool())
-                    {
-                        int KillCount = InsiderKillCount(GetPlayerById(playerId));
-                        int Norma = Options.InsiderCanSeeMadmateKillCount.GetInt();
-                        if (KillCount < Norma) ProgressText += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>({KillCount}/{Norma})</color>";
-                        else ProgressText += $" <color={GetRoleColorCode(CustomRoles.Impostor)}>★</color>";
-                    }
+                    ProgressText = Insider.AddProgressText(playerId, ProgressText);
                     break;
                 default:
                     //タスクテキスト
@@ -607,13 +601,8 @@ namespace TownOfHost
                         SeerKnowsImpostors = true;
                 }
 
-                bool SeerKnowsMadmate = false;
+                bool SeerKnowsMadmate = Insider.InsiderKnowsMadmate(seer);
 
-                if (seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeMadmate.GetBool())
-                {
-                    int KillCount = InsiderKillCount(seer);
-                    SeerKnowsMadmate = KillCount >= Options.InsiderCanSeeMadmateKillCount.GetInt();
-                }
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                 string SeerRealName = seer.GetRealName(isMeeting);
@@ -686,8 +675,8 @@ namespace TownOfHost
                             TargetMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                         }
                         //インサイダーからのラバーズ表示
-                        else if (seer.Is(CustomRoles.Insider) && !seer.Data.IsDead && target.Data.IsDead && !seer.Is(CustomRoles.Lovers) && target.Is(CustomRoles.Lovers)
-                            && (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool() || (Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var insider) && seer == insider)))
+                        else if (seer.Is(CustomRoles.Insider) && !seer.Data.IsDead && target.Data.IsDead && target.Is(CustomRoles.Lovers)
+                            && Insider.InsiderKnowsOtherRole(seer, target))
                         {
                             TargetMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                         }
@@ -707,7 +696,7 @@ namespace TownOfHost
                             }
                         }
                         //インサイダーからの味方の能力表示
-                        bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Options.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                        bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
 
                         if (seer.Is(CustomRoles.BountyHunter) || InsiderCanSeeImpostorAbility)
                         {
@@ -749,7 +738,7 @@ namespace TownOfHost
 
 
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || InsiderCanSeeOtherRole(seer, target) ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
+                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.InsiderKnowsOtherRole(seer, target) ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isMeeting);
@@ -932,28 +921,6 @@ namespace TownOfHost
             }
 
             return LivingImpostorsNum <= 0;
-        }
-        public static bool InsiderCanSeeOtherRole(PlayerControl Insider, PlayerControl Target)
-        {
-            if (!Insider.Is(CustomRoles.Insider)) return false;
-            if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false;
-            if (Insider == Target) return false;
-            if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false;
-            if (Options.InsiderCanSeeAbilitiesOfImpostors.GetBool() && Target.GetCustomRole().IsImpostor()) return true;
-            if (Target.Data.IsDead)
-                if (Options.InsiderCanSeeWholeRolesOfGhosts.GetBool()) return true;
-                else if (Main.IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true;
-            return false;
-        }
-        public static int InsiderKillCount(PlayerControl Insider)
-        {
-            int KillCount = 0;
-            foreach (var target in PlayerControl.AllPlayerControls)
-            {
-                if (!Main.IsKilledByInsider.TryGetValue(target.PlayerId, out var killer)) continue;
-                if (Insider == killer) KillCount += 1;
-            }
-            return KillCount;
         }
     }
 }

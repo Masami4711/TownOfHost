@@ -54,9 +54,9 @@ namespace TownOfHost
                     if (c.Name == "Maximum") continue; //Maximumの項目は飛ばす
                     text += $"\t{c.GetName()}: {c.GetString()}\n";
                 }
-                if (kvp.Key == CustomRoles.Insider && Options.InsiderCanSeeMadmate.GetBool())
+                if (kvp.Key == CustomRoles.Insider && Insider.InsiderCanSeeMadmate.GetBool())
                 {
-                    text += $"\t{Options.InsiderCanSeeMadmateKillCount.GetName()}: {Options.InsiderCanSeeMadmateKillCount.GetString()}\n";
+                    text += $"\t{Insider.InsiderCanSeeMadmateKillCount.GetName()}: {Insider.InsiderCanSeeMadmateKillCount.GetString()}\n";
                 }
                 if (kvp.Key.IsMadmate()) //マッドメイトの時に追加する詳細設定
                 {
