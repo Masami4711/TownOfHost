@@ -20,6 +20,7 @@ namespace TownOfHost
         private static CustomOption CanKillExecutioner;
         private static CustomOption CanKillJackal;
         private static CustomOption CanKillJShrodingerCat;
+        private static CustomOption CanKillContrarian;
         private static CustomOption CanKillCrewmatesAsIt;
         private static CustomOption ShotLimitOpt;
 
@@ -39,6 +40,7 @@ namespace TownOfHost
             CanKillExecutioner = CustomOption.Create(Id + 20, Color.white, "SheriffCanKillExecutioner", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             CanKillJackal = CustomOption.Create(Id + 23, Color.white, "SheriffCanKillJackal", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             CanKillJShrodingerCat = CustomOption.Create(Id + 24, Color.white, "SheriffCanKillJShrodingerCat", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
+            CanKillContrarian = CustomOption.Create(Id + 25, Color.white, "SheriffCanKillContrarian", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             CanKillCrewmatesAsIt = CustomOption.Create(Id + 15, Color.white, "SheriffCanKillCrewmatesAsIt", false, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             ShotLimitOpt = CustomOption.Create(Id + 16, Color.white, "SheriffShotLimit", 15, 1, 15, 1, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
         }
@@ -129,6 +131,7 @@ namespace TownOfHost
                 CustomRoles.EgoSchrodingerCat => CanKillEgoShrodingerCat.GetBool(),
                 CustomRoles.Jackal => CanKillJackal.GetBool(),
                 CustomRoles.JSchrodingerCat => CanKillJShrodingerCat.GetBool(),
+                CustomRoles.Contrarian => CanKillContrarian.GetBool(),
                 CustomRoles.SchrodingerCat => true,
                 _ => cRole.GetRoleType() switch
                 {
