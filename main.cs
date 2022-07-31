@@ -49,7 +49,6 @@ namespace TownOfHost
         public static Dictionary<byte, CustomRoles> AllPlayerCustomRoles;
         public static Dictionary<byte, CustomRoles> AllPlayerCustomSubRoles;
         public static Dictionary<byte, bool> BlockKilling;
-        public static Dictionary<byte, float> SheriffShotLimit;
         public static Dictionary<byte, Color32> PlayerColors = new();
         public static Dictionary<byte, PlayerState.DeathReason> AfterMeetingDeathPlayers = new();
         public static Dictionary<CustomRoles, String> roleColors;
@@ -70,7 +69,6 @@ namespace TownOfHost
         public static Dictionary<byte, float> AllPlayerKillCooldown = new();
         public static Dictionary<byte, float> AllPlayerSpeed = new();
         public static Dictionary<byte, (byte, float)> BitPlayers = new();
-        public static Dictionary<byte, float> SerialKillerTimer = new();
         public static Dictionary<byte, float> BountyTimer = new();
         public static Dictionary<byte, float> WarlockTimer = new();
         public static Dictionary<byte, PlayerControl> BountyTargets;
@@ -86,7 +84,6 @@ namespace TownOfHost
         public static Dictionary<byte, byte> PuppeteerList = new(); // Key: targetId, Value: PuppeteerId
         public static Dictionary<byte, byte> SpeedBoostTarget = new();
         public static Dictionary<byte, int> MayorUsedButtonCount = new();
-        public static Dictionary<byte, int> TimeThiefKillCount = new();
         public static int AliveImpostorCount;
         public static int SKMadmateNowCount;
         public static bool witchMeeting;
@@ -136,7 +133,6 @@ namespace TownOfHost
             AllPlayerCustomSubRoles = new Dictionary<byte, CustomRoles>();
             CustomWinTrigger = false;
             BitPlayers = new Dictionary<byte, (byte, float)>();
-            SerialKillerTimer = new Dictionary<byte, float>();
             BountyTimer = new Dictionary<byte, float>();
             WarlockTimer = new Dictionary<byte, float>();
             BountyTargets = new Dictionary<byte, PlayerControl>();
@@ -205,6 +201,8 @@ namespace TownOfHost
                     {CustomRoles.Egoist, "#5600ff"},
                     {CustomRoles.EgoSchrodingerCat, "#5600ff"},
                     {CustomRoles.Contrarian, "#562856"},
+                    {CustomRoles.Jackal, "#00b4eb"},
+                    {CustomRoles.JSchrodingerCat, "#00b4eb"},
                     //HideAndSeek
                     {CustomRoles.HASFox, "#e478ff"},
                     {CustomRoles.HASTroll, "#00ff00"},
@@ -269,7 +267,7 @@ namespace TownOfHost
         FireWorks,
         Mafia,
         SerialKiller,
-        ShapeMaster,
+        //ShapeMaster,
         Sniper,
         Vampire,
         Witch,
@@ -313,6 +311,8 @@ namespace TownOfHost
         Terrorist,
         Executioner,
         Contrarian,
+        Jackal,
+        JSchrodingerCat,//ジャッカル陣営のシュレディンガーの猫
         //HideAndSeek
         HASFox,
         HASTroll,
@@ -333,6 +333,7 @@ namespace TownOfHost
         Executioner = CustomRoles.Executioner,
         Arsonist = CustomRoles.Arsonist,
         Egoist = CustomRoles.Egoist,
+        Jackal = CustomRoles.Jackal,
         HASTroll = CustomRoles.HASTroll,
     }
     public enum AdditionalWinners
