@@ -8,6 +8,8 @@ namespace TownOfHost
     {
         static readonly int Id = 3000;
         public static List<byte> playerIdList = new();
+        public static bool IsPoweredLightsOut = false;
+        public static List<byte> IsBlackOut = new();
         public static CustomOption PoweredLightsOut;
         public static CustomOption LightsOutMinimum;
         public static CustomOption PoweredComms;
@@ -23,48 +25,83 @@ namespace TownOfHost
         public static void Init()
         {
             playerIdList = new();
+            IsPoweredLightsOut = new();
+            IsBlackOut = new();
         }
         public static void Add(byte playerId)
         {
             playerIdList.Add(playerId);
+            IsPoweredLightsOut = false;
+            IsBlackOut.Clear();
         }
         public static bool IsEnable() => playerIdList.Count > 0;
         public static void PoweredSabotage(SystemTypes systemType, PlayerControl player, byte amount)
         {
-            Logger.Info("Powered Sabotage", "Cracker");
-            bool HasImpVision = player.GetCustomRole().IsImpostor()
-                            || (player.GetCustomRole().IsMadmate() && Options.MadmateHasImpostorVision.GetBool())
-                            || player.Is(CustomRoles.EgoSchrodingerCat)
-                            || (player.Is(CustomRoles.Lighter) && player.GetPlayerTaskState().IsTaskFinished
-                            && Options.LighterTaskCompletedDisableLightOut.GetBool());
+            // Logger.Info($"Powered Sabotage by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
             int mapId = PlayerControl.GameOptions.MapId;
 
             switch (systemType)
             {
                 case SystemTypes.Electrical:
-                    byte[] amounts = { 150, 148, 134, 142 };
-                    if (amount != amounts[mapId - 1]) break;
-                    if (!PoweredLightsOut.GetBool() && LightsOutMinimum.GetFloat() == 0) break;
-                    Logger.Info("Powered Lights Out", "Cracker");
+                    if (amount < 140) break;
+                    if (!PoweredLightsOut.GetBool()) break;
+                    Logger.Info($"Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
+                    BlackOut();
                     break;
                 case SystemTypes.Comms:
                     if (amount != 128) break;
                     if (!PoweredComms.GetBool()) break;
-                    Logger.Info("Powered Comms", "Cracker");
+                    Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     break;
                 case SystemTypes.Reactor:
                 case SystemTypes.Laboratory:
                     if (!(systemType == SystemTypes.Laboratory && mapId == 2 && amount == 128)
                         && !(systemType == SystemTypes.Reactor && mapId == 4 && amount == 128)) break;
                     if (!PoweredReactor.GetBool()) break;
-                    Logger.Info("Powered Reactor", "Cracker");
+                    Logger.Info($"Powered Reactor by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     CheckAndCloseAllDoors(mapId);
                     break;
                 default:
                     break;
             }
         }
-        private static void CheckAndCloseAllDoors(int mapId)
+        public static bool HasImpostorVision(PlayerControl player)
+            => player.Data.IsDead
+            || player.GetCustomRole().IsImpostor()
+            || (player.GetCustomRole().IsMadmate() && Options.MadmateHasImpostorVision.GetBool())
+            || player.Is(CustomRoles.EgoSchrodingerCat)
+            || (player.Is(CustomRoles.Lighter) && player.GetPlayerTaskState().IsTaskFinished && Options.LighterTaskCompletedDisableLightOut.GetBool())
+            || ((player.Is(CustomRoles.Jackal) || player.Is(CustomRoles.JSchrodingerCat)) && Options.JackalHasImpostorVision.GetBool());
+        public static void BlackOut()
+        {
+            IsPoweredLightsOut = true;
+            foreach (var player in PlayerControl.AllPlayerControls)
+            {
+                if (!HasImpostorVision(player)) IsBlackOut.Add(player.PlayerId);
+                SetVision(player.PlayerId);
+            }
+            new LateTask(() =>
+            {
+                IsPoweredLightsOut = false;
+                IsBlackOut.Clear();
+                foreach (var player in PlayerControl.AllPlayerControls) SetVision(player.PlayerId);
+            }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
+        }
+        public static void SetVision(byte playerId)
+        {
+            var opt = Main.RealOptionsData.DeepCopy();
+            if (IsBlackOut.Contains(playerId))
+            {
+                opt.CrewLightMod = 0f;
+                opt.ImpostorLightMod = 0f;
+            }
+            else
+            {
+                opt.CrewLightMod = Main.RealOptionsData.CrewLightMod;
+                opt.ImpostorLightMod = Main.RealOptionsData.ImpostorLightMod;
+            }
+        }
+        public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 3) return;
             SystemTypes[] SkeldDoorRooms =
