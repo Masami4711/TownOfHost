@@ -173,10 +173,10 @@ namespace TownOfHost
                 }
             }
 
-            if (!Options.MadmateCanFixLightsOut.GetBool() && //Madmateが停電を直せる設定がオフ
-               systemType == SystemTypes.Electrical && //システムタイプが電気室
-               0 <= amount && amount <= 4 && //配電盤操作のamount
-               (player.Is(CustomRoles.Madmate) || player.Is(CustomRoles.MadGuardian) || player.Is(CustomRoles.MadSnitch) || player.Is(CustomRoles.SKMadmate))) //実行者がMadmateかMadGuardianかMadSnitchかSKMadmate)
+            if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate())
+                || Cracker.IsPoweredLightsOut) &&
+                systemType == SystemTypes.Electrical && //システムタイプが電気室
+                0 <= amount && amount <= 4) //配電盤操作のamount
                 return false;
             if (!Options.MadmateCanFixComms.GetBool() && //Madmateがコミュサボを直せる設定がオフ
                 systemType == SystemTypes.Comms && //システムタイプが通信室
@@ -188,8 +188,9 @@ namespace TownOfHost
             }
             return true;
         }
-        public static void Postfix(ShipStatus __instance)
+        public static void Postfix(ShipStatus __instance, [HarmonyArgument(0)] SystemTypes systemType, [HarmonyArgument(1)] PlayerControl player, [HarmonyArgument(2)] byte amount)
         {
+            if (!player.Data.IsDead && player.Is(CustomRoles.Cracker)) Cracker.PoweredSabotage(systemType, player, amount);
             Utils.CustomSyncAllSettings();
             new LateTask(
                 () =>

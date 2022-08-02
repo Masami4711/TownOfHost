@@ -108,6 +108,7 @@ namespace TownOfHost
             TimeThief.Init();
             Mare.Init();
             Sheriff.Init();
+            Cracker.Init();
         }
     }
     [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.SelectRoles))]
@@ -279,6 +280,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.TimeThief, Impostors);
                 AssignCustomRolesFromList(CustomRoles.EvilTracker, Shapeshifters);
                 AssignCustomRolesFromList(CustomRoles.Seer, Crewmates);
+                AssignCustomRolesFromList(CustomRoles.Cracker, Impostors);
 
                 //RPCによる同期
                 foreach (var pc in PlayerControl.AllPlayerControls)
@@ -320,6 +322,7 @@ namespace TownOfHost
                     }
                     if (pc.Is(CustomRoles.FireWorks)) FireWorks.Add(pc.PlayerId);
                     if (pc.Is(CustomRoles.Mare)) Mare.Add(pc.PlayerId);
+                    if (pc.Is(CustomRoles.Cracker)) Cracker.Add(pc.PlayerId);
                     if (pc.Data.Role.Role == RoleTypes.Shapeshifter) Main.CheckShapeshift.Add(pc.PlayerId, false);
                     if (pc.Is(CustomRoles.Arsonist))
                     {
