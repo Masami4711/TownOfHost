@@ -77,30 +77,38 @@ namespace TownOfHost
             IsPoweredLightsOut = true;
             foreach (var player in PlayerControl.AllPlayerControls)
             {
-                if (!HasImpostorVision(player)) IsBlackOut.Add(player.PlayerId);
-                SetVision(player.PlayerId);
+                if (!HasImpostorVision(player))
+                {
+                    PlayerState.IsBlackOut[player.PlayerId] = true;
+                    ExtendedPlayerControl.CustomSyncSettings(player);
+                }
+
             }
             new LateTask(() =>
             {
                 IsPoweredLightsOut = false;
-                IsBlackOut.Clear();
-                foreach (var player in PlayerControl.AllPlayerControls) SetVision(player.PlayerId);
+                foreach (var player in PlayerControl.AllPlayerControls)
+                {
+                    PlayerState.IsBlackOut[player.PlayerId] = false;
+                    ExtendedPlayerControl.CustomSyncSettings(player);
+                }
+
             }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
         }
-        public static void SetVision(byte playerId)
-        {
-            var opt = Main.RealOptionsData.DeepCopy();
-            if (IsBlackOut.Contains(playerId))
-            {
-                opt.CrewLightMod = 0f;
-                opt.ImpostorLightMod = 0f;
-            }
-            else
-            {
-                opt.CrewLightMod = Main.RealOptionsData.CrewLightMod;
-                opt.ImpostorLightMod = Main.RealOptionsData.ImpostorLightMod;
-            }
-        }
+        // public static void SetVision(byte playerId)
+        // {
+        //     var opt = Main.RealOptionsData.DeepCopy();
+        //     if (IsBlackOut.Contains(playerId))
+        //     {
+        //         opt.CrewLightMod = 0f;
+        //         opt.ImpostorLightMod = 0f;
+        //     }
+        //     else
+        //     {
+        //         opt.CrewLightMod = Main.RealOptionsData.CrewLightMod;
+        //         opt.ImpostorLightMod = Main.RealOptionsData.ImpostorLightMod;
+        //     }
+        // }
         public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 3) return;
