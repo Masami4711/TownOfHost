@@ -664,9 +664,19 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 ・ジェスター恋人：ジェスター恋人が追放されればジェスターとして勝利。恋人が投票で追放された場合はジェスター恋人は敗北。<br>
 ・ベイト恋人：恋人がキルされてベイト恋人が後追い死亡した時は、通報は行われない。<br>
 
+## DisableDevice/デバイスを無効化
+
+参考元 : [SuperNewRoles](https://github.com/ykundesu/SuperNewRoles), [The Other Roles: GM Edition](https://github.com/yukinogatari/TheOtherRoles-GM)<br>
+
+各種機器を無効化することができます。(現在はアドミンのみ、MiraHQ非対応)<br>
+
+| 設定名                     |
+| -------------------------- |
+| アドミン無効化              |
+| ・ どのアドミンを無効化するか |
 ## SabotageTimeControl/サボタージュの時間制御
 
-一部サボタージュの制限時間を変更することができます。
+一部サボタージュの制限時間を変更することができます。<br>
 
 | 設定名                         |
 | ------------------------------ |
@@ -818,5 +828,6 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 [ジェスター](#Jester/ジェスター)(てるてる)と[マッドメイト](#Madmate/マッドメイト) のアイデア元 : [au.libhalt.net](https://au.libhalt.net)<br>
 [テロリスト](#Terrorist/テロリスト)(Trickstar + Joker) : [Foolers Mod](https://github.com/MengTube/Foolers-Mod)<br>
 [恋人](#lovers/恋人) : [Town-Of-Us-R](https://github.com/eDonnes124/Town-Of-Us-R)<br>
+中国語翻訳 : fivefirex、ZeMingOH233<br>
 
 作者の Twitter : https://twitter.com/XenonBottle<br>
