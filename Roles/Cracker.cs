@@ -42,10 +42,10 @@ namespace TownOfHost
 
             switch (systemType)
             {
-                case SystemTypes.Electrical:
-                    if (amount < 140) break;
+                case SystemTypes.Sabotage:
+                    if (amount != 7) break;
                     if (!PoweredLightsOut.GetBool()) break;
-                    Logger.Info($"Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
+                    Logger.Info($"Ready for Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     BlackOut();
                     break;
                 case SystemTypes.Comms:
@@ -75,40 +75,34 @@ namespace TownOfHost
         public static void BlackOut()
         {
             IsPoweredLightsOut = true;
-            foreach (var player in PlayerControl.AllPlayerControls)
+            new LateTask(() =>
             {
-                if (!HasImpostorVision(player))
+                if (Utils.IsActive(SystemTypes.Electrical))
                 {
-                    PlayerState.IsBlackOut[player.PlayerId] = true;
-                    ExtendedPlayerControl.CustomSyncSettings(player);
+                    foreach (var player in PlayerControl.AllPlayerControls)
+                    {
+                        if (!HasImpostorVision(player))
+                        {
+                            PlayerState.IsBlackOut[player.PlayerId] = true;
+                            ExtendedPlayerControl.CustomSyncSettings(player);
+                        }
+                    }
                 }
+            }, 2.0f, "Powered Lights Out");
 
-            }
             new LateTask(() =>
             {
                 IsPoweredLightsOut = false;
                 foreach (var player in PlayerControl.AllPlayerControls)
                 {
-                    PlayerState.IsBlackOut[player.PlayerId] = false;
-                    ExtendedPlayerControl.CustomSyncSettings(player);
+                    if (!HasImpostorVision(player))
+                    {
+                        PlayerState.IsBlackOut[player.PlayerId] = false;
+                        ExtendedPlayerControl.CustomSyncSettings(player);
+                    }
                 }
-
             }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
         }
-        // public static void SetVision(byte playerId)
-        // {
-        //     var opt = Main.RealOptionsData.DeepCopy();
-        //     if (IsBlackOut.Contains(playerId))
-        //     {
-        //         opt.CrewLightMod = 0f;
-        //         opt.ImpostorLightMod = 0f;
-        //     }
-        //     else
-        //     {
-        //         opt.CrewLightMod = Main.RealOptionsData.CrewLightMod;
-        //         opt.ImpostorLightMod = Main.RealOptionsData.ImpostorLightMod;
-        //     }
-        // }
         public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 3) return;
