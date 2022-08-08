@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HarmonyLib;
 using Hazel;
+using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -68,7 +69,7 @@ namespace TownOfHost
                 {
                     AmongUsClient.Instance.KickPlayer(__instance.GetClientId(), false);
                     Logger.Warn($"不正なRPCを受信したため{__instance?.Data?.PlayerName}をキックしました。", "Kick");
-                    Logger.SendInGame($"不正なRPCを受信したため{__instance?.Data?.PlayerName}をキックしました。\nTOH以外のMODが入っていないか確認してください。");
+                    Logger.SendInGame(string.Format(GetString("Warning.InvalidRpc"), __instance?.Data?.PlayerName));
                 }
                 return false;
             }
@@ -93,7 +94,7 @@ namespace TownOfHost
                         {
                             AmongUsClient.Instance.KickPlayer(__instance.GetClientId(), false);
                             Logger.Info($"不正なRPCを受信したため{__instance?.Data?.PlayerName}をキックしました。", "Kick");
-                            Logger.SendInGame($"不正なRPCを受信したため{__instance?.Data?.PlayerName}をキックしました。\nTOH以外のMODが入っていないか確認してください。");
+                            Logger.SendInGame(string.Format(GetString("Warning.InvalidRpc"), __instance?.Data?.PlayerName));
                         }
                     }
                     break;
@@ -121,10 +122,7 @@ namespace TownOfHost
                     RPC.SetCustomRole(CustomRoleTargetId, role);
                     break;
                 case CustomRPC.SetBountyTarget:
-                    byte HunterId = reader.ReadByte();
-                    byte TargetId = reader.ReadByte();
-                    var target = Utils.GetPlayerById(TargetId);
-                    if (target != null) Main.BountyTargets[HunterId] = target;
+                    BountyHunter.ReceiveRPC(reader);
                     break;
                 case CustomRPC.SetKillOrSpell:
                     byte playerId = reader.ReadByte();
@@ -457,6 +455,7 @@ namespace TownOfHost
         }
         public static void RemoveExecutionerKey(byte Key)
         {
+            if (!AmongUsClient.Instance.AmHost) return;
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.RemoveExecutionerTarget, Hazel.SendOption.Reliable, -1);
             writer.Write(Key);
             AmongUsClient.Instance.FinishRpcImmediately(writer);

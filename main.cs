@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
@@ -18,7 +19,7 @@ namespace TownOfHost
     {
         //Sorry for many Japanese comments.
         public const string PluginGuid = "com.emptybottle.townofhost";
-        public const string PluginVersion = "2.2.1";
+        public const string PluginVersion = "3.0.0";
         public Harmony Harmony { get; } = new Harmony(PluginGuid);
         public static Version version = Version.Parse(PluginVersion);
         public static BepInEx.Logging.ManualLogSource Logger;
@@ -48,7 +49,6 @@ namespace TownOfHost
         public static Dictionary<(byte, byte), string> LastNotifyNames;
         public static Dictionary<byte, CustomRoles> AllPlayerCustomRoles;
         public static Dictionary<byte, CustomRoles> AllPlayerCustomSubRoles;
-        public static Dictionary<byte, bool> BlockKilling;
         public static Dictionary<byte, Color32> PlayerColors = new();
         public static Dictionary<byte, PlayerState.DeathReason> AfterMeetingDeathPlayers = new();
         public static Dictionary<CustomRoles, String> roleColors;
@@ -69,10 +69,7 @@ namespace TownOfHost
         public static Dictionary<byte, float> AllPlayerKillCooldown = new();
         public static Dictionary<byte, float> AllPlayerSpeed = new();
         public static Dictionary<byte, (byte, float)> BitPlayers = new();
-        public static Dictionary<byte, float> BountyTimer = new();
         public static Dictionary<byte, float> WarlockTimer = new();
-        public static Dictionary<byte, PlayerControl> BountyTargets;
-        public static Dictionary<byte, bool> isTargetKilled = new();
         public static Dictionary<byte, PlayerControl> CursedPlayers = new();
         public static List<PlayerControl> SpelledPlayer = new();
         public static Dictionary<byte, bool> KillOrSpell = new();
@@ -133,9 +130,7 @@ namespace TownOfHost
             AllPlayerCustomSubRoles = new Dictionary<byte, CustomRoles>();
             CustomWinTrigger = false;
             BitPlayers = new Dictionary<byte, (byte, float)>();
-            BountyTimer = new Dictionary<byte, float>();
             WarlockTimer = new Dictionary<byte, float>();
-            BountyTargets = new Dictionary<byte, PlayerControl>();
             CursedPlayers = new Dictionary<byte, PlayerControl>();
             SpelledPlayer = new List<PlayerControl>();
             isDoused = new Dictionary<(byte, byte), bool>();
@@ -157,8 +152,6 @@ namespace TownOfHost
             NameColorManager.Begin();
 
             Translator.Init();
-
-            BlockKilling = new Dictionary<byte, bool>();
 
             hasArgumentException = false;
             ExceptionMessage = "";
@@ -205,6 +198,8 @@ namespace TownOfHost
                     //HideAndSeek
                     {CustomRoles.HASFox, "#e478ff"},
                     {CustomRoles.HASTroll, "#00ff00"},
+                    // GM
+                    {CustomRoles.GM, "#ff5b70"},
                     //サブ役職
                     {CustomRoles.NoSubRoleAssigned, "#ffffff"},
                     {CustomRoles.Lovers, "#ffaaaa"}
@@ -239,6 +234,19 @@ namespace TownOfHost
             TownOfHost.Logger.Info($"{nameof(ThisAssembly.Git.IsDirty)}: {ThisAssembly.Git.IsDirty}", "GitVersion");
             TownOfHost.Logger.Info($"{nameof(ThisAssembly.Git.Sha)}: {ThisAssembly.Git.Sha}", "GitVersion");
             TownOfHost.Logger.Info($"{nameof(ThisAssembly.Git.Tag)}: {ThisAssembly.Git.Tag}", "GitVersion");
+
+            if (!File.Exists("template.txt"))
+            {
+                TownOfHost.Logger.Info("Among Us.exeと同じフォルダにtemplate.txtが見つかりませんでした。新規作成します。", "Template");
+                try
+                {
+                    File.WriteAllText(@"template.txt", "test:This is template text.\\nLine breaks are also possible.\ntest:これは定型文です。\\n改行も可能です。");
+                }
+                catch (Exception ex)
+                {
+                    TownOfHost.Logger.Error(ex.ToString(), "Template");
+                }
+            }
 
             Harmony.PatchAll();
         }
@@ -314,6 +322,8 @@ namespace TownOfHost
         //HideAndSeek
         HASFox,
         HASTroll,
+        //GM
+        GM,
         // Sub-roll after 500
         NoSubRoleAssigned = 500,
         Lovers,
