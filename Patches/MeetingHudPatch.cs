@@ -280,7 +280,7 @@ namespace TownOfHost
                 {
                     case CustomRoles.Madmate:
                     case CustomRoles.Snitch:
-                        if (seer.Is(CustomRoles.Madmate) && Options.MadmateNoticeImpostors.GetBool()) break;
+                        if (seer.Is(CustomRoles.Madmate) && !Options.MadmateNoticeImpostors.GetBool()) break;
                         if (seer.GetPlayerTaskState().IsTaskFinished) //seerがタスクを終えている
                             LocalPlayerKnowsImpostor = true;
                         break;
