@@ -299,7 +299,6 @@ namespace TownOfHost
                         if (Main.EvilTrackerTarget[seer.PlayerId] == target)
                             pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "◀");
                         break;
-
                 }
 
                 switch (target.GetCustomRole())

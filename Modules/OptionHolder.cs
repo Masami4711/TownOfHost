@@ -272,7 +272,7 @@ namespace TownOfHost
             TimeThief.SetupCustomOption();
             SetupRoleOptions(2900, CustomRoles.EvilTracker);
             EvilTrackerCanSeeKillFlash = CustomOption.Create(2910, Color.white, "EvilTrackerCanSeeKillFlash", true, CustomRoleSpawnChances[CustomRoles.EvilTracker]);
-            EvilTrackerCanResetTargetAfterMeeting = CustomOption.Create(2911, Color.white, "EvilTrackerCanResetTargetAfterMeeting", true, CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            EvilTrackerCanResetTargetAfterMeeting = CustomOption.Create(2911, Color.white, "EvilTrackerResetTargetAfterMeeting", true, CustomRoleSpawnChances[CustomRoles.EvilTracker]);
             Cracker.SetupCustomOption();
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
