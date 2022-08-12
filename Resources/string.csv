@@ -340,10 +340,10 @@ JackalHasImpostorVision,Jackal Has Impostor Vision,ジャッカルがインポ�
 EvilTrackerCanSeeKillFlash,EvilTracker Can See Kill Flash(Only Impostor Kills),インポスターキル時にフラッシュが見える,当内鬼进行击杀时邪恶的追踪者可以看到闪光
 EvilTrackerResetTargetAfterMeeting,EvilTracker Reset Target After Meeting,会議後に再度ターゲットを設定できる,会议后重置邪恶的追踪者追踪目标
 KillFlashDuration,Kill Flash Duration(s),キルフラッシュの長さ(秒)
-PoweredLightsOut,Powered Lights Out,強力な停電
+EnablePoweredLightsOut,Powered Lights Out,強力な停電
 LightsOutMinimum,Lights Out Minimum Duration,停電の最低持続時間
-PoweredComms,Powered Comms,強力な通信障害
-PoweredReactor,Powered Reactor,強力なリアクター
+EnablePoweredComms,Powered Comms,強力な通信障害
+EnablePoweredReactor,Powered Reactor,強力なリアクター
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定,躲猫猫设置,躲貓貓設定

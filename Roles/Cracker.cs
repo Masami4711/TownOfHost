@@ -10,17 +10,17 @@ namespace TownOfHost
         public static List<byte> playerIdList = new();
         public static bool IsPoweredLightsOut = false;
         public static List<byte> IsBlackOut = new();
-        public static CustomOption PoweredLightsOut;
+        public static CustomOption EnablePoweredLightsOut;
         public static CustomOption LightsOutMinimum;
-        public static CustomOption PoweredComms;
-        public static CustomOption PoweredReactor;
+        public static CustomOption EnablePoweredComms;
+        public static CustomOption EnablePoweredReactor;
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, CustomRoles.Cracker);
-            PoweredLightsOut = CustomOption.Create(Id + 10, Color.white, "PoweredLightsOut", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            LightsOutMinimum = CustomOption.Create(Id + 11, Color.white, "LightsOutMinimum", 5, 0, 20, 1, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            PoweredComms = CustomOption.Create(Id + 12, Color.white, "PoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            PoweredReactor = CustomOption.Create(Id + 13, Color.white, "PoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            EnablePoweredLightsOut = CustomOption.Create(Id + 10, Color.white, "EnablePoweredLightsOut", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            LightsOutMinimum = CustomOption.Create(Id + 11, Color.white, "LightsOutMinimum", 5, 0, 20, 1, EnablePoweredLightsOut);
+            EnablePoweredComms = CustomOption.Create(Id + 12, Color.white, "EnablePoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            EnablePoweredReactor = CustomOption.Create(Id + 13, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
         }
         public static void Init()
         {
@@ -42,22 +42,22 @@ namespace TownOfHost
 
             switch (systemType)
             {
-                case SystemTypes.Sabotage:
+                case SystemTypes.Sabotage: //停電
                     if (amount != 7) break;
-                    if (!PoweredLightsOut.GetBool()) break;
+                    if (!EnablePoweredLightsOut.GetBool()) break;
                     Logger.Info($"Ready for Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
-                    BlackOut();
+                    PoweredLightsOut();
                     break;
                 case SystemTypes.Comms:
                     if (amount != 128) break;
-                    if (!PoweredComms.GetBool()) break;
+                    if (!EnablePoweredComms.GetBool()) break;
                     Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     break;
                 case SystemTypes.Reactor:
                 case SystemTypes.Laboratory:
                     if (!(systemType == SystemTypes.Laboratory && mapId == 2 && amount == 128)
                         && !(systemType == SystemTypes.Reactor && mapId == 4 && amount == 128)) break;
-                    if (!PoweredReactor.GetBool()) break;
+                    if (!EnablePoweredReactor.GetBool()) break;
                     Logger.Info($"Powered Reactor by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     CheckAndCloseAllDoors(mapId);
                     break;
@@ -72,7 +72,7 @@ namespace TownOfHost
             || player.Is(CustomRoles.EgoSchrodingerCat)
             || (player.Is(CustomRoles.Lighter) && player.GetPlayerTaskState().IsTaskFinished && Options.LighterTaskCompletedDisableLightOut.GetBool())
             || ((player.Is(CustomRoles.Jackal) || player.Is(CustomRoles.JSchrodingerCat)) && Options.JackalHasImpostorVision.GetBool());
-        public static void BlackOut()
+        public static void PoweredLightsOut()
         {
             IsPoweredLightsOut = true;
             new LateTask(() =>
@@ -102,6 +102,10 @@ namespace TownOfHost
                     }
                 }
             }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
+        }
+        public static void Comms()
+        {
+
         }
         public static void CheckAndCloseAllDoors(int mapId)
         {
