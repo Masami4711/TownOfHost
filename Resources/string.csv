@@ -343,6 +343,7 @@ KillFlashDuration,Kill Flash Duration(s),キルフラッシュの長さ(秒)
 EnablePoweredLightsOut,Powered Lights Out,強力な停電
 LightsOutMinimum,Lights Out Minimum Duration,停電の最低持続時間
 EnablePoweredComms,Powered Comms,強力な通信障害
+NormaToFixComms,Required Counts To Fix Comms,必要な修理回数
 EnablePoweredReactor,Powered Reactor,強力なリアクター
 
 ## かくれんぼ設定

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
@@ -10,9 +11,11 @@ namespace TownOfHost
         public static List<byte> playerIdList = new();
         public static bool IsPoweredLightsOut = false;
         public static List<byte> IsBlackOut = new();
+        public static int CountsToFixComms = 0;
         public static CustomOption EnablePoweredLightsOut;
         public static CustomOption LightsOutMinimum;
         public static CustomOption EnablePoweredComms;
+        public static CustomOption NormaToFixComms;
         public static CustomOption EnablePoweredReactor;
         public static void SetupCustomOption()
         {
@@ -20,19 +23,22 @@ namespace TownOfHost
             EnablePoweredLightsOut = CustomOption.Create(Id + 10, Color.white, "EnablePoweredLightsOut", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
             LightsOutMinimum = CustomOption.Create(Id + 11, Color.white, "LightsOutMinimum", 5, 0, 20, 1, EnablePoweredLightsOut);
             EnablePoweredComms = CustomOption.Create(Id + 12, Color.white, "EnablePoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            EnablePoweredReactor = CustomOption.Create(Id + 13, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            NormaToFixComms = CustomOption.Create(Id + 13, Color.white, "NormaToFixComms", 2, 2, 5, 1, EnablePoweredComms);
+            EnablePoweredReactor = CustomOption.Create(Id + 14, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
         }
         public static void Init()
         {
             playerIdList = new();
             IsPoweredLightsOut = new();
             IsBlackOut = new();
+            CountsToFixComms = new();
         }
         public static void Add(byte playerId)
         {
             playerIdList.Add(playerId);
             IsPoweredLightsOut = false;
             IsBlackOut.Clear();
+            CountsToFixComms = 0;
         }
         public static bool IsEnable() => playerIdList.Count > 0;
         public static void PoweredSabotage(SystemTypes systemType, PlayerControl player, byte amount)
@@ -52,6 +58,7 @@ namespace TownOfHost
                     if (amount != 128) break;
                     if (!EnablePoweredComms.GetBool()) break;
                     Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
+                    PoweredComms();
                     break;
                 case SystemTypes.Reactor:
                 case SystemTypes.Laboratory:
@@ -103,9 +110,16 @@ namespace TownOfHost
                 }
             }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
         }
-        public static void Comms()
+        public static void PoweredComms()
         {
-
+            CountsToFixComms = NormaToFixComms.GetInt() - 1;
+        }
+        public static bool CheckAndBlockFixComms(PlayerControl player)
+        {
+            if (CountsToFixComms == 0 || (!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate())) return false;
+            Logger.Info($"{NormaToFixComms.GetInt() - CountsToFixComms}/{NormaToFixComms.GetInt()}回目の修理", "CheckAndBlockFixComms");
+            CountsToFixComms--;
+            return true;
         }
         public static void CheckAndCloseAllDoors(int mapId)
         {

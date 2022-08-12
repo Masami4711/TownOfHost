@@ -86,9 +86,9 @@ namespace TownOfHost
                 systemType == SystemTypes.Electrical && //システムタイプが電気室
                 0 <= amount && amount <= 4) //配電盤操作のamount
                 return false;
-            if (!Options.MadmateCanFixComms.GetBool() && //Madmateがコミュサボを直せる設定がオフ
-                systemType == SystemTypes.Comms && //システムタイプが通信室
-                (player.Is(CustomRoles.Madmate) || player.Is(CustomRoles.MadGuardian))) //実行者がMadmateかMadGuardian)
+            if (((!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateがコミュサボを直せる設定がオフ
+                || Cracker.CheckAndBlockFixComms(player))
+                && systemType == SystemTypes.Comms) //システムタイプが通信室
                 return false;
             if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.Arsonist) || (player.Is(CustomRoles.Jackal) && !Options.JackalCanUseSabotage.GetBool()))
             {
