@@ -49,26 +49,25 @@ namespace TownOfHost
             switch (systemType)
             {
                 case SystemTypes.Sabotage: //停電
-                    if (amount != 7) break;
                     if (!EnablePoweredLightsOut.GetBool()) break;
+                    if (amount != 7) break;
                     Logger.Info($"Ready for Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     PoweredLightsOut();
                     break;
                 case SystemTypes.Comms:
-                    if (amount != 128) break;
                     if (!EnablePoweredComms.GetBool()) break;
+                    if (amount != 128) break;
+                    if (mapId == 3) break;
                     Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     PoweredComms();
                     break;
                 case SystemTypes.Reactor:
                 case SystemTypes.Laboratory:
+                    if (!EnablePoweredReactor.GetBool()) break;
                     if (!(systemType == SystemTypes.Laboratory && mapId == 2 && amount == 128)
                         && !(systemType == SystemTypes.Reactor && mapId == 4 && amount == 128)) break;
-                    if (!EnablePoweredReactor.GetBool()) break;
                     Logger.Info($"Powered Reactor by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     CheckAndCloseAllDoors(mapId);
-                    break;
-                default:
                     break;
             }
         }
@@ -150,8 +149,8 @@ namespace TownOfHost
             SystemTypes.Medical,
             SystemTypes.Records};
 
-            SystemTypes[][] Doors = { SkeldDoorRooms, PolusDoorRooms, null, AirShipDoorRooms };
-            foreach (var doorRoom in Doors[mapId - 1])
+            SystemTypes[][] Doors = { SkeldDoorRooms, SkeldDoorRooms, PolusDoorRooms, null, AirShipDoorRooms }; //Skeld, Dleks, Polus, MiraHQ, AirShip
+            foreach (var doorRoom in Doors[mapId])
             {
                 ShipStatus.Instance.CloseDoorsOfType(doorRoom);
             }
