@@ -916,11 +916,11 @@ namespace TownOfHost
                         || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
                         || seer.GetPlayerTaskState().IsTaskFinished)))))) // || タスク完了）
                     {
-                        Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
+                        Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⚠");
                     }
                     if (target.Is(CustomRoles.Criminal) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || (seer == target && seer.Is(CustomRoles.Criminal))))
                     {
-                        Mark += target.Data.IsDead ? "<color=#000000>★</color>" : $"<color={Utils.GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
+                        Mark += Helpers.ColorString(target.Data.IsDead ? Utils.GetRoleColor(CustomRoles.Scapegoat) : Utils.GetRoleColor(CustomRoles.Crewmate), "★");
                     }
 
 

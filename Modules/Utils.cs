@@ -557,9 +557,9 @@ namespace TownOfHost
                 if (seer.Is(CustomRoles.Scapegoat) && (seer.Data.IsDead || (Options.RealizeScapegoatWhileLiving.GetBool()
                     && (seer.Is(CustomRoles.Sheriff) || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
                     || seer.GetPlayerTaskState().IsTaskFinished))))
-                    SelfMark += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
+                    SelfMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "⚠");
                 //クリミナルにマーク
-                if (seer.Is(CustomRoles.Criminal)) SelfMark += seer.Data.IsDead ? "<color=#000000>★</color>" : $"<color={GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
+                if (seer.Is(CustomRoles.Criminal)) SelfMark += Helpers.ColorString(seer.Data.IsDead ? GetRoleColor(CustomRoles.Scapegoat) : GetRoleColor(CustomRoles.Crewmate), "★");
 
 
                 //呪われている場合
@@ -690,11 +690,11 @@ namespace TownOfHost
 
                         if (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() && target.Is(CustomRoles.Scapegoat))
                         {
-                            TargetMark += $"<color={GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
+                            TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "⚠");
                         }
                         if (((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || target.Data.IsDead) && target.Is(CustomRoles.Criminal))
                         {
-                            TargetMark += target.Data.IsDead ? "<color=#000000>★</color>" : $"<color={GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
+                            TargetMark += Helpers.ColorString(target.Data.IsDead ? GetRoleColor(CustomRoles.Scapegoat) : GetRoleColor(CustomRoles.Crewmate), "★");
                         }
 
                         if (seer.Is(CustomRoles.Arsonist))//seerがアーソニストの時

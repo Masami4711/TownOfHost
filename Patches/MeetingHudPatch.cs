@@ -348,12 +348,12 @@ namespace TownOfHost
                     || seer.GetPlayerTaskState().CompletedTasksCount >= Options.ScapegoatTaskCountToRealize.GetFloat()
                     || seer.GetPlayerTaskState().IsTaskFinished)))))) // || タスク完了)
                 {
-                    pva.NameText.text += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⚠</color>";
+                    pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⚠");
                 }
                 if (target.Is(CustomRoles.Criminal) && ((seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) //前提条件 && （幽霊視点
-                    || (seer == target && seer.Is(CustomRoles.Criminal)) || target.Data.IsDead)) // || 本人視点 || 本人死亡）
+                    || seer == target || target.Data.IsDead)) // || 本人視点 || 本人死亡）
                 {
-                    pva.NameText.text += target.Data.IsDead ? $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>★</color>" : $"<color={Utils.GetRoleColorCode(CustomRoles.Crewmate)}>★</color>";
+                    pva.NameText.text += Helpers.ColorString(target.Data.IsDead ? Utils.GetRoleColor(CustomRoles.Scapegoat) : Utils.GetRoleColor(CustomRoles.Crewmate), "★");
                 }
                 if (seer.GetCustomRole().IsImpostor() && //LocalPlayerがImpostor
                     target.Is(CustomRoles.Egoist) //変更対象がEgoist
