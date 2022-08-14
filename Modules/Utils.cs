@@ -41,8 +41,14 @@ namespace TownOfHost
                 case SystemTypes.Laboratory:
                     {
                         var ReactorSystemType = ShipStatus.Instance.Systems[type].Cast<ReactorSystemType>();
-                        Logger.Info($"SystemTypes:{type}", "SwitchSystem");
+                        Logger.Info($"SystemTypes:{type}", "ReactorSystemType");
                         return ReactorSystemType != null && ReactorSystemType.IsActive;
+                    }
+                case SystemTypes.LifeSupp:
+                    {
+                        var LifeSuppSystemType = ShipStatus.Instance.Systems[type].Cast<LifeSuppSystemType>();
+                        Logger.Info($"SystemTypes:{type}", "LifeSuppSystemType");
+                        return LifeSuppSystemType != null && LifeSuppSystemType.IsActive;
                     }
                 default:
                     return false;
@@ -154,9 +160,12 @@ namespace TownOfHost
         }
         public static string GetRoleName(CustomRoles role)
         {
-            var lang = (TranslationController.Instance.currentLanguage.languageID == SupportedLangs.Japanese || Main.ForceJapanese.Value) &&
-                Main.JapaneseRoleName.Value == true ? SupportedLangs.Japanese : TranslationController.Instance.currentLanguage.languageID;
-
+            var CurrentLanguage = TranslationController.Instance.currentLanguage.languageID;
+            var lang = CurrentLanguage;
+            if (Main.ForceJapanese.Value && Main.JapaneseRoleName.Value)
+                lang = SupportedLangs.Japanese;
+            else if (CurrentLanguage == SupportedLangs.Japanese && !Main.JapaneseRoleName.Value)
+                lang = SupportedLangs.English;
             return GetRoleName(role, lang);
         }
         public static string GetRoleName(CustomRoles role, SupportedLangs lang)
