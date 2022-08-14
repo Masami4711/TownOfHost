@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
+using InnerNet;
 
 namespace TownOfHost
 {
@@ -12,10 +13,12 @@ namespace TownOfHost
         public static bool IsPoweredLightsOut = false;
         public static List<byte> IsBlackOut = new();
         public static int CountsToFixComms = 0;
+        public static bool IsForcedComms = false;
         public static CustomOption EnablePoweredLightsOut;
         public static CustomOption LightsOutMinimum;
         public static CustomOption EnablePoweredComms;
         public static CustomOption NormaToFixComms;
+        public static CustomOption EnablePoweredO2;
         public static CustomOption EnablePoweredReactor;
         public static void SetupCustomOption()
         {
@@ -24,7 +27,8 @@ namespace TownOfHost
             LightsOutMinimum = CustomOption.Create(Id + 11, Color.white, "LightsOutMinimum", 5, 0, 20, 1, EnablePoweredLightsOut);
             EnablePoweredComms = CustomOption.Create(Id + 12, Color.white, "EnablePoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
             NormaToFixComms = CustomOption.Create(Id + 13, Color.white, "NormaToFixComms", 2, 2, 5, 1, EnablePoweredComms);
-            EnablePoweredReactor = CustomOption.Create(Id + 14, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            EnablePoweredO2 = CustomOption.Create(Id + 14, Color.white, "EnablePoweredO2", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            EnablePoweredReactor = CustomOption.Create(Id + 15, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
         }
         public static void Init()
         {
@@ -32,6 +36,7 @@ namespace TownOfHost
             IsPoweredLightsOut = new();
             IsBlackOut = new();
             CountsToFixComms = new();
+            IsForcedComms = new();
         }
         public static void Add(byte playerId)
         {
@@ -39,6 +44,7 @@ namespace TownOfHost
             IsPoweredLightsOut = false;
             IsBlackOut.Clear();
             CountsToFixComms = 0;
+            IsForcedComms = false;
         }
         public static bool IsEnable() => playerIdList.Count > 0;
         public static void PoweredSabotage(SystemTypes systemType, PlayerControl player, byte amount)
@@ -51,7 +57,7 @@ namespace TownOfHost
                 case SystemTypes.Sabotage: //停電
                     if (!EnablePoweredLightsOut.GetBool()) break;
                     if (amount != 7) break;
-                    Logger.Info($"Ready for Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
+                    Logger.Info($"Powered Lights Out by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     PoweredLightsOut();
                     break;
                 case SystemTypes.Comms:
@@ -61,23 +67,22 @@ namespace TownOfHost
                     Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     PoweredComms();
                     break;
+                case SystemTypes.LifeSupp:
+                    if (!EnablePoweredO2.GetBool()) break;
+                    if (amount != 128) break;
+                    Logger.Info($"Powered O2 by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
+                    PoweredO2();
+                    break;
                 case SystemTypes.Reactor:
                 case SystemTypes.Laboratory:
                     if (!EnablePoweredReactor.GetBool()) break;
                     if (!(systemType == SystemTypes.Laboratory && mapId == 2 && amount == 128)
-                        && !(systemType == SystemTypes.Reactor && mapId == 4 && amount == 128)) break;
+                        && !(systemType == SystemTypes.Reactor && mapId is 0 or 1 or 4 && amount == 128)) break;
                     Logger.Info($"Powered Reactor by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
-                    CheckAndCloseAllDoors(mapId);
+                    PoweredReactor(mapId);
                     break;
             }
         }
-        public static bool HasImpostorVision(PlayerControl player)
-            => player.Data.IsDead
-            || player.GetCustomRole().IsImpostor()
-            || (player.GetCustomRole().IsMadmate() && Options.MadmateHasImpostorVision.GetBool())
-            || player.Is(CustomRoles.EgoSchrodingerCat)
-            || (player.Is(CustomRoles.Lighter) && player.GetPlayerTaskState().IsTaskFinished && Options.LighterTaskCompletedDisableLightOut.GetBool())
-            || ((player.Is(CustomRoles.Jackal) || player.Is(CustomRoles.JSchrodingerCat)) && Options.JackalHasImpostorVision.GetBool());
         public static void PoweredLightsOut()
         {
             IsPoweredLightsOut = true;
@@ -113,13 +118,50 @@ namespace TownOfHost
         {
             CountsToFixComms = NormaToFixComms.GetInt() - 1;
         }
-        public static bool CheckAndBlockFixComms(PlayerControl player)
+        public static void PoweredO2()
         {
-            if (CountsToFixComms == 0 || (!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate())) return false;
-            Logger.Info($"{NormaToFixComms.GetInt() - CountsToFixComms}/{NormaToFixComms.GetInt()}回目の修理", "CheckAndBlockFixComms");
-            CountsToFixComms--;
-            return true;
+            CauseForcedComms();
         }
+        public static void PoweredReactor(int mapId)
+        {
+            CauseForcedComms();
+            if (mapId is 2 or 4) CheckAndCloseAllDoors(mapId);
+        }
+        public static void CauseForcedComms()
+        {
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
+                SabotageFixWriter.Write((byte)SystemTypes.Comms);
+                MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
+                SabotageFixWriter.Write((byte)128);
+                AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
+            }
+            IsForcedComms = true;
+        }
+        // public static void CheckAndFixForcedComms(SystemTypes systemType, byte amount)
+        // {
+        //     if (!IsForcedComms) return;
+        //     if (systemType is not (SystemTypes.LifeSupp or SystemTypes.Laboratory or SystemTypes.Reactor)) return;
+        //     switch (amount)
+        //     {
+        //         case 128:
+        //             break;
+        //         case 64:
+        //         case 65:
+        //             break;
+        //         default:
+        //             return;
+        //     }
+        //     foreach (var pc in PlayerControl.AllPlayerControls)
+        //     {
+        //         MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
+        //         SabotageFixWriter.Write((byte)SystemTypes.Comms);
+        //         MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
+        //         SabotageFixWriter.Write((byte)16);
+        //         AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
+        //     }
+        // }
         public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 3) return;
@@ -155,5 +197,20 @@ namespace TownOfHost
                 ShipStatus.Instance.CloseDoorsOfType(doorRoom);
             }
         }
+        public static bool CheckAndBlockFixComms(PlayerControl player)
+        {
+            if (IsForcedComms) return true;
+            if (CountsToFixComms == 0 || (!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate())) return false;
+            Logger.Info($"{NormaToFixComms.GetInt() - CountsToFixComms}/{NormaToFixComms.GetInt()}回目の修理", "CheckAndBlockFixComms");
+            CountsToFixComms = Math.Max(0, CountsToFixComms - 1);
+            return true;
+        }
+        public static bool HasImpostorVision(PlayerControl player)
+            => player.Data.IsDead
+            || player.GetCustomRole().IsImpostor()
+            || (player.GetCustomRole().IsMadmate() && Options.MadmateHasImpostorVision.GetBool())
+            || player.Is(CustomRoles.EgoSchrodingerCat)
+            || (player.Is(CustomRoles.Lighter) && player.GetPlayerTaskState().IsTaskFinished && Options.LighterTaskCompletedDisableLightOut.GetBool())
+            || ((player.Is(CustomRoles.Jackal) || player.Is(CustomRoles.JSchrodingerCat)) && Options.JackalHasImpostorVision.GetBool());
     }
 }
