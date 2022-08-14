@@ -88,7 +88,8 @@ namespace TownOfHost
                 return false;
             if (((!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateがコミュサボを直せる設定がオフ
                 || Cracker.CheckAndBlockFixComms(player))
-                && systemType == SystemTypes.Comms) //システムタイプが通信室
+                && systemType == SystemTypes.Comms
+                && amount is 0 or 16 or 17) //システムタイプが通信室
                 return false;
             if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.Arsonist) || (player.Is(CustomRoles.Jackal) && !Options.JackalCanUseSabotage.GetBool()))
             {

@@ -61,9 +61,10 @@ namespace TownOfHost
                     PoweredLightsOut();
                     break;
                 case SystemTypes.Comms:
+                    if (IsForcedComms) break;
                     if (!EnablePoweredComms.GetBool()) break;
                     if (amount != 128) break;
-                    if (mapId == 3) break;
+                    if (mapId == 1) break;
                     Logger.Info($"Powered Comms by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
                     PoweredComms();
                     break;
@@ -129,42 +130,37 @@ namespace TownOfHost
         }
         public static void CauseForcedComms()
         {
-            foreach (var pc in PlayerControl.AllPlayerControls)
-            {
-                MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
-                SabotageFixWriter.Write((byte)SystemTypes.Comms);
-                MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
-                SabotageFixWriter.Write((byte)128);
-                AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
-            }
             IsForcedComms = true;
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 128);
         }
-        // public static void CheckAndFixForcedComms(SystemTypes systemType, byte amount)
-        // {
-        //     if (!IsForcedComms) return;
-        //     if (systemType is not (SystemTypes.LifeSupp or SystemTypes.Laboratory or SystemTypes.Reactor)) return;
-        //     switch (amount)
-        //     {
-        //         case 128:
-        //             break;
-        //         case 64:
-        //         case 65:
-        //             break;
-        //         default:
-        //             return;
-        //     }
-        //     foreach (var pc in PlayerControl.AllPlayerControls)
-        //     {
-        //         MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
-        //         SabotageFixWriter.Write((byte)SystemTypes.Comms);
-        //         MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
-        //         SabotageFixWriter.Write((byte)16);
-        //         AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
-        //     }
-        // }
+        public static void CheckAndFixForcedComms()
+        {
+            if (!IsForcedComms) return;
+            int mapId = PlayerControl.GameOptions.MapId;
+            Logger.Info($"mapId:{mapId}", "Cracker");
+            Logger.Info($"{Utils.IsActive(SystemTypes.LifeSupp)}", "LifeSupp");
+            Logger.Info($"{Utils.IsActive(SystemTypes.Laboratory)}", "Laboratory");
+            Logger.Info($"{Utils.IsActive(SystemTypes.Reactor)}", "Reactor");
+            // foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
+            //     if (task.TaskType is
+            //     TaskTypes.FixLights or
+            //     TaskTypes.RestoreOxy or
+            //     TaskTypes.ResetReactor or
+            //     TaskTypes.ResetSeismic or
+            //     TaskTypes.FixComms or
+            //     TaskTypes.StopCharles) return;
+            if (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor)) return;
+            IsForcedComms = false;
+            if (mapId == 1)
+            {
+                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 19);
+                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 18);
+            }
+            else ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 0);
+        }
         public static void CheckAndCloseAllDoors(int mapId)
         {
-            if (mapId == 3) return;
+            if (mapId == 1) return;
             SystemTypes[] SkeldDoorRooms =
             {SystemTypes.Cafeteria,
             SystemTypes.Electrical,
@@ -191,7 +187,7 @@ namespace TownOfHost
             SystemTypes.Medical,
             SystemTypes.Records};
 
-            SystemTypes[][] Doors = { SkeldDoorRooms, SkeldDoorRooms, PolusDoorRooms, null, AirShipDoorRooms }; //Skeld, Dleks, Polus, MiraHQ, AirShip
+            SystemTypes[][] Doors = { SkeldDoorRooms, null, PolusDoorRooms, SkeldDoorRooms, AirShipDoorRooms }; //Skeld, MiraHQ, Polus, Dleks, AirShip
             foreach (var doorRoom in Doors[mapId])
             {
                 ShipStatus.Instance.CloseDoorsOfType(doorRoom);
