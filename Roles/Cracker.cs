@@ -10,8 +10,7 @@ namespace TownOfHost
     {
         static readonly int Id = 3000;
         public static List<byte> playerIdList = new();
-        public static bool IsPoweredLightsOut = false;
-        public static List<byte> IsBlackOut = new();
+        public static bool IsForcedLightsOut = false;
         public static int CountsToFixComms = 0;
         public static bool IsForcedComms = false;
         public static CustomOption EnablePoweredLightsOut;
@@ -20,6 +19,7 @@ namespace TownOfHost
         public static CustomOption NormaToFixComms;
         public static CustomOption EnablePoweredO2;
         public static CustomOption EnablePoweredReactor;
+        public static CustomOption CloseAllDoors;
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, CustomRoles.Cracker);
@@ -29,20 +29,19 @@ namespace TownOfHost
             NormaToFixComms = CustomOption.Create(Id + 13, Color.white, "NormaToFixComms", 2, 2, 5, 1, EnablePoweredComms);
             EnablePoweredO2 = CustomOption.Create(Id + 14, Color.white, "EnablePoweredO2", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
             EnablePoweredReactor = CustomOption.Create(Id + 15, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            CloseAllDoors = CustomOption.Create(Id + 16, Color.white, "CloseAllDoors", true, EnablePoweredReactor);
         }
         public static void Init()
         {
             playerIdList = new();
-            IsPoweredLightsOut = new();
-            IsBlackOut = new();
+            IsForcedLightsOut = new();
             CountsToFixComms = new();
             IsForcedComms = new();
         }
         public static void Add(byte playerId)
         {
             playerIdList.Add(playerId);
-            IsPoweredLightsOut = false;
-            IsBlackOut.Clear();
+            IsForcedLightsOut = false;
             CountsToFixComms = 0;
             IsForcedComms = false;
         }
@@ -86,7 +85,8 @@ namespace TownOfHost
         }
         public static void PoweredLightsOut()
         {
-            IsPoweredLightsOut = true;
+            IsForcedLightsOut = true;
+            float delay = 2.0f;
             new LateTask(() =>
             {
                 if (Utils.IsActive(SystemTypes.Electrical))
@@ -100,11 +100,11 @@ namespace TownOfHost
                         }
                     }
                 }
-            }, 2.0f, "Powered Lights Out");
+            }, delay, "Powered Lights Out");
 
             new LateTask(() =>
             {
-                IsPoweredLightsOut = false;
+                IsForcedLightsOut = false;
                 foreach (var player in PlayerControl.AllPlayerControls)
                 {
                     if (!HasImpostorVision(player))
@@ -113,7 +113,7 @@ namespace TownOfHost
                         ExtendedPlayerControl.CustomSyncSettings(player);
                     }
                 }
-            }, LightsOutMinimum.GetFloat(), "Powered Lights Out");
+            }, delay + LightsOutMinimum.GetFloat(), "Powered Lights Out");
         }
         public static void PoweredComms()
         {
@@ -122,33 +122,33 @@ namespace TownOfHost
         public static void PoweredO2()
         {
             CauseForcedComms();
+            // SetHalfVision();
         }
         public static void PoweredReactor(int mapId)
         {
             CauseForcedComms();
-            if (mapId is 2 or 4) CheckAndCloseAllDoors(mapId);
+            if (CloseAllDoors.GetBool() && (mapId is 2 or 4)) CheckAndCloseAllDoors(mapId);
         }
         public static void CauseForcedComms()
         {
             IsForcedComms = true;
+            // foreach (var pc in PlayerControl.AllPlayerControls)
+            // {
+            //     if (!pc.Data.IsDead)
+            //     {
+            //         MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
+            //         SabotageFixWriter.Write((byte)SystemTypes.Comms);
+            //         MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
+            //         SabotageFixWriter.Write((byte)128);
+            //         AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
+            //     }
+            // }
             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 128);
         }
         public static void CheckAndFixForcedComms()
         {
             if (!IsForcedComms) return;
             int mapId = PlayerControl.GameOptions.MapId;
-            Logger.Info($"mapId:{mapId}", "Cracker");
-            Logger.Info($"{Utils.IsActive(SystemTypes.LifeSupp)}", "LifeSupp");
-            Logger.Info($"{Utils.IsActive(SystemTypes.Laboratory)}", "Laboratory");
-            Logger.Info($"{Utils.IsActive(SystemTypes.Reactor)}", "Reactor");
-            // foreach (PlayerTask task in PlayerControl.LocalPlayer.myTasks)
-            //     if (task.TaskType is
-            //     TaskTypes.FixLights or
-            //     TaskTypes.RestoreOxy or
-            //     TaskTypes.ResetReactor or
-            //     TaskTypes.ResetSeismic or
-            //     TaskTypes.FixComms or
-            //     TaskTypes.StopCharles) return;
             if (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor)) return;
             IsForcedComms = false;
             if (mapId == 1)
@@ -158,6 +158,17 @@ namespace TownOfHost
             }
             else ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 0);
         }
+        // public static void SetHalfVision()
+        // {
+        //     foreach (var pc in PlayerControl.AllPlayerControls)
+        //     {
+        //         if (HasImpostorVision(pc)) continue;
+        //         var opt = Main.RealOptionsData.DeepCopy();
+        //         opt.CrewLightMod /= 2;
+        //         opt.ImpostorLightMod /= 2;
+        //         ExtendedPlayerControl.CustomSyncSettings(pc);
+        //     }
+        // }
         public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 1) return;

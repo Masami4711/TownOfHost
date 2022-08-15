@@ -347,6 +347,7 @@ EnablePoweredComms,Powered Comms,強力な通信障害
 NormaToFixComms,Required Counts To Fix Comms,必要な修理回数
 EnablePoweredO2,Powered O2,強力な酸素枯渇
 EnablePoweredReactor,Powered Reactor,強力なリアクター
+CloseAllDoors,Close All Doors(Polus and Airship),全てのドアを閉める(PolusとAirshipのみ)
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定,躲猫猫设置,躲貓貓設定

@@ -82,7 +82,7 @@ namespace TownOfHost
                 SabotageMaster.RepairSystem(__instance, systemType, amount);
 
             if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate())
-                || Cracker.IsPoweredLightsOut) &&
+                || Cracker.IsForcedLightsOut) &&
                 systemType == SystemTypes.Electrical && //システムタイプが電気室
                 0 <= amount && amount <= 4) //配電盤操作のamount
                 return false;
