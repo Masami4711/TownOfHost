@@ -299,7 +299,7 @@ SheriffCanKillEgoist,Sheriff Can Kill Egoist,シェリフがエゴイストを�
 SheriffCanKillEgoShrodingerCat,Sheriff Can Kill EgoistSide ShrodingerCat,シェリフがエゴイスト陣営のシュレディンガーの猫をキルできる,警长可以执法自私阵营的薛定谔的猫,警長可以槍死利己主義者方的薛定諤的貓
 SheriffCanKillJackal,Sheriff Can Kill Jackal,シェリフがジャッカルをキルできる,警长可以执法豺狼,警長可以槍死豺狼
 SheriffCanKillJShrodingerCat,Sheriff Can Kill JackalSide ShrodingerCat,シェリフがジャッカル陣営のシュレディンガーの猫をキルできる,警长可以执法豺狼阵营的薛定谔的猫,警長可以槍死豺狼方的薛定諤的貓
-SheriffCanKillCrewmatesAsIt,Sheriff Can Kill Crewmates As It,シェリフがそのままクルーをキルできる,警长尝试执法船员时会和被执法者同归于尽,警長走火時會讓嘗試槍的玩家同歸於盡
+SheriffMisfireKillsTarget,Misfire Kills Target,誤爆時、ターゲットも死ぬ,警长误杀好人会同时击杀目标,警長誤殺好人會同時擊殺目標
 SheriffShotLimit,Sheriff Shot Limit,シェリフのキル可能回数,警长最大执法次数,警長最大子彈數量
 DoctorTaskCompletedBatteryCharge,Doctor Battery Duration,ドクターがタスクを終わらせたときにセットされるバイタルの秒数,科学家每完成一个任务增加的设备充能数,醫生完成任務充電秒數
 SnitchEnableTargetArrow,Snitch Can See Target Arrow,ターゲットを示す矢印が見える,告密者完成任务后可以通过箭头确认所有被发现目标,告密者完成任務後可以看到目標的箭頭
@@ -331,6 +331,7 @@ JackalKillCooldown,Jackal Kill Cooldown,ジャッカルのキルクール,豺狼
 JackalCanVent,Jackal Can Use Vents,ジャッカルがベントを使用できる,豺狼可以使用管道,豺狼可以跳管道
 JackalCanUseSabotage,Jackal Can Use Sabotage,ジャッカルがサボタージュを使用できる,豺狼可以破坏,豺狼可以破壞
 JackalHasImpostorVision,Jackal Has Impostor Vision,ジャッカルがインポスターと同じ視界を持つ,豺狼拥有内鬼视野,豺狼擁有狼人的視野
+EgoistKillCooldown,Egoist KillCooldown,エゴイストのキルクール
 PoweredLightsOut,Powered Lights Out,強力な停電
 LightsOutMinimum,Lights Out Minimum Duration,停電の最低持続時間
 PoweredComms,Powered Comms,強力な通信障害
@@ -391,7 +392,7 @@ Message.TemplateNotFoundHost,"No messages matching "{0}" were found.\nPlease add
 Message.TemplateNotFoundClient,"No messages matching "{0}" were found.",「{0}」に該当するメッセージが見つかりませんでした。,未找到与“{0}”相关的消息。,沒有找到與「{0}」相關的訊息
 Message.SyncButtonLeft,The emergency meeting button can be used {0} more times,緊急会議ボタンはあと{0}回使用できます,您可以多次使用紧急会议按钮 {0},"全場拍桌數量還剩下{0}次,請謹慎拍桌"
 Message.Executed,{0} was executed,{0}を処刑しました,,{0}被處刑了
-Message.HideGameSettings,Game settings are hidden by the host.,ゲーム設定はホストによって秘匿されています。,游戏设置被房主隐藏。,遊戲設置被房主隱藏。
+Message.HideGameSettings,Game settings are hidden by the host.,ゲーム設定はホストによって秘匿されています。,游戏设置被房主隐藏。,遊戲設定被房主隱藏。
 
 ## 警告
 Warning.EgoistCannotWin,Egoist cannot win!,エゴイストが勝利できません,野心家无法获胜,利己主義者無法獲勝
@@ -406,6 +407,7 @@ Error.SpeedBoosterNullException,Error: The speed boost destination is null.\nPle
 ## その他
 ForExample,For Example,使用例,使用例子,使用例子
 ForceEnd,No Contest,廃村,强制结束游戏,遊戲已被強制結束
+EveryoneDied,Everyone Died,誰もいなくなった
 ForceEndText,The host terminated the game,ホストから強制終了コマンドが入力されました,房主强制结束了游戏,房主已強制結束遊戲
 HideGameCodes,Hide Game Codes,ゲームコードを隠す,直播模式,隱藏遊戲代碼
 updateButton,Update\n<size=75%>TownOfHost</size>,アップデート\n<size=75%>TownOfHost</size>,更新\n<size=75%>TownOfHost</size>,更新\n<size=75%>Town Of Host</size>中
