@@ -364,6 +364,7 @@ namespace TownOfHost
             }
             if (target.Is(CustomRoles.TimeThief))
                 target.ResetVotingTime();
+            if (CustomRoles.Cracker.IsEnable()) Cracker.FixForcedComms(target);
 
 
             foreach (var pc in PlayerControl.AllPlayerControls)

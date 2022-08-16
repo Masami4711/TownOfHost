@@ -13,6 +13,7 @@ namespace TownOfHost
         public static bool IsForcedLightsOut = false;
         public static int CountsToFixComms = 0;
         public static bool IsForcedComms = false;
+        private static int mapId = PlayerControl.GameOptions.MapId;
         public static CustomOption EnablePoweredLightsOut;
         public static CustomOption LightsOutMinimum;
         public static CustomOption EnablePoweredComms;
@@ -49,8 +50,6 @@ namespace TownOfHost
         public static void PoweredSabotage(SystemTypes systemType, PlayerControl player, byte amount)
         {
             // Logger.Info($"Powered Sabotage by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
-            int mapId = PlayerControl.GameOptions.MapId;
-
             switch (systemType)
             {
                 case SystemTypes.Sabotage: //停電
@@ -79,7 +78,7 @@ namespace TownOfHost
                     if (!(systemType == SystemTypes.Laboratory && mapId == 2 && amount == 128)
                         && !(systemType == SystemTypes.Reactor && mapId is 0 or 1 or 4 && amount == 128)) break;
                     Logger.Info($"Powered Reactor by {Utils.GetNameWithRole(player.PlayerId)}", "Cracker");
-                    PoweredReactor(mapId);
+                    PoweredReactor();
                     break;
             }
         }
@@ -121,35 +120,63 @@ namespace TownOfHost
         }
         public static void PoweredO2()
         {
-            CauseForcedComms();
-            // SetHalfVision();
+            StartForcedComms();
         }
-        public static void PoweredReactor(int mapId)
+        public static void PoweredReactor()
         {
-            CauseForcedComms();
+            StartForcedComms();
             if (CloseAllDoors.GetBool() && (mapId is 2 or 4)) CheckAndCloseAllDoors(mapId);
         }
-        public static void CauseForcedComms()
+        public static void StartForcedComms()
         {
             IsForcedComms = true;
-            // foreach (var pc in PlayerControl.AllPlayerControls)
-            // {
-            //     if (!pc.Data.IsDead)
-            //     {
-            //         MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
-            //         SabotageFixWriter.Write((byte)SystemTypes.Comms);
-            //         MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
-            //         SabotageFixWriter.Write((byte)128);
-            //         AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
-            //     }
-            // }
-            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 128);
+            bool HostIsAlive = false;
+            foreach (var pc in PlayerControl.AllPlayerControls)
+            {
+                if (pc.AmOwner && !pc.Data.IsDead)
+                {
+                    HostIsAlive = true;
+                    break;
+                }
+            }
+            if (HostIsAlive)
+            {
+                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 128);
+                foreach (var pc in PlayerControl.AllPlayerControls)
+                    if (pc.Data.IsDead) FixForcedComms(pc);
+            }
+            else foreach (var pc in PlayerControl.AllPlayerControls)
+                    if (!pc.Data.IsDead) CauseForcedComms(pc);
+            Utils.NotifyRoles();
         }
-        public static void CheckAndFixForcedComms()
+        public static void CauseForcedComms(PlayerControl pc)
         {
             if (!IsForcedComms) return;
-            int mapId = PlayerControl.GameOptions.MapId;
-            if (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor)) return;
+            MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
+            SabotageFixWriter.Write((byte)SystemTypes.Comms);
+            MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
+            SabotageFixWriter.Write((byte)128);
+            AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
+        }
+        public static void CheckAndFixAllForcedComms()
+        {
+            if (!IsForcedComms) return;
+            if (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor))
+            {
+                foreach (var pc in PlayerControl.AllPlayerControls)
+                {
+                    if (!pc.Data.IsDead) continue;
+                    // foreach (PlayerTask task in pc.myTasks)
+                    // {
+                    //     if (task.TaskType == TaskTypes.FixComms)
+                    //     {
+                    FixForcedComms(pc);
+                    //         break;
+                    //     }
+                    // }
+                }
+                return;
+            }
             IsForcedComms = false;
             if (mapId == 1)
             {
@@ -158,17 +185,17 @@ namespace TownOfHost
             }
             else ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 0);
         }
-        // public static void SetHalfVision()
-        // {
-        //     foreach (var pc in PlayerControl.AllPlayerControls)
-        //     {
-        //         if (HasImpostorVision(pc)) continue;
-        //         var opt = Main.RealOptionsData.DeepCopy();
-        //         opt.CrewLightMod /= 2;
-        //         opt.ImpostorLightMod /= 2;
-        //         ExtendedPlayerControl.CustomSyncSettings(pc);
-        //     }
-        // }
+        public static void FixForcedComms(PlayerControl pc)
+        {
+            if (!IsForcedComms) return;
+            Logger.Info($"{pc.GetNameWithRole()}", "FixForcedComms");
+            // if (pc.AmOwner) return;
+            MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
+            SabotageFixWriter.Write((byte)SystemTypes.Comms);
+            MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
+            SabotageFixWriter.Write((byte)16);
+            AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
+        }
         public static void CheckAndCloseAllDoors(int mapId)
         {
             if (mapId == 1) return;

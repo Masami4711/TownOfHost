@@ -630,7 +630,7 @@ namespace TownOfHost
                     }
                 }
             }
-            if (CustomRoles.Cracker.IsEnable()) Cracker.CheckAndFixForcedComms();
+            if (CustomRoles.Cracker.IsEnable()) Cracker.CheckAndFixAllForcedComms();
 
             var seerList = PlayerControl.AllPlayerControls;
             if (SpecifySeer != null)
