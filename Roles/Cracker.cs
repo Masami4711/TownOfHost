@@ -147,7 +147,10 @@ namespace TownOfHost
             }
             else foreach (var pc in PlayerControl.AllPlayerControls)
                     if (!pc.Data.IsDead) CauseForcedComms(pc);
-            // Utils.NotifyRoles();
+            new LateTask(() =>
+            {
+                Utils.NotifyRoles();
+            }, 0.1f, "NotifyRoles");
         }
         public static void CauseForcedComms(PlayerControl pc)
         {
