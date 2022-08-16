@@ -147,11 +147,12 @@ namespace TownOfHost
             }
             else foreach (var pc in PlayerControl.AllPlayerControls)
                     if (!pc.Data.IsDead) CauseForcedComms(pc);
-            Utils.NotifyRoles();
+            // Utils.NotifyRoles();
         }
         public static void CauseForcedComms(PlayerControl pc)
         {
             if (!IsForcedComms) return;
+            if (pc.AmOwner) return;
             MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
             SabotageFixWriter.Write((byte)SystemTypes.Comms);
             MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
@@ -178,18 +179,19 @@ namespace TownOfHost
                 return;
             }
             IsForcedComms = false;
-            if (mapId == 1)
-            {
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 19);
-                ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 18);
-            }
-            else ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 0);
+            ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16);
         }
         public static void FixForcedComms(PlayerControl pc)
         {
             if (!IsForcedComms) return;
             Logger.Info($"{pc.GetNameWithRole()}", "FixForcedComms");
-            // if (pc.AmOwner) return;
+            // if (pc.AmOwner)
+            // {
+            //     ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16);
+            //     foreach (var pc2 in PlayerControl.AllPlayerControls)
+            //         if (!pc.Data.IsDead) CauseForcedComms(pc2);
+            //     return;
+            // }
             MessageWriter SabotageFixWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, pc.GetClientId());
             SabotageFixWriter.Write((byte)SystemTypes.Comms);
             MessageExtensions.WriteNetObject(SabotageFixWriter, pc);
