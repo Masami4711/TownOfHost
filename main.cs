@@ -335,6 +335,7 @@ namespace TownOfHost
     {
         Draw = -1,
         Default = -2,
+        None = -3,
         Impostor = CustomRoles.Impostor,
         Crewmate = CustomRoles.Crewmate,
         Jester = CustomRoles.Jester,
