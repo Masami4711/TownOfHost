@@ -64,6 +64,11 @@ namespace TownOfHost
                 Logger.Info("targetは現在キルできない状態です。", "CheckMurder");
                 return false;
             }
+            if (target.Data.IsDead) //同じtargetへの同時キルをブロック
+            {
+                Logger.Info("targetは既に死んでいたため、キルをキャンセルしました。", "CheckMurder");
+                return false;
+            }
             if (MeetingHud.Instance != null) //会議中でないかの判定
             {
                 Logger.Info("会議が始まっていたため、キルをキャンセルしました。", "CheckMurder");
@@ -317,7 +322,6 @@ namespace TownOfHost
             if (!target.Data.IsDead || !AmongUsClient.Instance.AmHost) return;
 
             PlayerControl killer = __instance; //読み替え変数
-            bool doSetDead = true;
             if (PlayerState.GetDeathReason(target.PlayerId) == PlayerState.DeathReason.Sniped)
             {
                 killer = Utils.GetPlayerById(Sniper.GetSniper(target.PlayerId));
@@ -340,7 +344,6 @@ namespace TownOfHost
             {
                 Logger.Info(target?.Data?.PlayerName + "はTerroristだった", "MurderPlayer");
                 Utils.CheckTerroristWin(target.Data);
-                doSetDead = false;
             }
             if (target.Is(CustomRoles.Trapper) && !killer.Is(CustomRoles.Trapper))
                 killer.TrapperKilled(target);
@@ -379,8 +382,7 @@ namespace TownOfHost
             }
             FixedUpdatePatch.LoversSuicide(target.PlayerId);
 
-            if (doSetDead)
-                PlayerState.SetDead(target.PlayerId);
+            PlayerState.SetDead(target.PlayerId);
             Utils.CountAliveImpostors();
             Utils.CustomSyncAllSettings();
             Utils.NotifyRoles();
