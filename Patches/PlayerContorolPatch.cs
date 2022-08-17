@@ -538,6 +538,7 @@ namespace TownOfHost
             Main.BitPlayers = new Dictionary<byte, (byte, float)>();
             Main.PuppeteerList.Clear();
             Sniper.OnStartMeeting();
+            Cracker.CheckAndFixAllForcedComms(NoCheck: true);
 
             if (__instance.Data.IsDead) return true;
             //=============================================

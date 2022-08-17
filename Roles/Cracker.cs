@@ -162,27 +162,33 @@ namespace TownOfHost
             SabotageFixWriter.Write((byte)128);
             AmongUsClient.Instance.FinishRpcImmediately(SabotageFixWriter);
         }
-        public static void CheckAndFixAllForcedComms()
+        public static void CheckAndFixAllForcedComms(bool NoCheck = false)
         {
             if (!IsForcedComms) return;
-            if (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor))
+            if (!NoCheck && (Utils.IsActive(SystemTypes.LifeSupp) || Utils.IsActive(SystemTypes.Laboratory) || Utils.IsActive(SystemTypes.Reactor)))
             {
                 foreach (var pc in PlayerControl.AllPlayerControls)
                 {
                     if (!pc.Data.IsDead) continue;
-                    // foreach (PlayerTask task in pc.myTasks)
-                    // {
-                    //     if (task.TaskType == TaskTypes.FixComms)
-                    //     {
+                    foreach (PlayerTask task in pc.myTasks)
+                    {
+                        // Logger.Info($"{task.TaskType}", $"{pc.GetNameWithRole()}");
+                        // if (task.TaskType == TaskTypes.FixComms)
+                        // {
+                        //     Logger.Info($"{pc.GetNameWithRole()}", "TaskTypes.FixComms");
+                        //     break;
+                        // }
+                    }
                     FixForcedComms(pc);
-                    //         break;
-                    //     }
-                    // }
                 }
                 return;
             }
             IsForcedComms = false;
             ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16);
+            new LateTask(() =>
+            {
+                Utils.NotifyRoles();
+            }, 0.1f, "NotifyRoles");
         }
         public static void FixForcedComms(PlayerControl pc)
         {
@@ -236,6 +242,7 @@ namespace TownOfHost
                 ShipStatus.Instance.CloseDoorsOfType(doorRoom);
             }
         }
+        public static bool IsComms(PlayerControl player, bool Comms) => IsForcedComms ? !player.Data.IsDead : Comms && Utils.IsActive(SystemTypes.Comms);
         public static bool CheckAndBlockFixComms(PlayerControl player)
         {
             if (IsForcedComms) return true;

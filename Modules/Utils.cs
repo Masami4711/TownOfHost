@@ -310,6 +310,7 @@ namespace TownOfHost
                         Comms = true;
                         break;
                     }
+                if (CustomRoles.Cracker.IsEnable()) Comms = Cracker.IsComms(pc, Comms);
             }
             return GetProgressText(pc.PlayerId, Comms);
         }
