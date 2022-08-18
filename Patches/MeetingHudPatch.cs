@@ -242,7 +242,7 @@ namespace TownOfHost
                 roleTextMeeting.enabled =
                     pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
                     (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
-                    Options.EnableGM.GetBool() || Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, pc);
+                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, pc);
             }
             if (Options.SyncButtonMode.GetBool())
             {
