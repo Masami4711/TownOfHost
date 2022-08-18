@@ -345,14 +345,8 @@ namespace TownOfHost
             if (target.Is(CustomRoles.NekoKabocha))
             {
                 Logger.Info(target?.Data?.PlayerName + "はNekoKabochaだった", "MurderPlayer");
-                bool RevengeCheck = false;
-                foreach (var pc in PlayerControl.AllPlayerControls)
-                    if (pc != killer && pc != target && !pc.Data.IsDead)
-                    {
-                        RevengeCheck = true;
-                        break;
-                    }
-                if (killer != target && RevengeCheck
+                bool NoRevenge = PlayerControl.AllPlayerControls.ToArray().All(x => x == killer || x == target || x.Data.IsDead);
+                if (killer != target && !NoRevenge
                 && ((killer.GetCustomRole().IsCrewmate() && Options.NekoKabochaRevengeCrewmate.GetBool())
                 || (killer.GetCustomRole().IsNeutral() && Options.NekoKabochaRevengeNeutral.GetBool())
                 || (killer.GetCustomRole().IsImpostor() && Options.NekoKabochaRevengeImpostor.GetBool())))
