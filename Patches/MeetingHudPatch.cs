@@ -242,7 +242,7 @@ namespace TownOfHost
                 roleTextMeeting.enabled =
                     pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
                     (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
-                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, pc);
+                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.KnowOtherRole(PlayerControl.LocalPlayer, pc);
             }
             if (Options.SyncButtonMode.GetBool())
             {
@@ -325,7 +325,7 @@ namespace TownOfHost
                         break;
                     case CustomRoles.Lovers:
                         if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead
-                        || (seer.Is(CustomRoles.Insider) && target.Data.IsDead && Insider.InsiderKnowsOtherRole(seer, target)))
+                        || (seer.Is(CustomRoles.Insider) && target.Data.IsDead && Insider.KnowOtherRole(seer, target)))
                             pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
                         break;
                 }
@@ -336,7 +336,7 @@ namespace TownOfHost
                         pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
                 }
 
-                bool LocalPlayerKnowsMadmate = Insider.InsiderKnowsMadmate(seer);
+                bool LocalPlayerKnowsMadmate = Insider.KnowMadmates(seer);
                 if (LocalPlayerKnowsMadmate)
                 {
                     if (target != null && target.GetCustomRole().IsMadmate()) //変更先がマッドメイト
@@ -348,13 +348,13 @@ namespace TownOfHost
                     pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
                 //インサイダーからの味方の能力表示
-                bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
 
                 if (seer.Is(CustomRoles.BountyHunter) && BountyHunter.Targets[seer.PlayerId] == target)
                 {
                     pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⊕");
                 }
-                else if (InsiderCanSeeImpostorAbility)
+                else if (InsiderKnowsImpostorAbilities)
                 {
                     foreach (var kvp in BountyHunter.Targets)
                     {

@@ -254,7 +254,7 @@ namespace TownOfHost
                     ProgressText += $" {FireWorks.GetFireWorksCount(playerId)}";
                     break;
                 case CustomRoles.Insider:
-                    ProgressText = Insider.AddProgressText(playerId, ProgressText);
+                    ProgressText += Insider.GetKillCount(playerId);
                     break;
                 default:
                     //タスクテキスト
@@ -653,7 +653,7 @@ namespace TownOfHost
                         SeerKnowsImpostors = true;
                 }
 
-                bool SeerKnowsMadmate = Insider.InsiderKnowsMadmate(seer);
+                bool SeerKnowsMadmate = Insider.KnowMadmates(seer);
 
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
@@ -728,9 +728,9 @@ namespace TownOfHost
                         }
                         //インサイダーからのラバーズ表示
                         else if (seer.Is(CustomRoles.Insider) && !seer.Data.IsDead && target.Data.IsDead && target.Is(CustomRoles.Lovers)
-                            && Insider.InsiderKnowsOtherRole(seer, target))
+                            && Insider.KnowOtherRole(seer, target))
                         {
-                            TargetMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
+                            TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Lovers), "♡");
                         }
 
                         if (seer.Is(CustomRoles.Arsonist))//seerがアーソニストの時
@@ -748,26 +748,26 @@ namespace TownOfHost
                             }
                         }
                         //インサイダーからの味方の能力表示
-                        bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                        bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
 
-                        if (seer.Is(CustomRoles.BountyHunter) || InsiderCanSeeImpostorAbility)
+                        if (seer.Is(CustomRoles.BountyHunter) || InsiderKnowsImpostorAbilities)
                         {
                             foreach (var kvp in BountyHunter.Targets)
                             {
-                                if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Value.PlayerId)
+                                if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Value.PlayerId)
                                 {
-                                    TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⊕</color>";
+                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "⊕");
                                 }
                             }
                         }
 
-                        if (seer.Is(CustomRoles.Puppeteer) || InsiderCanSeeImpostorAbility)
+                        if (seer.Is(CustomRoles.Puppeteer) || InsiderKnowsImpostorAbilities)
                         {
                             foreach (var kvp in Main.PuppeteerList)
                             {
-                                if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key)
+                                if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key)
                                 {
-                                    TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
+                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "◆");
                                 }
                             }
                         }
@@ -777,20 +777,20 @@ namespace TownOfHost
                         // {
                         //     TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
                         // }
-                        if (seer.Is(CustomRoles.Vampire) || InsiderCanSeeImpostorAbility)
+                        if (seer.Is(CustomRoles.Vampire) || InsiderKnowsImpostorAbilities)
                         {
                             foreach (var kvp in Main.BitPlayers)
                             {
-                                if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key && !target.Data.IsDead)
+                                if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key && !target.Data.IsDead)
                                 {
-                                    TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>×</color>";
+                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "×");
                                 }
                             }
                         }
 
 
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.InsiderKnowsOtherRole(seer, target) ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
+                        string TargetRoleText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.KnowOtherRole(seer, target) ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
 
                         if (target.Is(CustomRoles.GM))
                             TargetRoleText = $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}</size>\r\n";

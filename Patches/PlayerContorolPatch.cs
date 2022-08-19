@@ -230,6 +230,7 @@ namespace TownOfHost
                             killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                             killer.RpcGuardAndKill(target);
                             Main.BitPlayers.Add(target.PlayerId, (killer.PlayerId, 0f));
+                            Utils.NotifyRoles();
                             return false;
                         }
                         break;
@@ -268,6 +269,7 @@ namespace TownOfHost
                         Main.PuppeteerList[target.PlayerId] = killer.PlayerId;
                         Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown * 2;
                         killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
+                        Utils.NotifyRoles();
                         killer.RpcGuardAndKill(target);
                         return false;
                     case CustomRoles.TimeThief:
@@ -767,7 +769,7 @@ namespace TownOfHost
                     RoleText.text = RoleTextData.Item1;
                     RoleText.color = RoleTextData.Item2;
                     if (__instance.AmOwner) RoleText.enabled = true; //自分ならロールを表示
-                    else if (Insider.InsiderKnowsOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
+                    else if (Insider.KnowOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
                     else if (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) RoleText.enabled = true; //他プレイヤーでVisibleTasksCountが有効なおかつ自分が死んでいるならロールを表示
                     else RoleText.enabled = false; //そうでなければロールを非表示
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
@@ -831,9 +833,9 @@ namespace TownOfHost
                         var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                         RealName = ncd.OpenTag + RealName + ncd.CloseTag;
                     }
-                    if (Insider.InsiderKnowsMadmate(seer) && target.GetCustomRole().IsMadmate()) //seerがインサイダー
+                    if (Insider.KnowMadmates(seer) && target.GetCustomRole().IsMadmate()) //seerがインサイダー
                     {
-                        RealName = $"<color={Utils.GetRoleColorCode(CustomRoles.Madmate)}>{RealName}</color>";
+                        RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Madmate), RealName);
                     }
 
 
@@ -868,15 +870,15 @@ namespace TownOfHost
                     }
 
                     //インサイダーからの味方の能力表示
-                    bool InsiderCanSeeImpostorAbility = seer.Is(CustomRoles.Insider) && Insider.InsiderCanSeeAbilitiesOfImpostors.GetBool();
+                    bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
 
-                    if (seer.Is(CustomRoles.BountyHunter) || InsiderCanSeeImpostorAbility)
+                    if (seer.Is(CustomRoles.BountyHunter) || InsiderKnowsImpostorAbilities)
                     {
                         foreach (var kvp in BountyHunter.Targets)
                         {
-                            if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Value.PlayerId)
+                            if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Value.PlayerId)
                             {
-                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>⊕</color>";
+                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⊕");
                             }
                         }
                     }
@@ -887,23 +889,23 @@ namespace TownOfHost
                     // {
                     //     Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
                     // }
-                    if (seer.Is(CustomRoles.Puppeteer) || InsiderCanSeeImpostorAbility)
+                    if (seer.Is(CustomRoles.Puppeteer) || InsiderKnowsImpostorAbilities)
                     {
                         foreach (var kvp in Main.PuppeteerList)
                         {
-                            if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key)
+                            if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key)
                             {
-                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
+                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "◆");
                             }
                         }
                     }
-                    if (seer.Is(CustomRoles.Vampire) || InsiderCanSeeImpostorAbility)
+                    if (seer.Is(CustomRoles.Vampire) || InsiderKnowsImpostorAbilities)
                     {
                         foreach (var kvp in Main.BitPlayers)
                         {
-                            if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderCanSeeImpostorAbility) && target.PlayerId == kvp.Key && !target.Data.IsDead)
+                            if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key && !target.Data.IsDead)
                             {
-                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>×</color>";
+                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "×");
                             }
                         }
                     }
