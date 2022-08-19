@@ -99,6 +99,7 @@ namespace TownOfHost
             Mare.Init();
             Egoist.Init();
             Sheriff.Init();
+            NekoKabocha.Init();
             AntiBlackout.Reset();
         }
     }
@@ -360,6 +361,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.SabotageMaster:
                             SabotageMaster.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.NekoKabocha:
+                            NekoKabocha.Add(pc.PlayerId);
                             break;
                     }
                     pc.ResetKillCooldown();

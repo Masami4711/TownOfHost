@@ -335,7 +335,7 @@ EgoistKillCooldown,Egoist KillCooldown,エゴイストのキルクール
 NekoKabochaRevengeCrewmate,Take Revenge On Crew Killer,クルーに殺されたら、道連れにする,复仇者可以仇杀船员阵营的凶手
 NekoKabochaRevengeNeutral,Take Revenge On Neutral Killer,その他陣営に殺されたら、道連れにする,复仇者可以仇杀中立阵营的凶手
 NekoKabochaRevengeImpostor,Take Revenge On Impostor Killer,インポスターに殺されたら、道連れにする,复仇者可以仇杀内鬼阵营的凶手
-NekoKabochaRevengeExile,Take Revenge When Exiled,追放されたら、ランダムに道連れにする,复仇放逐可以与一名玩家同归于尽
+NekoKabochaRevengeExile,Take Revenge On Someone When Exiled,追放されたら、ランダムに道連れにする,复仇放逐可以与一名玩家同归于尽
 RandomRevengeIncludeTeamImpostor,Random Revenge Include Team Impostor,インポスター陣営もランダムに道連れにする,
 
 ## かくれんぼ設定

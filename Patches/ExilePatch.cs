@@ -106,6 +106,7 @@ namespace TownOfHost
                     Main.isCurseAndKill[pc.PlayerId] = false;
                 }
             }
+            // NekoKabocha.RevengeSpyral();
             Main.AfterMeetingDeathPlayers.Do(x =>
             {
                 var player = Utils.GetPlayerById(x.Key);

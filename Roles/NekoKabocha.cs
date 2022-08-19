@@ -1,0 +1,94 @@
+using System.Collections.Generic;
+using System.Linq;
+using Hazel;
+using UnityEngine;
+
+namespace TownOfHost
+{
+    public static class NekoKabocha
+    {
+        static readonly int Id = 3200;
+        static List<byte> playerIdList = new();
+        public static CustomOption RevengeCrewmate;
+        public static CustomOption RevengeNeutral;
+        public static CustomOption RevengeImpostor;
+        public static CustomOption RevengeExile;
+        public static CustomOption RandomRevengeIncludeTeamImpostor;
+        public static void SetupCustomOption()
+        {
+            Options.SetupRoleOptions(Id, CustomRoles.NekoKabocha);
+            RevengeCrewmate = CustomOption.Create(Id + 10, Color.white, "NekoKabochaRevengeCrewmate", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeNeutral = CustomOption.Create(Id + 11, Color.white, "NekoKabochaRevengeNeutral", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeImpostor = CustomOption.Create(Id + 12, Color.white, "NekoKabochaRevengeImpostor", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeExile = CustomOption.Create(Id + 13, Color.white, "NekoKabochaRevengeExile", false, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RandomRevengeIncludeTeamImpostor = CustomOption.Create(Id + 14, Color.white, "RandomRevengeIncludeTeamImpostor", true, RevengeExile);
+        }
+        public static void Init()
+        {
+            playerIdList = new();
+        }
+        public static void Add(byte playerId)
+        {
+            playerIdList.Add(playerId);
+        }
+        public static bool IsEnable() => playerIdList.Count > 0;
+        public static void RevengeOnKill(PlayerControl killer, PlayerControl target)
+        {
+            Logger.Info(target?.Data?.PlayerName + "はNekoKabochaだった", "MurderPlayer");
+            var deathReason = PlayerState.GetDeathReason(target.PlayerId);
+            bool NoRevenge = PlayerControl.AllPlayerControls.ToArray().All(x => x == killer || x == target || x.Data.IsDead);
+            if (killer == target || NoRevenge) return;
+            if ((killer.GetCustomRole().IsCrewmate() && RevengeCrewmate.GetBool())
+            || (killer.GetCustomRole().IsNeutral() && RevengeNeutral.GetBool())
+            || (killer.GetCustomRole().IsImpostor() && RevengeImpostor.GetBool()))
+            {
+                PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Revenge);
+                killer.RpcMurderPlayer(killer);
+            }
+        }
+        public static void RevengeOnExile(byte playerId)
+        {
+            if (!RevengeExile.GetBool()) return;
+            var nekokabocha = Utils.GetPlayerById(playerId);
+            var target = PickRevengeTarget(nekokabocha);
+            Main.AfterMeetingDeathPlayers.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
+            Logger.Info($"{nekokabocha.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "NekoKabocha");
+        }
+        public static void RevengeSpyral()
+        {
+            bool loop = true;
+            while (loop)
+                loop = RevengeOnRPCExile();
+        }
+        public static bool RevengeOnRPCExile()
+        {
+            if (!RevengeExile.GetBool()) return false;
+            var AdditionalRevengeTarget = new Dictionary<byte, PlayerState.DeathReason>();
+            foreach (var kvp in Main.AfterMeetingDeathPlayers)
+            {
+                var nekokabocha = Utils.GetPlayerById(kvp.Key);
+                if (!nekokabocha.Is(CustomRoles.NekoKabocha) || kvp.Value == PlayerState.DeathReason.Suicide) continue;
+                var target = PickRevengeTarget(nekokabocha);
+                AdditionalRevengeTarget.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
+                Logger.Info($"{nekokabocha.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "NekoKabocha");
+            }
+            if (AdditionalRevengeTarget == null) return false;
+            foreach (var d in AdditionalRevengeTarget) Main.AfterMeetingDeathPlayers.TryAdd(d.Key, d.Value);
+            return true;
+        }
+        public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
+        {
+            List<PlayerControl> TargetList = new();
+            foreach (var candidate in PlayerControl.AllPlayerControls)
+            {
+                if (candidate == exiledplayer || candidate.Data.IsDead || Main.AfterMeetingDeathPlayers.ContainsKey(candidate.PlayerId)) continue;
+                if (!candidate.GetCustomRole().IsImpostorTeam() || RandomRevengeIncludeTeamImpostor.GetBool())
+                    TargetList.Add(candidate);
+            }
+            var rand = new System.Random();
+            var target = TargetList[rand.Next(TargetList.Count)];
+            Logger.Info($"{exiledplayer.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "PickRevengeTarget");
+            return target;
+        }
+    }
+}

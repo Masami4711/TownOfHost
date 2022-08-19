@@ -171,13 +171,8 @@ namespace TownOfHost
                 {
                     FixedUpdatePatch.LoversSuicide(exiledPlayer.PlayerId, true);
                 }
-                if (Utils.GetPlayerById(exileId).Is(CustomRoles.NekoKabocha) && Options.NekoKabochaRevengeExile.GetBool())
-                {
-                    var nekokabocha = Utils.GetPlayerById(exileId);
-                    var target = PickRevengeTarget(nekokabocha);
-                    Main.AfterMeetingDeathPlayers.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
-                    Logger.Info($"{nekokabocha.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "NekoKabocha");
-                }
+                if (Utils.GetPlayerById(exileId).Is(CustomRoles.NekoKabocha)/* && Options.NekoKabochaRevengeExile.GetBool()*/)
+                    NekoKabocha.RevengeOnExile(exileId);
 
                 //霊界用暗転バグ対処
                 if (!AntiBlackout.OverrideExiledPlayer && exiledPlayer != null && Main.ResetCamPlayerList.Contains(exiledPlayer.PlayerId))
@@ -195,28 +190,6 @@ namespace TownOfHost
         {
             var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
             return player != null && player.Is(CustomRoles.Mayor);
-        }
-        public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
-        {
-            List<PlayerControl> TargetList = new();
-            foreach (var candidate in PlayerControl.AllPlayerControls)
-            {
-                if (candidate == exiledplayer || candidate.Data.IsDead) continue;
-                // if (exiledplayer.GetCustomRole().IsMadmate())
-                // {
-                //     if (!candidate.GetCustomRole().IsImpostor()) TargetList.Add(candidate);
-                //     continue;
-                // }
-                if (exiledplayer.Is(CustomRoles.NekoKabocha))
-                {
-                    if (!candidate.GetCustomRole().IsImpostorTeam() || Options.RandomRevengeIncludeTeamImpostor.GetBool()) TargetList.Add(candidate);
-                    continue;
-                }
-            }
-            var rand = new System.Random();
-            var target = TargetList[rand.Next(TargetList.Count)];
-            Logger.Info($"{exiledplayer.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "PickRevengeTarget");
-            return target;
         }
     }
 
