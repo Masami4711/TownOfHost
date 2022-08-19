@@ -16,10 +16,10 @@ namespace TownOfHost
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, CustomRoles.Insider);
-            CanSeeImpostorAbilities = CustomOption.Create(Id + 10, Color.white, "CanSeeImpostorAbilities", true, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            CanSeeWholeRolesOfGhosts = CustomOption.Create(Id + 11, Color.white, "CanSeeWholeRolesOfGhosts", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            CanSeeMadmates = CustomOption.Create(Id + 12, Color.white, "CanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            KillCountToSeeMadmates = CustomOption.Create(Id + 13, Color.white, "KillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
+            CanSeeImpostorAbilities = CustomOption.Create(Id + 10, Color.white, "InsiderCanSeeImpostorAbilities", true, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            CanSeeWholeRolesOfGhosts = CustomOption.Create(Id + 11, Color.white, "InsiderCanSeeWholeRolesOfGhosts", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            CanSeeMadmates = CustomOption.Create(Id + 12, Color.white, "InsiderCanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            KillCountToSeeMadmates = CustomOption.Create(Id + 13, Color.white, "InsiderKillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
         }
         public static void Init()
         {
