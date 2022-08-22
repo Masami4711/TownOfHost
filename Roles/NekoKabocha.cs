@@ -44,6 +44,7 @@ namespace TownOfHost
             {
                 PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Revenge);
                 killer.RpcMurderPlayer(killer);
+                Logger.Info($"{target.GetNameWithRole()}が:{killer.GetNameWithRole()}を道連れにしました", "NekoKabocha");
             }
         }
         public static void RevengeOnExile(byte playerId)
@@ -51,30 +52,10 @@ namespace TownOfHost
             if (!RevengeExile.GetBool()) return;
             var nekokabocha = Utils.GetPlayerById(playerId);
             var target = PickRevengeTarget(nekokabocha);
-            Main.AfterMeetingDeathPlayers.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
+            if (target == null) return;
+            // Main.AfterMeetingDeathPlayers.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
+            CheckForEndVotingPatch.TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
             Logger.Info($"{nekokabocha.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "NekoKabocha");
-        }
-        public static void RevengeSpyral()
-        {
-            bool loop = true;
-            while (loop)
-                loop = RevengeOnRPCExile();
-        }
-        public static bool RevengeOnRPCExile()
-        {
-            if (!RevengeExile.GetBool()) return false;
-            var AdditionalRevengeTarget = new Dictionary<byte, PlayerState.DeathReason>();
-            foreach (var kvp in Main.AfterMeetingDeathPlayers)
-            {
-                var nekokabocha = Utils.GetPlayerById(kvp.Key);
-                if (!nekokabocha.Is(CustomRoles.NekoKabocha) || kvp.Value == PlayerState.DeathReason.Suicide) continue;
-                var target = PickRevengeTarget(nekokabocha);
-                AdditionalRevengeTarget.TryAdd(target.PlayerId, PlayerState.DeathReason.Revenge);
-                Logger.Info($"{nekokabocha.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "NekoKabocha");
-            }
-            if (AdditionalRevengeTarget == null) return false;
-            foreach (var d in AdditionalRevengeTarget) Main.AfterMeetingDeathPlayers.TryAdd(d.Key, d.Value);
-            return true;
         }
         public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
         {
@@ -85,6 +66,7 @@ namespace TownOfHost
                 if (!candidate.GetCustomRole().IsImpostorTeam() || RandomRevengeIncludeTeamImpostor.GetBool())
                     TargetList.Add(candidate);
             }
+            if (TargetList == null) return null;
             var rand = new System.Random();
             var target = TargetList[rand.Next(TargetList.Count)];
             Logger.Info($"{exiledplayer.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "PickRevengeTarget");

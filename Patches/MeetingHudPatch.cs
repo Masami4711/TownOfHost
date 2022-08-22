@@ -24,7 +24,8 @@ namespace TownOfHost
                     if (pc.Is(CustomRoles.Dictator) && pva.DidVote && pc.PlayerId != pva.VotedFor && pva.VotedFor < 253 && !pc.Data.IsDead)
                     {
                         var voteTarget = Utils.GetPlayerById(pva.VotedFor);
-                        Main.AfterMeetingDeathPlayers.TryAdd(pc.PlayerId, PlayerState.DeathReason.Suicide);
+                        // Main.AfterMeetingDeathPlayers.TryAdd(pc.PlayerId, PlayerState.DeathReason.Suicide);
+                        TryAddAfterMeetingDeathPlayers(pc.PlayerId, PlayerState.DeathReason.Suicide);
                         __instance.RpcVotingComplete(new MeetingHud.VoterState[]{ new ()
                         {
                             VoterId = pva.TargetPlayerId,
@@ -60,7 +61,8 @@ namespace TownOfHost
                             switch (Options.GetWhenSkipVote())
                             {
                                 case VoteMode.Suicide:
-                                    Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    // Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    TryAddAfterMeetingDeathPlayers(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
                                     Logger.Info($"スキップしたため{voter.GetNameWithRole()}を自殺させました", "Vote");
                                     break;
                                 case VoteMode.SelfVote:
@@ -76,7 +78,8 @@ namespace TownOfHost
                             switch (Options.GetWhenNonVote())
                             {
                                 case VoteMode.Suicide:
-                                    Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    // Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    TryAddAfterMeetingDeathPlayers(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
                                     Logger.Info($"無投票のため{voter.GetNameWithRole()}を自殺させました", "Vote");
                                     break;
                                 case VoteMode.SelfVote:
@@ -148,7 +151,8 @@ namespace TownOfHost
                 {
                     foreach (var p in Main.SpelledPlayer)
                     {
-                        Main.AfterMeetingDeathPlayers.TryAdd(p.PlayerId, PlayerState.DeathReason.Spell);
+                        // Main.AfterMeetingDeathPlayers.TryAdd(p.PlayerId, PlayerState.DeathReason.Spell);
+                        TryAddAfterMeetingDeathPlayers(p.PlayerId, PlayerState.DeathReason.Spell);
                         if (Main.ExecutionerTarget.ContainsValue(p.PlayerId) && exileId != p.PlayerId)
                         {
                             byte Executioner = 0x73;
@@ -190,6 +194,19 @@ namespace TownOfHost
         {
             var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
             return player != null && player.Is(CustomRoles.Mayor);
+        }
+        public static void TryAddAfterMeetingDeathPlayers(byte playerId, PlayerState.DeathReason deathReason)
+        {
+            Logger.Info($"playerId:{Utils.GetNameWithRole(playerId)}, deathReason:{deathReason}", "TryAddAfterMeetingDeathPlayers");
+            Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason);
+            if (deathReason == PlayerState.DeathReason.Suicide) return;
+            var player = Utils.GetPlayerById(playerId);
+            switch (player.GetCustomRole())
+            {
+                case CustomRoles.NekoKabocha:
+                    NekoKabocha.RevengeOnExile(playerId);
+                    break;
+            }
         }
     }
 
