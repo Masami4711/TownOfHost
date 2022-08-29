@@ -593,7 +593,7 @@ Kihi的想法
 创建者:そうくん<br>
  想法提出者:しゅー<br>
 
-阵营 : 中立阵营<br>
+阵营 : 自私者阵营<br>
 基础 : 变形者<br>
 胜利条件：在所有内鬼死亡后满足内鬼阵营胜利条件。<br>
 
@@ -898,4 +898,6 @@ Translate-Chinese : 四个憨批汉化组:氢氧则名；两个少年汉化组:�
 - [Kou](https://github.com/kou-hetare) <!--([Twitter](https://twitter.com/))-->
 - [Ykundesu](https://github.com/ykundesu) <!--([Twitter](https://twitter.com/))-->
 - [Yurino](https://github.com/yurinakira) <!--([Twitter](https://twitter.com/))-->
+- [Masami](https://github.com/Masami4711) <!--([Twitter](https://twitter.com/))-->
+
 翻译来自https://www.deepl.com
