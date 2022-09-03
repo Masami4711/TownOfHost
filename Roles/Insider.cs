@@ -9,10 +9,14 @@ namespace TownOfHost
         static readonly int Id = 2800;
         static List<byte> playerIdList = new();
         public static Dictionary<byte, PlayerControl> IsKilledByInsider = new();
-        public static CustomOption CanSeeImpostorAbilities;
-        public static CustomOption CanSeeWholeRolesOfGhosts;
-        public static CustomOption CanSeeMadmates;
-        public static CustomOption KillCountToSeeMadmates;
+        private static CustomOption CanSeeImpostorAbilities;
+        private static CustomOption CanSeeWholeRolesOfGhosts;
+        private static CustomOption CanSeeMadmates;
+        private static CustomOption KillCountToSeeMadmates;
+        static Dictionary<CustomRoles, CustomRoles> ReplaceRoles = new()
+        {
+            {CustomRoles.Bait, CustomRoles.Crewmate}
+        };
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, CustomRoles.Insider);
@@ -98,5 +102,25 @@ namespace TownOfHost
 
         }
         public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
+        public static string GetRoleText(PlayerControl target, string TargetTaskText, string fontSize)
+        {
+            if (DisableTaskText(target)) TargetTaskText = "";
+            var Role = RoleTextData(target);
+            var RoleText = $"<size={fontSize}>{Helpers.ColorString(Role.Item2, Role.Item1)}{TargetTaskText}</size>\r\n";
+            return RoleText;
+        }
+        public static (string, Color) RoleTextData(PlayerControl target)
+        {
+            var RoleName = target.GetRoleName();
+            var RoleColor = target.GetRoleColor();
+            if (ReplaceRoles.TryGetValue(target.GetCustomRole(), out var newRole))
+            {
+                RoleName = Utils.GetRoleName(newRole);
+                RoleColor = Utils.GetRoleColor(newRole);
+            }
+            return (RoleName, RoleColor);
+        }
+        public static bool DisableTaskText(PlayerControl pc)
+        => Utils.HasTasks(pc.Data) && CustomRoles.Bait.IsEnable();
     }
 }
