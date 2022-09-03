@@ -21,8 +21,8 @@ namespace TownOfHost
         // プリセット
         private static readonly string[] presets =
         {
-            "Preset_1", "Preset_2", "Preset_3",
-            "Preset_4", "Preset_5"
+            Main.Preset1.Value, Main.Preset2.Value, Main.Preset3.Value,
+            Main.Preset4.Value, Main.Preset5.Value
         };
 
         // ゲームモード
@@ -181,6 +181,7 @@ namespace TownOfHost
         public static CustomOption ColorNameMode;
         public static CustomOption GhostCanSeeOtherRoles;
         public static CustomOption GhostCanSeeOtherVotes;
+        public static CustomOption GhostIgnoreTasks;
         public static CustomOption HideGameSettings;
         public static readonly string[] suffixModes =
         {
@@ -241,7 +242,7 @@ namespace TownOfHost
 
         public static float GetRoleChance(CustomRoles role)
         {
-            return CustomRoleSpawnChances.TryGetValue(role, out var option) ? option.GetSelection() / 10f : roleSpawnChances[role];
+            return CustomRoleSpawnChances.TryGetValue(role, out var option) ? option.GetSelection()/* / 10f */ : roleSpawnChances[role];
         }
         public static void Load()
         {
@@ -457,6 +458,8 @@ namespace TownOfHost
             GhostCanSeeOtherRoles = CustomOption.Create(100603, Color.white, "GhostCanSeeOtherRoles", true)
                 .SetGameMode(CustomGameMode.All);
             GhostCanSeeOtherVotes = CustomOption.Create(100604, Color.white, "GhostCanSeeOtherVotes", true)
+                .SetGameMode(CustomGameMode.All);
+            GhostIgnoreTasks = CustomOption.Create(100607, Color.white, "GhostIgnoreTasks", false)
                 .SetGameMode(CustomGameMode.All);
             HideGameSettings = CustomOption.Create(100606, Color.white, "HideGameSettings", false)
                 .SetGameMode(CustomGameMode.All);
