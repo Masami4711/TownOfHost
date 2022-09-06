@@ -9,11 +9,15 @@ namespace TownOfHost
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.OnGameEnd))]
     class EndGamePatch
     {
+        public static Dictionary<byte, string> SummaryText = new();
         public static void Postfix(AmongUsClient __instance, [HarmonyArgument(0)] ref EndGameResult endGameResult)
         {
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             GameStates.InGame = false;
 
+            SummaryText = new();
+            foreach (var id in Main.AllPlayerCustomRoles.Keys)
+                SummaryText[id] = Utils.SummaryTexts(id, disableColor: false);
             Logger.Info("-----------ゲーム終了-----------", "Phase");
             PlayerControl.GameOptions.killCooldown = Options.DefaultKillCooldown;
             //winnerListリセット
@@ -194,6 +198,8 @@ namespace TownOfHost
             Main.winnerList = new();
             foreach (var pc in winner)
             {
+                if (Main.currentWinner is not CustomWinner.Draw && pc.Is(CustomRoles.GM)) continue;
+
                 TempData.winners.Add(new WinningPlayerData(pc.Data));
                 Main.winnerList.Add(pc.PlayerId);
             }
@@ -242,6 +248,12 @@ namespace TownOfHost
                 {
                     __instance.BackgroundBar.material.color = Utils.GetRoleColor(winnerRole);
                 }
+            }
+            if (AmongUsClient.Instance.AmHost && Main.AllPlayerCustomRoles[0] == CustomRoles.GM)
+            {
+                __instance.WinText.text = "Game Over";
+                __instance.WinText.color = Utils.GetRoleColor(CustomRoles.GM);
+                __instance.BackgroundBar.material.color = Utils.GetRoleColor(CustomRoles.GM);
             }
             switch (Main.currentWinner)
             {
@@ -297,13 +309,13 @@ namespace TownOfHost
             Dictionary<byte, CustomRoles> cloneRoles = new(Main.AllPlayerCustomRoles);
             foreach (var id in Main.winnerList)
             {
-                roleSummaryText += $"\n<color={CustomWinnerColor}>★</color> " + Utils.SummaryTexts(id, disableColor: false);
+                roleSummaryText += $"\n<color={CustomWinnerColor}>★</color> " + EndGamePatch.SummaryText[id];
                 cloneRoles.Remove(id);
             }
             foreach (var kvp in cloneRoles)
             {
                 var id = kvp.Key;
-                roleSummaryText += $"\n　 " + Utils.SummaryTexts(id, disableColor: false);
+                roleSummaryText += $"\n　 " + EndGamePatch.SummaryText[id];
             }
             TMPro.TMP_Text roleSummaryTextMesh = roleSummary.GetComponent<TMPro.TMP_Text>();
             roleSummaryTextMesh.alignment = TMPro.TextAlignmentOptions.TopLeft;

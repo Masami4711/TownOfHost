@@ -64,10 +64,10 @@ namespace TownOfHost
             if (player.Is(CustomRoles.SabotageMaster))
                 SabotageMaster.RepairSystem(__instance, systemType, amount);
 
-            if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate())
-                || Cracker.IsForcedLightsOut) &&
-                systemType == SystemTypes.Electrical && //システムタイプが電気室
-                0 <= amount && amount <= 4) //配電盤操作のamount
+            if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateが停電を直せる設定がオフ
+                || Cracker.IsForcedLightsOut)
+                && systemType == SystemTypes.Electrical //システムタイプが電気室
+                && 0 <= amount && amount <= 4) //配電盤操作のamount
                 return false;
             if (((!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateがコミュサボを直せる設定がオフ
                 || Cracker.CheckAndBlockFixComms(player))

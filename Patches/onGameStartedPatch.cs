@@ -346,6 +346,7 @@ namespace TownOfHost
                             {
                                 if (pc == target) continue;
                                 else if (!Options.ExecutionerCanTargetImpostor.GetBool() && target.GetCustomRole().IsImpostor()) continue;
+                                else if (!Options.ExecutionerCanTargetNeutralKiller.GetBool() && target.IsNeutralKiller()) continue;
 
                                 targetList.Add(target);
                             }
@@ -368,13 +369,24 @@ namespace TownOfHost
                             SabotageMaster.Add(pc.PlayerId);
                             break;
                         case CustomRoles.EvilTracker:
-                            EvilTracker.Add(pc);
+                            EvilTracker.Add(pc.PlayerId);
                             break;
                         case CustomRoles.Cracker:
                             Cracker.Add(pc.PlayerId);
                             break;
                     }
                     pc.ResetKillCooldown();
+
+                    //通常モードでかくれんぼをする人用
+                    if (Options.IsStandardHAS)
+                    {
+                        foreach (var seer in PlayerControl.AllPlayerControls)
+                        {
+                            if (seer == pc) continue;
+                            if (pc.GetCustomRole().IsImpostor() || pc.IsNeutralKiller()) //変更対象がインポスター陣営orキル可能な第三陣営
+                                NameColorManager.Instance.RpcAdd(seer.PlayerId, pc.PlayerId, $"{pc.GetRoleColorCode()}");
+                        }
+                    }
                 }
 
                 //役職の人数を戻す
@@ -430,13 +442,9 @@ namespace TownOfHost
                         if (pc == player) continue;
                         sender.RpcSetRole(pc, RoleTypes.Scientist, playerCID);
                     }
-                    //他視点でDesyncする人の役職を科学者にするループ
-                    foreach (var pc in PlayerControl.AllPlayerControls)
-                    {
-                        if (pc == player) continue;
-                        if (pc.PlayerId == 0) player.SetRole(RoleTypes.Scientist); //ホスト視点用
-                        else sender.RpcSetRole(player, RoleTypes.Scientist, pc.GetClientId());
-                    }
+                    //他視点でDesyncする人の役職を科学者にする
+                    player.SetRole(RoleTypes.Scientist); //ホスト視点用
+                    sender.RpcSetRole(player, RoleTypes.Scientist);
                 }
                 else
                 {

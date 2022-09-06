@@ -31,8 +31,7 @@ namespace TownOfHost
         RemoveExecutionerTarget,
         SendFireWorksState,
         SetCurrentDousingTarget,
-        // SetEvilTrackerTarget,
-        // RemoveEvilTrackerTarget,
+        SetEvilTrackerTarget,
     }
     public enum Sounds
     {
@@ -85,9 +84,10 @@ namespace TownOfHost
                 case CustomRPC.VersionCheck:
                     try
                     {
-                        string version = reader.ReadString();
+                        Version version = Version.Parse(reader.ReadString());
                         string tag = reader.ReadString();
-                        Main.playerVersion[__instance.PlayerId] = new PlayerVersion(version, tag);
+                        string forkId = 3 <= version.Major ? reader.ReadString() : Main.OriginalForkId;
+                        Main.playerVersion[__instance.PlayerId] = new PlayerVersion(version, tag, forkId);
                     }
                     catch
                     {
@@ -187,12 +187,11 @@ namespace TownOfHost
                     if (PlayerControl.LocalPlayer.PlayerId == arsonistId)
                         Main.currentDousingTarget = dousingTargetId;
                     break;
-                    // case CustomRPC.SetEvilTrackerTarget:
-                    //     EvilTracker.RPCSetTarget(reader);
-                    //     break;
-                    // case CustomRPC.RemoveEvilTrackerTarget:
-                    //     EvilTracker.RPCRemoveTarget(reader);
-                    //     break;
+                case CustomRPC.SetEvilTrackerTarget:
+                    byte TrackerId = reader.ReadByte();
+                    int TargetId = reader.ReadInt32();
+                    EvilTracker.RPCSetTarget(TrackerId, TargetId);
+                    break;
             }
         }
     }
@@ -237,8 +236,9 @@ namespace TownOfHost
             MessageWriter writer = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.VersionCheck, SendOption.Reliable);
             writer.Write(Main.PluginVersion);
             writer.Write($"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})");
+            writer.Write(Main.ForkId);
             writer.EndMessage();
-            Main.playerVersion[PlayerControl.LocalPlayer.PlayerId] = new PlayerVersion(Main.PluginVersion, $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})");
+            Main.playerVersion[PlayerControl.LocalPlayer.PlayerId] = new PlayerVersion(Main.PluginVersion, $"{ThisAssembly.Git.Commit}({ThisAssembly.Git.Branch})", Main.ForkId);
         }
         public static void SendDeathReason(byte playerId, PlayerState.DeathReason deathReason)
         {
@@ -385,6 +385,9 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Sheriff:
                     Sheriff.Add(targetId);
+                    break;
+                case CustomRoles.EvilTracker:
+                    EvilTracker.Add(targetId);
                     break;
             }
             HudManager.Instance.SetHudActive(true);
