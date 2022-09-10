@@ -149,6 +149,22 @@ The target swaps after a configurable amount of time.<br>
 | Kill Cooldown After Killing Bounty(s)    |
 | Kill Cooldown After Killing Others(s)    |
 
+### EvilTracker
+
+Team : Impostors<br>
+Basis : Shapeshifter<br>
+
+EvilTrackers can track other players.<br>
+They have arrows pointing to the other impostors and to another player selected by shapeshift.<br>
+Depending on option, they can also see kill flash when other impostor kills.<br>
+
+#### Game Options
+
+| Name                                            |
+| ----------------------------------------------- |
+| EvilTracker Can See The Flash Of Impostor Kills |
+| EvilTracker Can Reset Target After Meeting      |
+
 ### FireWorks
 
 Create and idea by こう。<br>
@@ -182,6 +198,12 @@ While lights out they can move faster, and yet their name looks red by everyone.
 
 #### Game Options
 
+| Name                 |
+| -------------------- |
+| acceleration valued  |
+
+#### Game Options
+
 | Name                            |
 | ------------------------------- |
 | Mare Player Speed In Lights Out |
@@ -208,7 +230,7 @@ Unless taking a kill by deadline, they murder themselves instantly.<br>
 | Name                          |
 | ----------------------------- |
 | SerialKiller Kill Cooldown(s) |
-| Time Limit To Suiside(s)      |
+| Time Limit To Suicide(s)      |
 
 ### ShapeMaster
 
@@ -485,6 +507,21 @@ Opening a door in Polus or The Airship will open all the linked doors.<br>
 | SabotageMaster Can Fix Both Comms In MIRA HQ           |
 | SabotageMaster Can Fix Lights Out All At Once          |
 
+### Seer
+
+Team : Crewmates<br>
+Decision : Crewmate<br>
+
+Seer can see when someone dies.<br>
+For an instant, your vision turns total darkness and Reactor is alerted only to you unless on Reactor (named "Kill Flash").<br>
+There is a setting to slightly adjust Kill Flash duration.<br>
+
+#### Settings
+
+| Common Settings        |
+| ---------------------- |
+| Kill Flash Duration(s) |
+
 ### Sheriff
 
 Team : Crewmates<br>
@@ -536,13 +573,14 @@ Create and idea by よっキング<br>
 Team : Crewmates<br>
 Basis : Crewmate<br>
 
-Finishing all the tasks boosts the player speed of someone alive.<br>
+Defined amount of tasks boosts the player speed of someone alive.<br>
 
 #### Game Options
 
 | Name                 |
 | -------------------- |
-| Boosted Player Speed |
+| Acceleration valued  |
+| Tasks that trigger   |
 
 ### Trapper
 
@@ -577,7 +615,7 @@ Basis : Impostor<br>
 Victory Condition : Douse and ignite all the living players<br>
 
 When an arsonist tries to use the kill button, they douse oil onto the crewmates.<br>
-To win as Arsonist, you must douse all fellow players and vent to win.<br>
+To win as Arsonist, you must douse all Fallow players and vent to win.<br>
 To douse, you must stand next to a player after pressing kill until the orange triangle is filled in.<br>
 
 * As a measure against blackout, after death, the Arsonist can only see the motion of committing suicide at each meeting. There is no corpse. <br>
@@ -594,7 +632,7 @@ To douse, you must stand next to a player after pressing kill until the orange t
 Create by そうくん<br>
 Original idea by しゅー<br>
 
-Team : Neutral<br>
+Team : Egoist<br>
 Basis : Shapeshifter<br>
 Victory Condition : Satisfy the Impostor victory condition after all the Impostors die.<br>
 
@@ -907,5 +945,6 @@ Translated with https://www.deepl.com<br>
 - [Kou](https://github.com/kou-hetare) <!--([Twitter](https://twitter.com/))-->
 - [Ykundesu](https://github.com/ykundesu) <!--([Twitter](https://twitter.com/))-->
 - [Yurino](https://github.com/yurinakira) <!--([Twitter](https://twitter.com/))-->
+- [Masami](https://github.com/Masami4711) <!--([Twitter](https://twitter.com/))-->
 
 Translated with https://www.deepl.com<br>

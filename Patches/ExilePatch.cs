@@ -105,6 +105,7 @@ namespace TownOfHost
                     Main.CursedPlayers[pc.PlayerId] = null;
                     Main.isCurseAndKill[pc.PlayerId] = false;
                 }
+                if (pc.Is(CustomRoles.EvilTracker)) EvilTracker.EnableResetTargetAfterMeeting(pc);
             }
             Main.AfterMeetingDeathPlayers.Do(x =>
             {
@@ -115,6 +116,8 @@ namespace TownOfHost
                 player?.RpcExileV2();
                 if (player.Is(CustomRoles.TimeThief) && x.Value == PlayerState.DeathReason.LoversSuicide)
                     player?.ResetVotingTime();
+                if (Main.ExecutionerTarget.ContainsValue(x.Key))
+                    player?.ChangeExecutionerRole();
             });
             Main.AfterMeetingDeathPlayers.Clear();
             FallFromLadder.Reset();

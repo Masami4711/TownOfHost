@@ -37,6 +37,7 @@ namespace TownOfHost
                     Logger.Info("キル能力解禁", "HideAndSeek");
                 }
             }
+            if (CustomRoles.EvilTracker.IsEnable()) EvilTracker.FixedUpdate();
         }
     }
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.RepairSystem))]
@@ -63,14 +64,15 @@ namespace TownOfHost
             if (player.Is(CustomRoles.SabotageMaster))
                 SabotageMaster.RepairSystem(__instance, systemType, amount);
 
-            if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate())
-                || Cracker.IsPoweredLightsOut) &&
-                systemType == SystemTypes.Electrical && //システムタイプが電気室
-                0 <= amount && amount <= 4) //配電盤操作のamount
+            if (((!Options.MadmateCanFixLightsOut.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateが停電を直せる設定がオフ
+                || Cracker.IsForcedLightsOut)
+                && systemType == SystemTypes.Electrical //システムタイプが電気室
+                && 0 <= amount && amount <= 4) //配電盤操作のamount
                 return false;
-            if (!Options.MadmateCanFixComms.GetBool() && //Madmateがコミュサボを直せる設定がオフ
-                systemType == SystemTypes.Comms && //システムタイプが通信室
-                (player.Is(CustomRoles.Madmate) || player.Is(CustomRoles.MadGuardian))) //実行者がMadmateかMadGuardian)
+            if (((!Options.MadmateCanFixComms.GetBool() && player.GetCustomRole().IsMadmate()) //Madmateがコミュサボを直せる設定がオフ
+                || Cracker.CheckAndBlockFixComms(player))
+                && systemType == SystemTypes.Comms
+                && amount is 0 or 16 or 17) //システムタイプが通信室
                 return false;
             if (player.Is(CustomRoles.Sheriff) || player.Is(CustomRoles.Arsonist) || (player.Is(CustomRoles.Jackal) && !Options.JackalCanUseSabotage.GetBool()))
             {

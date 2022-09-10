@@ -21,8 +21,8 @@ namespace TownOfHost
         // プリセット
         private static readonly string[] presets =
         {
-            "Preset_1", "Preset_2", "Preset_3",
-            "Preset_4", "Preset_5"
+            Main.Preset1.Value, Main.Preset2.Value, Main.Preset3.Value,
+            Main.Preset4.Value, Main.Preset5.Value
         };
 
         // ゲームモード
@@ -91,7 +91,8 @@ namespace TownOfHost
         public static CustomOption SnitchEnableTargetArrow;
         public static CustomOption SnitchCanGetArrowColor;
         public static CustomOption SnitchCanFindNeutralKiller;
-        public static CustomOption SpeedBoosterUpSpeed;
+        public static CustomOption SpeedBoosterUpSpeed; //加速値
+        public static CustomOption SpeedBoosterTaskTrigger; //効果を発動するタスク完了数
         public static CustomOption TrapperBlockMoveTime;
         public static CustomOption CanTerroristSuicideWin;
         public static CustomOption ArsonistDouseTime;
@@ -99,11 +100,13 @@ namespace TownOfHost
         public static CustomOption CanBeforeSchrodingerCatWinTheCrewmate;
         public static CustomOption SchrodingerCatExiledTeamChanges;
         public static CustomOption ExecutionerCanTargetImpostor;
+        public static CustomOption ExecutionerCanTargetNeutralKiller;
         public static CustomOption ExecutionerChangeRolesAfterTargetKilled;
         public static CustomOption JackalKillCooldown;
         public static CustomOption JackalCanVent;
         public static CustomOption JackalCanUseSabotage;
         public static CustomOption JackalHasImpostorVision;
+        public static CustomOption KillFlashDuration;
 
         // HideAndSeek
         public static CustomOption AllowCloseDoors;
@@ -143,12 +146,21 @@ namespace TownOfHost
         public static CustomOption VoteMode;
         public static CustomOption WhenSkipVote;
         public static CustomOption WhenNonVote;
+        public static CustomOption WhenTie;
         public static readonly string[] voteModes =
         {
             "Default", "Suicide", "SelfVote", "Skip"
         };
+        public static readonly string[] tieModes =
+        {
+            "TieMode.Default", "TieMode.All", "TieMode.Random"
+        };
         public static VoteMode GetWhenSkipVote() => (VoteMode)WhenSkipVote.GetSelection();
         public static VoteMode GetWhenNonVote() => (VoteMode)WhenNonVote.GetSelection();
+
+        // 全員生存時の会議時間
+        public static CustomOption AllAliveMeeting;
+        public static CustomOption AllAliveMeetingTime;
 
         //転落死
         public static CustomOption LadderDeath;
@@ -177,6 +189,7 @@ namespace TownOfHost
         public static CustomOption ColorNameMode;
         public static CustomOption GhostCanSeeOtherRoles;
         public static CustomOption GhostCanSeeOtherVotes;
+        public static CustomOption GhostIgnoreTasks;
         public static CustomOption HideGameSettings;
         public static readonly string[] suffixModes =
         {
@@ -237,7 +250,7 @@ namespace TownOfHost
 
         public static float GetRoleChance(CustomRoles role)
         {
-            return CustomRoleSpawnChances.TryGetValue(role, out var option) ? option.GetSelection() / 10f : roleSpawnChances[role];
+            return CustomRoleSpawnChances.TryGetValue(role, out var option) ? option.GetSelection()/* / 10f */ : roleSpawnChances[role];
         }
         public static void Load()
         {
@@ -272,10 +285,12 @@ namespace TownOfHost
             SetupRoleOptions(2000, CustomRoles.Puppeteer);
             Mare.SetupCustomOption();
             TimeThief.SetupCustomOption();
+            EvilTracker.SetupCustomOption();
             Cracker.SetupCustomOption();
 
             DefaultShapeshiftCooldown = CustomOption.Create(5011, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true);
-            CanMakeMadmateCount = CustomOption.Create(5012, Color.white, "CanMakeMadmateCount", 0, 0, 15, 1, null, true);
+            CanMakeMadmateCount = CustomOption.Create(5012, Utils.GetRoleColor(CustomRoles.Madmate), "CanMakeMadmateCount", 0, 0, 15, 1, null, true);
+            KillFlashDuration = CustomOption.Create(5013, Color.white, "KillFlashDuration", 0.3f, 0.1f, 0.45f, 0.05f, null, true);
 
             // Madmate
             SetupRoleOptions(10000, CustomRoles.Madmate);
@@ -314,12 +329,15 @@ namespace TownOfHost
             //20520~20523を使用
             SnitchTasks = OverrideTasksData.Create(20520, CustomRoles.Snitch);
             SetupRoleOptions(20600, CustomRoles.SpeedBooster);
-            SpeedBoosterUpSpeed = CustomOption.Create(20610, Color.white, "SpeedBoosterUpSpeed", 2f, 0.25f, 3f, 0.25f, CustomRoleSpawnChances[CustomRoles.SpeedBooster]);
+            SpeedBoosterUpSpeed = CustomOption.Create(20610, Color.white, "SpeedBoosterUpSpeed", 0.3f, 0.1f, 0.5f, 0.1f, CustomRoleSpawnChances[CustomRoles.SpeedBooster]);
+            SpeedBoosterTaskTrigger = CustomOption.Create(20611, Color.white, "SpeedBoosterTaskTrigger", 5f, 1f, 99f, 1f, CustomRoleSpawnChances[CustomRoles.SpeedBooster]);
             SetupRoleOptions(20700, CustomRoles.Doctor);
             DoctorTaskCompletedBatteryCharge = CustomOption.Create(20710, Color.white, "DoctorTaskCompletedBatteryCharge", 5, 0, 10, 1, CustomRoleSpawnChances[CustomRoles.Doctor]);
             SetupRoleOptions(20800, CustomRoles.Trapper);
             TrapperBlockMoveTime = CustomOption.Create(20810, Color.white, "TrapperBlockMoveTime", 5f, 1f, 180, 1, CustomRoleSpawnChances[CustomRoles.Trapper]);
             SetupRoleOptions(20900, CustomRoles.Dictator);
+            SetupRoleOptions(21000, CustomRoles.Seer);
+
             // Neutral
             SetupRoleOptions(50500, CustomRoles.Arsonist);
             ArsonistDouseTime = CustomOption.Create(50510, Color.white, "ArsonistDouseTime", 3, 1, 10, 1, CustomRoleSpawnChances[CustomRoles.Arsonist]);
@@ -339,6 +357,7 @@ namespace TownOfHost
             Egoist.SetupCustomOption();
             SetupRoleOptions(50700, CustomRoles.Executioner);
             ExecutionerCanTargetImpostor = CustomOption.Create(50710, Color.white, "ExecutionerCanTargetImpostor", false, CustomRoleSpawnChances[CustomRoles.Executioner]);
+            ExecutionerCanTargetNeutralKiller = CustomOption.Create(50712, Color.white, "ExecutionerCanTargetNeutralKiller", false, CustomRoleSpawnChances[CustomRoles.Executioner]);
             ExecutionerChangeRolesAfterTargetKilled = CustomOption.Create(50711, Color.white, "ExecutionerChangeRolesAfterTargetKilled", ExecutionerChangeRoles, ExecutionerChangeRoles[1], CustomRoleSpawnChances[CustomRoles.Executioner]);
             //Jackalは1人固定
             SetupSingleRoleOptions(50900, CustomRoles.Jackal, 1);
@@ -425,6 +444,12 @@ namespace TownOfHost
                 .SetGameMode(CustomGameMode.Standard);
             WhenNonVote = CustomOption.Create(100502, Color.white, "WhenNonVote", voteModes, voteModes[0], VoteMode)
                 .SetGameMode(CustomGameMode.Standard);
+            WhenTie = CustomOption.Create(100503, Color.white, "WhenTie", tieModes, tieModes[0], VoteMode)
+                .SetGameMode(CustomGameMode.Standard);
+
+            // 全員生存時の会議時間
+            AllAliveMeeting = CustomOption.Create(100900, Color.white, "AllAliveMeeting", false, null, true);
+            AllAliveMeetingTime = CustomOption.Create(100901, Color.white, "AllAliveMeetingTime", 10, 1, 300, 1, AllAliveMeeting);
 
             // 転落死
             LadderDeath = CustomOption.Create(101100, Color.white, "LadderDeath", false, null, true);
@@ -448,6 +473,8 @@ namespace TownOfHost
             GhostCanSeeOtherRoles = CustomOption.Create(100603, Color.white, "GhostCanSeeOtherRoles", true)
                 .SetGameMode(CustomGameMode.All);
             GhostCanSeeOtherVotes = CustomOption.Create(100604, Color.white, "GhostCanSeeOtherVotes", true)
+                .SetGameMode(CustomGameMode.All);
+            GhostIgnoreTasks = CustomOption.Create(100607, Color.white, "GhostIgnoreTasks", false)
                 .SetGameMode(CustomGameMode.All);
             HideGameSettings = CustomOption.Create(100606, Color.white, "HideGameSettings", false)
                 .SetGameMode(CustomGameMode.All);

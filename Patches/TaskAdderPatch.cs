@@ -19,7 +19,7 @@ namespace TownOfHost
                     __instance.transform
                 );
                 rolesFolder.gameObject.SetActive(false);
-                rolesFolder.FolderName = "Town Of Host";
+                rolesFolder.FolderName = Main.ModName;
                 CustomRolesFolder = rolesFolder;
                 __instance.Root.SubFolders.Add(rolesFolder);
             }
@@ -108,6 +108,7 @@ namespace TownOfHost
             { CustomRoles.Mare, RoleTypes.Impostor },
             { CustomRoles.Doctor, RoleTypes.Scientist },
             { CustomRoles.TimeThief, RoleTypes.Impostor },
+            { CustomRoles.EvilTracker, RoleTypes.Shapeshifter },
             { CustomRoles.LastImpostor, RoleTypes.Impostor },
             { CustomRoles.Cracker, RoleTypes.Impostor },
         };
