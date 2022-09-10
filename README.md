@@ -1,5 +1,7 @@
 # Town Of Host
 
+[English](https://github.com/tukasa0001/TownOfHost/blob/main/README-EN.md)
+
 [![TownOfHost-Title](./Images/TownOfHost-Title.png)](https://youtu.be/IGguGyq_F-c)
 
 <p align="center"><a href="https://github.com/tukasa0001/TownOfHost/releases/"><img src="https://badgen.net/github/release/tukasa0001/TownOfHost"></a></p>
@@ -147,6 +149,22 @@ GMはゲーム自体には何の影響も与えず、すべてのプレイヤー
 | バウンティハンターがターゲット以外をキルした時のクールダウン(s) |
 | バウンティハンター以外のキルクールダウン(s)                     |
 
+### EvilTracker/イビルトラッカー
+
+陣営 : インポスター<br>
+判定 : シェイプシフター<br>
+
+追跡能力を持つインポスターです。<br>
+インポスターへの矢印が常に表示され、さらにシェイプシフトで選択した一人を追跡することができます。<br>
+設定によってはインポスターがキルを行った場合にキルフラッシュを見ることもできます。<br>
+
+#### 設定
+
+| 設定名                               |
+| ------------------------------------ |
+| インポスターキル時にフラッシュが見える |
+| 会議後に再度ターゲットを設定できる     |
+
 ### FireWorks/花火職人
 
 制作・考案者 : こう。<br>
@@ -177,6 +195,12 @@ GMはゲーム自体には何の影響も与えず、すべてのプレイヤー
 
 停電時以外にキルをすることができませんが、キルクールが半分になります。<br>
 停電中にのみ移動速度も上昇しますが、自分の名前が赤く表示されます。<br>
+
+#### 設定
+
+| 設定名                 |
+| ---------------------- |
+| 加速値                 |
 
 ### Puppeteer/パペッティア
 
@@ -459,6 +483,21 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 | サボタージュマスターが MIRA HQ の通信妨害に対して能力を使える                  |
 | サボタージュマスターが停電に対して能力を使える                                 |
 
+### Seer/シーア
+
+陣営 : クルーメイト<br>
+判定 : クルーメイト<br>
+
+プレイヤーの死亡した瞬間が分かります。<br>
+視界が一瞬0になり、リアクターサボタージュ中でなければリアクターも一瞬鳴ります（キルフラッシュ）。<br>
+キルフラッシュの長さは共通設定で微調整できます（推奨：0.3s~）。<br>
+
+#### 設定
+
+| 共通設定                |
+| ----------------------- |
+| キルフラッシュの長さ(秒) |
+
 ### Sheriff/シェリフ
 
 陣営 : クルーメイト<br>
@@ -505,13 +544,14 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 陣営 ：クルーメイト<br>
 判定 ：クルーメイト<br>
 
-タスクを完了させると、生存しているランダムなプレイヤーの速度を上げさせます。<br>
+規定のタスク量を完了させると、生存しているランダムなプレイヤーの速度を上げる。<br>
 
 #### 設定
 
 | 設定名                 |
 | ---------------------- |
-| スピードアップ時の速さ |
+| 加速値                 |
+| 効果を発動するタスク数  |
 
 ### Trapper/トラッパー
 
@@ -552,7 +592,7 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 考案者 : しゅー<br>
 制作者 : そうくん<br>
 
-陣営 : 第三<br>
+陣営 : エゴイスト<br>
 判定 : シェイプシフター<br>
 勝利条件 : インポスター全滅後、インポスターの勝利条件を達成する<br>
 
@@ -837,9 +877,9 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 
 ## 参考など
 
-[バウンティーハンター](#BountyHunter/バンティーハンター)や[マフィア](#Mafia/マフィア)、[ヴァンパイア](#Vampire/ヴァンパイア)、[魔女](#Witch/魔女)、[ベイト](#Bait/ベイト)、[メイヤー](#Mayor/メイヤー)、[シェリフ](#Sheriff/シェリフ)、[スニッチ](#Snitch/スニッチ)、[ライター](#Lighter/ライター) のアイデア元であり、 Mod の作成方法の参考元 : [The Other Roles](https://github.com/Eisbison/TheOtherRoles)<br>
+[バウンティーハンター](#BountyHunter/バンティーハンター)や[マフィア](#Mafia/マフィア)、[ヴァンパイア](#Vampire/ヴァンパイア)、[魔女](#Witch/魔女)、[ベイト](#Bait/ベイト)、[メイヤー](#Mayor/メイヤー)、[シェリフ](#Sheriff/シェリフ)、[スニッチ](#Snitch/スニッチ)、[ライター](#Lighter/ライター)、[シーア](#Seer/シーア) のアイデア元であり、 Mod の作成方法の参考元 : [The Other Roles](https://github.com/Eisbison/TheOtherRoles)<br>
 [オポチュニスト](#Opportunist/オポチュニスト)、[ウォッチャー](#Watcher/ウォッチャー) のアイデア元 : [The Other Roles: GM Edition](https://github.com/yukinogatari/TheOtherRoles-GM)<br>
-[シュレディンガーの猫](#SchrodingerCat/シュレディンガーの猫) のアイデア元 : [The Other Roles: GM Haoming Edition](https://github.com/haoming37/TheOtherRoles-GM-Haoming)<br>
+[シュレディンガーの猫](#SchrodingerCat/シュレディンガーの猫)、[イビルトラッカー](#EvilTracker/イビルトラッカー) のアイデア元 : [The Other Roles: GM Haoming Edition](https://github.com/haoming37/TheOtherRoles-GM-Haoming)<br>
 [ドクター](#Doctor/ドクター) のアイデア元 : [Nebula on the Ship](https://github.com/Dolly1016/Nebula)<br>
 [ジェスター](#Jester/ジェスター)(てるてる)と[マッドメイト](#Madmate/マッドメイト) のアイデア元 : [au.libhalt.net](https://au.libhalt.net)<br>
 [テロリスト](#Terrorist/テロリスト)(Trickstar + Joker) : [Foolers Mod](https://github.com/MengTube/Foolers-Mod)<br>
@@ -865,3 +905,4 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 - [こう。](https://github.com/kou-hetare) <!--([Twitter](https://twitter.com/))-->
 - [よっキング](https://github.com/ykundesu) <!--([Twitter](https://twitter.com/))-->
 - [ゆりの](https://github.com/yurinakira) <!--([Twitter](https://twitter.com/))-->
+- [Masami](https://github.com/Masami4711) <!--([Twitter](https://twitter.com/))-->
