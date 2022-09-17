@@ -163,17 +163,20 @@ namespace TownOfHost
                             var sniperId = Sniper.GetSniper(target.PlayerId);
                             NameColorManager.Instance.RpcAdd(sniperId, target.PlayerId, $"{Utils.GetRoleColorCode(CustomRoles.SchrodingerCat)}");
                         }
-                        else if (BountyHunter.GetTarget(killer) == target)
-                            BountyHunter.ResetTarget(killer);//ターゲットの選びなおし
                         else
                         {
+                            if (killer.Is(CustomRoles.BountyHunter) && BountyHunter.GetTarget(killer) == target)
+                                BountyHunter.ResetTarget(killer);//ターゲットの選びなおし
                             SerialKiller.OnCheckMurder(killer, isKilledSchrodingerCat: true);
                             if (killer.GetCustomRole().IsImpostor())
                                 target.RpcSetCustomRole(CustomRoles.MSchrodingerCat);
                             if (killer.Is(CustomRoles.Sheriff))
                                 target.RpcSetCustomRole(CustomRoles.CSchrodingerCat);
                             if (killer.Is(CustomRoles.Egoist))
+                            {
+                                TeamEgoist.Add(target.PlayerId);
                                 target.RpcSetCustomRole(CustomRoles.EgoSchrodingerCat);
+                            }
                             if (killer.Is(CustomRoles.Jackal))
                                 target.RpcSetCustomRole(CustomRoles.JSchrodingerCat);
 
@@ -312,6 +315,8 @@ namespace TownOfHost
         public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
         {
             Logger.Info($"{__instance.GetNameWithRole()} => {target.GetNameWithRole()}{(target.protectedByGuardian ? "(Protected)" : "")}", "MurderPlayer");
+
+            if (RandomSpawn.CustomNetworkTransformPatch.NumOfTP.TryGetValue(__instance.PlayerId, out var num) && num > 2) RandomSpawn.CustomNetworkTransformPatch.NumOfTP[__instance.PlayerId] = 3;
         }
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] PlayerControl target)
         {
@@ -343,34 +348,17 @@ namespace TownOfHost
             }
             if (target.Is(CustomRoles.Trapper) && !killer.Is(CustomRoles.Trapper))
                 killer.TrapperKilled(target);
-            if (target.Is(CustomRoles.NekoKabocha))
-                NekoKabocha.RevengeOnKill(killer, target);
-            if (Main.ExecutionerTarget.ContainsValue(target.PlayerId))
+            if (Executioner.Target.ContainsValue(target.PlayerId))
+                Executioner.ChangeRoleByTarget(target);
+            if (target.Is(CustomRoles.Executioner) && Executioner.Target.ContainsKey(target.PlayerId))
             {
-                List<byte> RemoveExecutionerKey = new();
-                foreach (var ExecutionerTarget in Main.ExecutionerTarget)
-                {
-                    var executioner = Utils.GetPlayerById(ExecutionerTarget.Key);
-                    if (executioner == null) continue;
-                    if (target.PlayerId == ExecutionerTarget.Value && !executioner.Data.IsDead)
-                    {
-                        executioner.RpcSetCustomRole(Options.CRoleExecutionerChangeRoles[Options.ExecutionerChangeRolesAfterTargetKilled.GetSelection()]); //対象がキルされたらオプションで設定した役職にする
-                        RemoveExecutionerKey.Add(ExecutionerTarget.Key);
-                    }
-                }
-                foreach (var RemoveKey in RemoveExecutionerKey)
-                {
-                    Main.ExecutionerTarget.Remove(RemoveKey);
-                    RPC.RemoveExecutionerKey(RemoveKey);
-                }
-            }
-            if (target.Is(CustomRoles.Executioner) && Main.ExecutionerTarget.ContainsKey(target.PlayerId))
-            {
-                Main.ExecutionerTarget.Remove(target.PlayerId);
-                RPC.RemoveExecutionerKey(target.PlayerId);
+                Executioner.Target.Remove(target.PlayerId);
+                Executioner.SendRPC(target.PlayerId);
             }
             if (target.Is(CustomRoles.TimeThief))
                 target.ResetVotingTime();
+            if (target.Is(CustomRoles.NekoKabocha))
+                NekoKabocha.RevengeOnKill(killer, target);
 
 
             foreach (var pc in PlayerControl.AllPlayerControls)
@@ -384,6 +372,7 @@ namespace TownOfHost
             Utils.CountAliveImpostors();
             Utils.CustomSyncAllSettings();
             Utils.NotifyRoles();
+            Utils.TargetDies(__instance, target, PlayerState.GetDeathReason(target.PlayerId));
         }
     }
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Shapeshift))]
@@ -427,6 +416,7 @@ namespace TownOfHost
                     Main.CursedPlayers[shapeshifter.PlayerId] = null;
                 }
             }
+            if (shapeshifter.Is(CustomRoles.EvilTracker)) EvilTracker.Shapeshift(shapeshifter, target, shapeshifting);
 
             if (shapeshifter.CanMakeMadmate() && shapeshifting)
             {//変身したとき一番近い人をマッドメイトにする処理
@@ -613,6 +603,7 @@ namespace TownOfHost
                 }
                 //ターゲットのリセット
                 BountyHunter.FixedUpdate(player);
+                EvilTracker.FixedUpdate(player);
                 if (GameStates.IsInTask && player.IsAlive() && Options.LadderDeath.GetBool())
                 {
                     FallFromLadder.FixedUpdate(player);
@@ -818,10 +809,13 @@ namespace TownOfHost
                             RealName = Helpers.ColorString(target.GetRoleColor(), RealName); //targetの名前を役職色で表示
                         }
                     }
-                    else if (seer.GetCustomRole().IsImpostor() && //seerがインポスター
-                        target.Is(CustomRoles.Egoist) //targetがエゴイスト
-                    )
-                        RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName); //targetの名前をエゴイスト色で表示
+                    else if (seer.GetCustomRole().IsImpostor()) //seerがインポスター
+                    {
+                        if (target.Is(CustomRoles.Egoist)) //targetがエゴイスト
+                            RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName); //targetの名前をエゴイスト色で表示
+                        else if (target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool()) //targetがタスクを終わらせたマッドスニッチ
+                            Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.MadSnitch), "★"); //targetにマーク付与
+                    }
 
                     else if ((seer.Is(CustomRoles.EgoSchrodingerCat) && target.Is(CustomRoles.Egoist)) || //エゴ猫 --> エゴイスト
                              (seer.Is(CustomRoles.JSchrodingerCat) && target.Is(CustomRoles.Jackal)) //J猫 --> ジャッカル
@@ -858,12 +852,7 @@ namespace TownOfHost
                             Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
                         }
                     }
-                    foreach (var ExecutionerTarget in Main.ExecutionerTarget)
-                    {
-                        if ((seer.PlayerId == ExecutionerTarget.Key || seer.Data.IsDead) && //seerがKey or Dead
-                        target.PlayerId == ExecutionerTarget.Value) //targetがValue
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Executioner)}>♦</color>";
-                    }
+                    Mark += Executioner.TargetMark(seer, target);
                     if (seer.Is(CustomRoles.Puppeteer))
                     {
                         if (seer.Is(CustomRoles.Puppeteer) &&
@@ -877,9 +866,10 @@ namespace TownOfHost
                         Mark += Sniper.GetShotNotify(target.PlayerId);
 
                     }
+                    if (seer.Is(CustomRoles.EvilTracker)) Mark += EvilTracker.GetTargetMark(seer, target);
                     //タスクが終わりそうなSnitchがいるとき、インポスター/キル可能な第三陣営に警告が表示される
-                    if ((!GameStates.IsMeeting && target.GetCustomRole().IsImpostor())
-                        || (Options.SnitchCanFindNeutralKiller.GetBool() && target.IsNeutralKiller()))
+                    if (!GameStates.IsMeeting && (target.GetCustomRole().IsImpostor()
+                        || (Options.SnitchCanFindNeutralKiller.GetBool() && target.IsNeutralKiller())))
                     { //targetがインポスターかつ自分自身
                         var found = false;
                         var update = false;
@@ -947,6 +937,8 @@ namespace TownOfHost
                             }
                         }
                     }
+                    if (GameStates.IsInTask && target.Is(CustomRoles.EvilTracker)) Suffix += EvilTracker.PCGetTargetArrow(seer, target);
+
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
                         Mark = isBlocked ? "(true)" : "(false)";
                     }*/
@@ -1121,11 +1113,8 @@ namespace TownOfHost
                                 RPC.PlaySoundRPC(pc.PlayerId, Sounds.KillSound);
                         }
                     }
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.EndGame, Hazel.SendOption.Reliable, -1);
-                    writer.Write((byte)CustomWinner.Arsonist);
-                    writer.Write(__instance.myPlayer.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPC.ArsonistWin(__instance.myPlayer.PlayerId);
+                    CustomWinnerHolder.WinnerTeam = CustomWinner.Arsonist;
+                    CustomWinnerHolder.WinnerIds.Add(__instance.myPlayer.PlayerId);
                     return true;
                 }
                 if (__instance.myPlayer.Is(CustomRoles.Sheriff) ||

@@ -16,12 +16,12 @@ namespace TownOfHost
         public static CustomOption RandomRevengeIncludeTeamImpostor;
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.NekoKabocha);
-            RevengeCrewmate = CustomOption.Create(Id + 10, Color.white, "NekoKabochaRevengeCrewmate", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
-            RevengeNeutral = CustomOption.Create(Id + 11, Color.white, "NekoKabochaRevengeNeutral", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
-            RevengeImpostor = CustomOption.Create(Id + 12, Color.white, "NekoKabochaRevengeImpostor", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
-            RevengeExile = CustomOption.Create(Id + 13, Color.white, "NekoKabochaRevengeExile", false, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
-            RandomRevengeIncludeTeamImpostor = CustomOption.Create(Id + 14, Color.white, "RandomRevengeIncludeTeamImpostor", true, RevengeExile);
+            Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.NekoKabocha);
+            RevengeCrewmate = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "NekoKabochaRevengeCrewmate", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeNeutral = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "NekoKabochaRevengeNeutral", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeImpostor = CustomOption.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "NekoKabochaRevengeImpostor", true, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RevengeExile = CustomOption.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "NekoKabochaRevengeExile", false, Options.CustomRoleSpawnChances[CustomRoles.NekoKabocha]);
+            RandomRevengeIncludeTeamImpostor = CustomOption.Create(Id + 14, TabGroup.ImpostorRoles, Color.white, "RandomRevengeIncludeTeamImpostor", true, RevengeExile);
         }
         public static void Init()
         {
