@@ -105,10 +105,10 @@ namespace TownOfHost
                         winner.Add(pc);
                         CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.SchrodingerCat);
                     }
-                if (pc.Is(CustomRoles.Contrarian) && (!pc.Data.IsDead || Options.CanDeadContrarianWin.GetBool()) && Main.currentWinner != CustomWinner.Draw && Main.currentWinner != CustomWinner.Crewmate)
+                if (pc.Is(CustomRoles.Contrarian) && (!pc.Data.IsDead || Options.CanDeadContrarianWin.GetBool()) && !(CustomWinnerHolder.WinnerTeam is CustomWinner.Draw or CustomWinner.Crewmate))
                 {
                     winner.Add(pc);
-                    Main.additionalwinners.Add(AdditionalWinners.Contrarian);
+                    CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Contrarian);
                 }
             }
 
