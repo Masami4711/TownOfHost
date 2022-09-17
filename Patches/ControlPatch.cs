@@ -1,6 +1,5 @@
 using System.Linq;
 using HarmonyLib;
-using Hazel;
 using InnerNet;
 using UnityEngine;
 
@@ -27,6 +26,13 @@ namespace TownOfHost
                 if (resolutionIndex >= resolutions.Length) resolutionIndex = 0;
                 ResolutionManager.SetResolution(resolutions[resolutionIndex].Item1, resolutions[resolutionIndex].Item2, false);
             }
+            //カスタム翻訳のリロード
+            if (Input.GetKeyDown(KeyCode.F5) && Input.GetKey(KeyCode.T))
+            {
+                Logger.Info("Reload Custom Translation File", "KeyCommand");
+                Translator.LoadLangs();
+                Logger.SendInGame("Reloaded Custom Translation File");
+            }
             //ログファイルのダンプ
             if (Input.GetKeyDown(KeyCode.F1) && Input.GetKey(KeyCode.LeftControl))
             {
@@ -39,10 +45,7 @@ namespace TownOfHost
             //廃村
             if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.LeftShift) && GameStates.IsInGame)
             {
-                MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.EndGame, Hazel.SendOption.Reliable, -1);
-                writer.Write((int)CustomWinner.Draw);
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-                RPC.ForceEndGame();
+                CustomWinnerHolder.WinnerTeam = CustomWinner.Draw;
             }
             //ミーティングを強制終了
             if (Input.GetKeyDown(KeyCode.Return) && Input.GetKey(KeyCode.M) && Input.GetKey(KeyCode.LeftShift) && GameStates.IsMeeting)
@@ -160,6 +163,9 @@ namespace TownOfHost
                 ShipStatus.Instance.RpcRepairSystem(SystemTypes.Doors, 81);
                 ShipStatus.Instance.RpcRepairSystem(SystemTypes.Doors, 82);
             }
+            //現在の座標を取得
+            if (Input.GetKeyDown(KeyCode.I))
+                Logger.Info(PlayerControl.LocalPlayer.GetTruePosition().ToString(), "GetLocalPlayerPos");
             //マスゲーム用コード
             /*if (Input.GetKeyDown(KeyCode.C))
             {
