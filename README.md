@@ -1,5 +1,7 @@
 # Town Of Host
 
+[English](https://github.com/tukasa0001/TownOfHost/blob/main/README-EN.md)
+
 [![TownOfHost-Title](./Images/TownOfHost-Title.png)](https://youtu.be/IGguGyq_F-c)
 
 <p align="center"><a href="https://github.com/tukasa0001/TownOfHost/releases/"><img src="https://badgen.net/github/release/tukasa0001/TownOfHost"></a></p>
@@ -113,7 +115,7 @@ AmongUsバージョン : **2022.7.12**
 | [SerialKiller/シリアルキラー](#SerialKillerシリアルキラー)                           | [Nice Watcher/ナイスウォッチャー](#Watcherウォッチャー)                    | [Opportunist/オポチュニスト](#Opportunistオポチュニスト)                   |
 | [Sniper/スナイパー](#Sniperスナイパー)                                               | [SabotageMaster/サボタージュマスター](#SabotageMasterサボタージュマスター) | [Terrorist/テロリスト](#Terroristテロリスト)                               |
 | [TimeThief/タイムシーフ](#TimeThiefタイムシーフ)                                     | [Sheriff/シェリフ](#Sheriffシェリフ)                                       | [SchrodingerCat/シュレディンガーの猫](#SchrodingerCatシュレディンガーの猫) |
-| [Vampire/ヴァンパイア](#Vampireヴァンパイア)                                         | [Snitch/スニッチ](#Snitchスニッチ)                                         |                                                                            |
+| [Vampire/ヴァンパイア](#Vampireヴァンパイア)                                         | [Snitch/スニッチ](#Snitchスニッチ)                                         | [Jackal/ジャッカル](#Jackalジャッカル)                                  |
 | [Warlock/ウォーロック](#Warlockウォーロック)                                         | [SpeedBooster/スピードブースター](#SpeedBoosterスピードブースター)         |                                                                            |
 | [Witch/魔女](#Witch魔女)                                                             | [Trapper/トラッパー](#Trapperトラッパー)                                   |                                                                            |
 | [Mafia/マフィア](#Mafiaマフィア)                                                     |                                                                            |                                                                            |
@@ -146,6 +148,22 @@ GMはゲーム自体には何の影響も与えず、すべてのプレイヤー
 | バウンティハンターがターゲットをキルした後のクールダウン(s)     |
 | バウンティハンターがターゲット以外をキルした時のクールダウン(s) |
 | バウンティハンター以外のキルクールダウン(s)                     |
+
+### EvilTracker/イビルトラッカー
+
+陣営 : インポスター<br>
+判定 : シェイプシフター<br>
+
+追跡能力を持つインポスターです。<br>
+インポスターへの矢印が常に表示され、さらにシェイプシフトで選択した一人を追跡することができます。<br>
+設定によってはインポスターがキルを行った場合にキルフラッシュを見ることもできます。<br>
+
+#### 設定
+
+| 設定名                               |
+| ------------------------------------ |
+| インポスターキル時にフラッシュが見える |
+| 会議後に再度ターゲットを設定できる     |
 
 ### FireWorks/花火職人
 
@@ -370,10 +388,11 @@ GMはゲーム自体には何の影響も与えず、すべてのプレイヤー
 
 #### 設定
 
-| 設定名                         |
-| ------------------------------ |
+| 設定名                       |
+| ---------------------------- |
 | マッドスニッチがベントを使える |
-| マッドスニッチのタスク数       |
+| インポスターからも視認できる   |
+| マッドスニッチのタスク数      |
 
 ### SidekickMadmate/サイドキックマッドメイト
 
@@ -483,6 +502,21 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 | サボタージュマスターが酸素妨害に対して能力を使える                             |
 | サボタージュマスターが MIRA HQ の通信妨害に対して能力を使える                  |
 | サボタージュマスターが停電に対して能力を使える                                 |
+
+### Seer/シーア
+
+陣営 : クルーメイト<br>
+判定 : クルーメイト<br>
+
+プレイヤーの死亡した瞬間が分かります。<br>
+視界が一瞬0になり、リアクターサボタージュ中でなければリアクターも一瞬鳴ります（キルフラッシュ）。<br>
+キルフラッシュの長さは共通設定で微調整できます（推奨：0.3s~）。<br>
+
+#### 設定
+
+| 共通設定                |
+| ----------------------- |
+| キルフラッシュの長さ(秒) |
 
 ### Sheriff/シェリフ
 
@@ -657,6 +691,31 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 | ------------------------------------------------ |
 | 役職変化前であれば、クルー陣営と勝利できる       |
 | シュレディンガーの猫が吊られた際、陣営が変化する |
+
+### Jackal/ジャッカル
+
+制作者 :  空き瓶/EmptyBottle<br>
+
+陣営 : 第三(ジャッカル)<br>
+判定 : インポスター<br>
+勝利条件 : インポスターを全滅させ、ジャッカルチームの人数がクルーの人数と同数か上回ること<br>
+
+他のすべてのプレイヤーを排除することで勝利する第三陣営のジャッカルチームの役職です。<br>
+タスクがなく、インポスター、クルー、第三陣営をキルすることができます。<br>
+
+注意点<br>
+*特定条件になった場合、投票で追放された人がいても「誰も追放されなかった」と表示される(表示のみで追放はされます)<br>
+ 暗転対策の都合上このような表示になります。
+*インポスターを吊りきるとAutoMuteのミュートが解除されます。<br>
+
+#### 設定
+
+| 設定名                                               |
+| --------------------------------------------------- |
+| ジャッカルのキルクール                                |
+| ジャッカルがベントを使用できる                        |
+| ジャッカルがサボタージュを使用できる                   |
+| ジャッカルがインポスターと同じ視野を持つ               |
 
 ### Terrorist/テロリスト
 
@@ -863,9 +922,9 @@ Polus や The Airship のドアを開けるとその部屋の全てのドアが�
 
 ## 参考など
 
-[バウンティーハンター](#BountyHunter/バンティーハンター)や[マフィア](#Mafia/マフィア)、[ヴァンパイア](#Vampire/ヴァンパイア)、[魔女](#Witch/魔女)、[ベイト](#Bait/ベイト)、[メイヤー](#Mayor/メイヤー)、[シェリフ](#Sheriff/シェリフ)、[スニッチ](#Snitch/スニッチ)、[ライター](#Lighter/ライター) のアイデア元であり、 Mod の作成方法の参考元 : [The Other Roles](https://github.com/Eisbison/TheOtherRoles)<br>
+[バウンティーハンター](#BountyHunter/バンティーハンター)や[マフィア](#Mafia/マフィア)、[ヴァンパイア](#Vampire/ヴァンパイア)、[魔女](#Witch/魔女)、[ベイト](#Bait/ベイト)、[メイヤー](#Mayor/メイヤー)、[シェリフ](#Sheriff/シェリフ)、[スニッチ](#Snitch/スニッチ)、[ライター](#Lighter/ライター)、[シーア](#Seer/シーア)、[ジャッカル](#jackalジャッカル) のアイデア元であり、 Mod の作成方法の参考元 : [The Other Roles](https://github.com/Eisbison/TheOtherRoles)<br>
 [オポチュニスト](#Opportunist/オポチュニスト)、[ウォッチャー](#Watcher/ウォッチャー) のアイデア元 : [The Other Roles: GM Edition](https://github.com/yukinogatari/TheOtherRoles-GM)<br>
-[シュレディンガーの猫](#SchrodingerCat/シュレディンガーの猫) のアイデア元 : [The Other Roles: GM Haoming Edition](https://github.com/haoming37/TheOtherRoles-GM-Haoming)<br>
+[シュレディンガーの猫](#SchrodingerCat/シュレディンガーの猫)、[イビルトラッカー](#EvilTracker/イビルトラッカー) のアイデア元 : [The Other Roles: GM Haoming Edition](https://github.com/haoming37/TheOtherRoles-GM-Haoming)<br>
 [ドクター](#Doctor/ドクター) のアイデア元 : [Nebula on the Ship](https://github.com/Dolly1016/Nebula)<br>
 [ジェスター](#Jester/ジェスター)(てるてる)と[マッドメイト](#Madmate/マッドメイト) のアイデア元 : [au.libhalt.net](https://au.libhalt.net)<br>
 [テロリスト](#Terrorist/テロリスト)(Trickstar + Joker) : [Foolers Mod](https://github.com/MengTube/Foolers-Mod)<br>
