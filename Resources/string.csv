@@ -269,21 +269,21 @@ TieMode.Default,Default,デフォルト,默认,預設,Обычное
 TieMode.All,Exile Them All,全員追放,全体放逐,,Изгнать Всех
 TieMode.Random,Exile Random,ランダムに追放,随机放逐,,Изгнать Случайно
 DisableDevices,Disable Devices,デバイスを無効化,禁用设备,禁用裝置,Отключить Устройства
-DisableSkeldDevices,Disable Skeld Devices,スケルドのデバイス無効化,,,Отключить Устройства На TheSkeld
-DisableMiraHQDevices,Disable MiraHQ Device,ミラHQのデバイス無効化,,,Отключить Устройства На MiraHQ
-DisablePolusDevices,Disable Polus Device,ポーラスのデバイス無効化,,,Отключить Устройства На Polus
-DisableAirshipDevices,Disable Airship Device,エアシップのデバイス無効化,,,Отключить Устройства На Airship
-DisableSkeldAdmin,Disable Admin,アドミン無効化,禁用管理室,禁用管理室地圖,Отключить Стол Администратора
-DisableMiraHQAdmin,Disable Admin,アドミン無効化,禁用管理室,禁用管理室地圖,Отключить Стол Администратора
-DisablePolusAdmin,Disable Admin,アドミン無効化,禁用管理室,禁用管理室地圖,Отключить Стол Администратора
-DisableAirshipCockpitAdmin,Disable Cockpit Admin,アドミン無効化（コックピット）,禁用飞艇(驾驶舱)管理室,,Отключить Стол Администратора В Кабине
-DisableAirshipRecordsAdmin,Disable Records Admin,アドミン無効化（アーカイブ）,禁用飞艇(档案室)管理室,,Отключить Стол Администратора В Архиве
-DisableSkeldCamera,Disable Camera,カメラ無効化,,,Отключить Камеры
-DisablePolusCamera,Disable Camera,カメラ無効化,,,Отключить Камеры
-DisableAirshipCamera,Disable Camera,カメラ無効化,,,Отключить Камеры
-DisableMiraHQDoorLog,Disable DoorLog,ドアログ無効化,,,Отключить Журналы
-DisablePolusVital,Disable Vital,バイタル無効化,,,Отключить Пульсы
-DisableAirshipVital,Disable Vital,バイタル無効化,,,Отключить Пульсы
+DisableSkeldDevices,Disable Skeld Devices,スケルドのデバイス無効化,禁用骷髅舰设备,,Отключить Устройства На TheSkeld
+DisableMiraHQDevices,Disable MiraHQ Device,ミラHQのデバイス無効化,禁用米拉总部设备,,Отключить Устройства На MiraHQ
+DisablePolusDevices,Disable Polus Device,ポーラスのデバイス無効化,禁用波鲁斯设备,,Отключить Устройства На Polus
+DisableAirshipDevices,Disable Airship Device,エアシップのデバイス無効化,禁用飞艇设备,,Отключить Устройства На Airship
+DisableSkeldAdmin,Disable Admin,アドミン無効化,禁用管理室地图,禁用管理室地圖,Отключить Стол Администратора
+DisableMiraHQAdmin,Disable Admin,アドミン無効化,禁用管理室地图,禁用管理室地圖,Отключить Стол Администратора
+DisablePolusAdmin,Disable Admin,アドミン無効化,禁用管理室地图,禁用管理室地圖,Отключить Стол Администратора
+DisableAirshipCockpitAdmin,Disable Cockpit Admin,アドミン無効化（コックピット）,禁用飞艇(驾驶舱)管理室地图,,Отключить Стол Администратора В Кабине
+DisableAirshipRecordsAdmin,Disable Records Admin,アドミン無効化（アーカイブ）,禁用飞艇(档案室)管理室地图,,Отключить Стол Администратора В Архиве
+DisableSkeldCamera,Disable Camera,カメラ無効化,,禁用骷髅舰监控设备,Отключить Камеры
+DisablePolusCamera,Disable Camera,カメラ無効化,,禁用波鲁斯监控设备,Отключить Камеры
+DisableAirshipCamera,Disable Camera,カメラ無効化,,禁用飞艇监控设备,Отключить Камеры
+DisableMiraHQDoorLog,Disable DoorLog,ドアログ無効化,,禁用米拉总部门禁日志,Отключить Журналы
+DisablePolusVital,Disable Vital,バイタル無効化,,禁用波鲁斯生命监测装置,Отключить Пульсы
+DisableAirshipVital,Disable Vital,バイタル無効化,,禁用飞艇生命监测装置,Отключить Пульсы
 RandomSpawn,Random Spawn,ランダムスポーン,随机出生点,,Случайный Спавн
 AirshipAdditionalSpawn,Additional Spawn(Airship),追加スポーン位置(エアシップ),额外出生点（飞艇地图）,,Дополнительный Спавн(Airship)
 
@@ -294,7 +294,7 @@ NoGameEndInfo,NoGameEnd:\nA mode for debugging in which there is no win Basis.\n
 SyncButtonModeInfo,SyncButtonMode:\nThis mode limits the maximum number of meetings that can be called in total.,ボタン回数同期モード:\nプレイヤー全員のボタン回数が同期されているモード。(設定有),所有船员共享会议次数:\n游戏中存在全员共有的最大紧急会议次数。(可以进行设置),"全場拍桌數同步模式:\n該模式會讓全場玩家的拍桌數同步。(可以設定拍桌數)","СинхронизацияКнопки:\nЭтот режим ограничивает максимальное количество срочных собраний, которые можно созвать в целом."
 SabotageTimeControlInfo,Sabotage time control:\nIt is possible to change the time limit for some sabotage. (with settings),サボタージュの時間制御:\n一部サボタージュの制限時間を変更することができる。(設定有),破坏调整:\n可以调整一部分破坏的限制时间。(可以进行设置),"控制緊急任務時間:\n該模式可以讓某些地圖的破壞時間重新設定。 (可以設定)",Контроль времени саботажа:\nВозможность изменить время саботажа реактора. (в настройках)
 RandomMapsModeInfo,RandomMapsMode:\nA mode in which the map changes randomly. (with settings),ランダムマップモード:\nランダムにマップが変わるモード。(設定有),随机地图:\n随机选择地图游玩的模式。(可以进行设置),"隨機地圖模式:\n該模式會隨機挑選地圖。 (可以設定)",СлучайнаяКарта:\nРежим в котором карты случайным образом меняются в каждой игре. (в настройках)
-DisableDevicesInfo,"DisableDevices:\nVarious devices can be disabled (currently admin only, unavailable in MiraHQ)",デバイスを無効化:\n各種機器を無効化することができる。(現在はアドミンのみ、MiraHQ非対応),禁用设备:\n可以禁用各种设备。(目前只支持管理员，不支持米拉总部),"禁用設備:\n可以禁用各種設備。 (目前只支持管理室地圖,不支持MIRA HQ)","ОтключенныеУстройства:\nРазличные устройства могут быть отключены (в настоящее время только стол администратора, недоступна в MiraHQ)"
+DisableDevicesInfo,"DisableDevices:\nVarious devices can be disabled.",デバイスを無効化:\n各種機器を無効化することができる。,禁用设备:\n可以禁用各种设备。,"禁用設備:\n可以禁用各種設備。","ОтключенныеУстройства:\nРазличные устройства могут быть отключены"
 
 ## 詳細設定
 Cooldown,Cooldown,クールダウン,冷却时间,,Откат
@@ -316,11 +316,11 @@ CanMakeMadmateCount,SidekickMadmate Maximum,サイドキックマッドメイト
 MadSnitchTasks,MadSnitch Tasks,マッドスニッチのタスク数,背叛的告密者任务数,背叛告密者任務數量,Задания MadSnitch
 MadSnitchCanAlsoBeExposedToImpostor,Also Exposed To Impostor,インポスターからも視認できる,对内鬼同样可见,,Также Незащищен Предателем
 MadGuardianCanSeeWhoTriedToKill,MadGuardian Can See Who Tried To Kill,自身の殺害未遂者を知ることができる,堕落守卫可以得知对其进行击杀尝试的玩家,背叛天使可以看到是誰嘗試殺害自己,MadGuardian Видит Кто Пытался Его Убить
-MadmateCanFixLightsOut,Madmates Can Fix Lights Out,マッドメイト系役職が停電を直すことができる,叛徒职业可以修理照明破坏,叛徒職業的玩家可以修理電燈,Madmates Может Чинить Свет
-MadmateCanFixComms,Madmates Can Fix Comms,マッドメイト系役職が通信障害を直すことができる,叛徒职业可以修理通讯,叛徒職業的玩家可以修理通訊,Madmates Может Чинить Связь
-MadmateHasImpostorVision,Madmates Have Impostor Vision,マッドメイト系役職がインポスターと同じ視界を持つ,叛徒职业拥有内鬼视野,叛徒職業的玩家有跟狼人一樣的視野,Madmates Имеет Дальность Обзора Предателя
-MadmateCanSeeKillFlash,Madmates Can See Kill Flash,マッドメイト系役職がキルフラッシュを見れる,叛徒可以看到击杀闪光,,Madmates Может Видеть Вспышку Убийства
-MadmateCanSeeOtherVotes,Madmates Can See Other Votes,マッドメイト系役職が他人の投票を見れる,叛徒可以看到其他人所投的票,,Madmates Может Видеть Цвета Голосов
+MadmateCanFixLightsOut,Madmates Can Fix Lights Out,マッドメイト系役職が停電を直せる,叛徒职业可以修理照明破坏,叛徒職業的玩家可以修理電燈,Madmates Может Чинить Свет
+MadmateCanFixComms,Madmates Can Fix Comms,マッドメイト系役職が通信障害を直せる,叛徒职业可以修理通讯,叛徒職業的玩家可以修理通訊,Madmates Может Чинить Связь
+MadmateHasImpostorVision,Madmates Have Impostor Vision,マッドメイト系役職がインポスター視界を持つ,叛徒职业拥有内鬼视野,叛徒職業的玩家有跟狼人一樣的視野,Madmates Имеет Дальность Обзора Предателя
+MadmateCanSeeKillFlash,Madmates Can See Kill Flash,マッドメイト系役職にキルフラッシュが見える,叛徒可以看到击杀闪光,,Madmates Может Видеть Вспышку Убийства
+MadmateCanSeeOtherVotes,Madmates Can See Other Votes,マッドメイト系役職に他人の投票先が分かる,叛徒可以看到其他人所投的票,,Madmates Может Видеть Цвета Голосов
 MadmateVentCooldown,Madmates Vent Cooldown,マッドメイト系役職のベントクールダウン,叛徒职业跳管道冷却时间,叛徒職業的玩家跳管道冷卻,Откат Вентиляции Madmates
 MadmateVentMaxTime,Madmates Max Time In Vents(s),マッドメイト系役職のベント内での最大時間,叛徒职业在管道中停留的最大时间,叛徒職業的玩家在管道中可以停留的最大時間,Время Использования Вентиляции Madmates
 EvilWatcherChance,EvilWatcher Chance,イビルウォッチャーになる確率,窥视者成为内鬼阵营的概率,成為邪惡觀察者的機率,EvilWatcher Шанс
@@ -387,7 +387,7 @@ DeathReason.Vote,Exiled,追放,放逐,被丟,Изгнан
 DeathReason.Suicide,Suicide,自殺,自杀,自殺,Суициднулся
 DeathReason.Spell,Spelled,呪殺,咒杀,咒殺,Заколдован
 DeathReason.Bite,Bitten,噛殺,吸血,咬死,Укушен
-DeathReason.LoversSuicide,Copycat Suicide,後追い,为爱而死,戀人共死,Любовник Суициднулся
+DeathReason.FollowingSuicide,Copycat Suicide,後追い,为爱而死,戀人共死,Любовник Суициднулся
 DeathReason.Bombed,Bombed,爆死,炸死,炸死,Взорван
 DeathReason.Misfire,Misfire,誤爆,走火,走火,Убился
 DeathReason.Torched,Torched,焼殺,烧死,燒死,Сожжен
