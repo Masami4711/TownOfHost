@@ -1,9 +1,9 @@
-using System.Text.RegularExpressions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using static TownOfHost.Translator;
 
@@ -383,6 +383,7 @@ namespace TownOfHost
         }
         public static void ShowActiveSettings(byte PlayerId = byte.MaxValue)
         {
+            var mapId = PlayerControl.GameOptions.MapId;
             if (Options.HideGameSettings.GetBool() && PlayerId != byte.MaxValue)
             {
                 SendMessage(GetString("Message.HideGameSettings"), PlayerId);
@@ -404,7 +405,8 @@ namespace TownOfHost
                 text = GetString("Attributes") + ":";
                 if (Options.EnableLastImpostor.GetBool())
                 {
-                    text += String.Format("\n{0}:{1}", GetRoleName(CustomRoles.LastImpostor), Options.EnableLastImpostor.GetString());
+                    text += $"\n【{GetRoleName(CustomRoles.LastImpostor)}】";
+                    text += String.Format("\n{0}:{1}", GetString("KillCooldown"), Options.LastImpostorKillCooldown.GetString());
                 }
                 SendMessage(text, PlayerId);
                 text = GetString("Settings") + ":";
@@ -431,13 +433,38 @@ namespace TownOfHost
                     }
                     text += "\n";
                 }
-                if (Options.EnableLastImpostor.GetBool()) text += String.Format("\n{0}:{1}", GetString("LastImpostorKillCooldown"), Options.LastImpostorKillCooldown.GetString());
                 if ((CustomRoles.EvilTracker.IsEnable() && EvilTracker.CanSeeKillFlash.GetBool())
                 || CustomRoles.Seer.IsEnable())
                     text += String.Format("\n{0}:{1}", GetString("KillFlashDuration"), Options.KillFlashDuration.GetString());
                 if (Options.DisableDevices.GetBool())
                 {
-                    if (Options.DisableDevices.GetBool()) text += String.Format("\n{0}:{1}", Options.DisableAdmin.GetName(disableColor: true), Options.WhichDisableAdmin.GetString());
+                    if (Options.DisableSkeldDevices.GetBool() && (Options.AddedTheSkeld.GetBool() || mapId == 0))
+                    {
+                        text += String.Format("\n【{0}】", Options.DisableSkeldDevices.GetName(disableColor: true));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableSkeldAdmin.GetName(disableColor: true), GetOnOff(Options.DisableSkeldAdmin.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableSkeldCamera.GetName(disableColor: true), GetOnOff(Options.DisableSkeldCamera.GetBool()));
+                    }
+                    if (Options.DisableMiraHQDevices.GetBool() && (Options.AddedMiraHQ.GetBool() || mapId == 1))
+                    {
+                        text += String.Format("\n【{0}】", Options.DisableMiraHQDevices.GetName(disableColor: true));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableMiraHQAdmin.GetName(disableColor: true), GetOnOff(Options.DisableMiraHQAdmin.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableMiraHQDoorLog.GetName(disableColor: true), GetOnOff(Options.DisableMiraHQDoorLog.GetBool()));
+                    }
+                    if (Options.DisablePolusDevices.GetBool() && (Options.AddedPolus.GetBool() || mapId == 2))
+                    {
+                        text += String.Format("\n【{0}】", Options.DisablePolusDevices.GetName(disableColor: true));
+                        text += String.Format("\n┗{0}:{1}", Options.DisablePolusAdmin.GetName(disableColor: true), GetOnOff(Options.DisablePolusAdmin.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisablePolusCamera.GetName(disableColor: true), GetOnOff(Options.DisablePolusCamera.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisablePolusVital.GetName(disableColor: true), GetOnOff(Options.DisablePolusVital.GetBool()));
+                    }
+                    if (Options.DisableAirshipDevices.GetBool() && (Options.AddedTheAirShip.GetBool() || mapId == 4))
+                    {
+                        text += String.Format("\n【{0}】", Options.DisableAirshipDevices.GetName(disableColor: true));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableAirshipCockpitAdmin.GetName(disableColor: true), GetOnOff(Options.DisableAirshipCockpitAdmin.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableAirshipRecordsAdmin.GetName(disableColor: true), GetOnOff(Options.DisableAirshipRecordsAdmin.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableAirshipCamera.GetName(disableColor: true), GetOnOff(Options.DisableAirshipCamera.GetBool()));
+                        text += String.Format("\n┗{0}:{1}", Options.DisableAirshipVital.GetName(disableColor: true), GetOnOff(Options.DisableAirshipVital.GetBool()));
+                    }
                 }
                 if (Options.SyncButtonMode.GetBool()) text += String.Format("\n{0}:{1}", GetString("SyncedButtonCount"), Options.SyncedButtonCount.GetInt());
                 if (Options.SabotageTimeControl.GetBool())
@@ -559,7 +586,7 @@ namespace TownOfHost
                         PlayerState.SetDead(pc.PlayerId);
                     }
                 }
-                CustomWinnerHolder.WinnerTeam = CustomWinner.Terrorist;
+                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Terrorist);
                 CustomWinnerHolder.WinnerIds.Add(Terrorist.PlayerId);
             }
         }
