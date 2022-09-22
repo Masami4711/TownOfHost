@@ -4,8 +4,6 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using UnityEngine;
-using HarmonyLib;
-using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -171,6 +169,21 @@ namespace TownOfHost
                 sender.SendMessage();
             }
         }
+        public static void SetKillCooldown(this PlayerControl player, float time)
+        {
+            CustomRoles role = player.GetCustomRole();
+            if (!(role.IsImpostor() || player.IsNeutralKiller() || role is CustomRoles.Arsonist or CustomRoles.Sheriff)) return;
+            if (player.AmOwner)
+            {
+                player.SetKillTimer(time);
+            }
+            else
+            {
+                Main.AllPlayerKillCooldown[player.PlayerId] = time * 2;
+                player.CustomSyncSettings();
+                player.RpcGuardAndKill();
+            }
+        }
         public static void RpcSpecificMurderPlayer(this PlayerControl killer, PlayerControl target = null)
         {
             if (target == null) target = killer;
@@ -258,7 +271,7 @@ namespace TownOfHost
 
             var clientId = player.GetClientId();
             var opt = Main.RealOptionsData.DeepCopy();
-            opt.BlackOut(player, PlayerState.IsBlackOut[player.PlayerId]);
+            opt.BlackOut(PlayerState.IsBlackOut[player.PlayerId]);
 
             CustomRoles role = player.GetCustomRole();
             RoleType roleType = role.GetRoleType();
@@ -272,6 +285,8 @@ namespace TownOfHost
                     opt.RoleOptions.EngineerInVentMaxTime = Options.MadmateVentMaxTime.GetFloat();
                     if (Options.MadmateHasImpostorVision.GetBool())
                         opt.SetVision(player, true);
+                    if (Options.MadmateCanSeeOtherVotes.GetBool() && opt.AnonymousVotes)
+                        opt.AnonymousVotes = false;
                     break;
             }
 
@@ -328,7 +343,7 @@ namespace TownOfHost
                     Mare.ApplyGameOptions(opt, player.PlayerId);
                     break;
                 case CustomRoles.EvilTracker:
-                    EvilTracker.ApplyGameOptions(opt);
+                    EvilTracker.ApplyGameOptions(opt, player.PlayerId);
                     break;
                 case CustomRoles.Jackal:
                 case CustomRoles.JSchrodingerCat:
@@ -359,6 +374,9 @@ namespace TownOfHost
             }
             if (Options.GhostCanSeeOtherVotes.GetBool() && player.Data.IsDead && opt.AnonymousVotes)
                 opt.AnonymousVotes = false;
+            if (Options.AdditionalEmergencyCooldown.GetBool() &&
+                Options.AdditionalEmergencyCooldownThreshold.GetInt() <= PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead))
+                opt.EmergencyCooldown += Options.AdditionalEmergencyCooldownTime.GetInt();
             if (Options.SyncButtonMode.GetBool() && Options.SyncedButtonCount.GetSelection() <= Options.UsedButtonCount)
                 opt.EmergencyCooldown = 3600;
             if ((Options.CurrentGameMode == CustomGameMode.HideAndSeek || Options.IsStandardHAS) && Options.HideAndSeekKillDelayTimer > 0)
@@ -369,7 +387,7 @@ namespace TownOfHost
             opt.DiscussionTime = Mathf.Clamp(Main.DiscussionTime, 0, 300);
             opt.VotingTime = Mathf.Clamp(Main.VotingTime, TimeThief.LowerLimitVotingTime.GetInt(), 300);
 
-            if (Options.AllAliveMeeting.GetBool() && PlayerControl.AllPlayerControls.ToArray().All(x => !x.Data.IsDead))
+            if (Options.AllAliveMeeting.GetBool() && GameData.Instance.AllPlayers.ToArray().All(x => !x.IsDead))
             {
                 opt.DiscussionTime = 0;
                 opt.VotingTime = Options.AllAliveMeetingTime.GetInt();
@@ -715,19 +733,6 @@ namespace TownOfHost
                 player.GetCustomRole() is
                 CustomRoles.Egoist or
                 CustomRoles.Jackal;
-        }
-        public static void ChangeExecutionerRole(this PlayerControl target)
-        {
-            byte Executioner = 0x73;
-            Main.ExecutionerTarget.Do(x =>
-            {
-                if (x.Value == target.PlayerId)
-                    Executioner = x.Key;
-            });
-            Utils.GetPlayerById(Executioner).RpcSetCustomRole(Options.CRoleExecutionerChangeRoles[Options.ExecutionerChangeRolesAfterTargetKilled.GetSelection()]);
-            Main.ExecutionerTarget.Remove(Executioner);
-            RPC.RemoveExecutionerKey(Executioner);
-            Utils.NotifyRoles();
         }
 
         //汎用

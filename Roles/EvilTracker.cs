@@ -17,9 +17,9 @@ namespace TownOfHost
 
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.EvilTracker);
-            CanSeeKillFlash = CustomOption.Create(Id + 10, Color.white, "EvilTrackerCanSeeKillFlash", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
-            CanResetTargetAfterMeeting = CustomOption.Create(Id + 11, Color.white, "EvilTrackerResetTargetAfterMeeting", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.EvilTracker);
+            CanSeeKillFlash = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeKillFlash", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            CanResetTargetAfterMeeting = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "EvilTrackerResetTargetAfterMeeting", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
         }
         public static void Init()
         {
@@ -58,9 +58,9 @@ namespace TownOfHost
             }
         }
 
-        public static void ApplyGameOptions(GameOptionsData opt)
+        public static void ApplyGameOptions(GameOptionsData opt, byte playerId)
         {
-            opt.RoleOptions.ShapeshifterCooldown = 5f;
+            opt.RoleOptions.ShapeshifterCooldown = CanSetTarget[playerId] ? 5f : 255f;
             opt.RoleOptions.ShapeshifterDuration = 1f;
         }
         public static void SendTarget(byte EvilTrackerId, byte targetId)
@@ -108,7 +108,7 @@ namespace TownOfHost
                     case PlayerState.DeathReason.Bombed:
                         return true;
                     case PlayerState.DeathReason.Suicide:
-                    case PlayerState.DeathReason.LoversSuicide:
+                    case PlayerState.DeathReason.FollowingSuicide:
                     case PlayerState.DeathReason.Misfire:
                     case PlayerState.DeathReason.Torched:
                         return false;
@@ -129,9 +129,8 @@ namespace TownOfHost
             {
                 var target = Utils.GetPlayerById(arrow.Key.Item2);
                 bool EvilTrackerTarget = seer.GetTarget() == target;
-                if (arrow.Key.Item1 == seer.PlayerId && !target.Data.IsDead && (target.GetCustomRole().IsImpostor() || EvilTrackerTarget))
-                    if (EvilTrackerTarget) SelfSuffix += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Crewmate), arrow.Value);
-                    else SelfSuffix += arrow.Value;
+                if (arrow.Key.Item1 == seer.PlayerId && !PlayerState.isDead[arrow.Key.Item2] && (target.GetCustomRole().IsImpostor() || EvilTrackerTarget))
+                    SelfSuffix += EvilTrackerTarget ? Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Crewmate), arrow.Value) : arrow.Value;
             }
             return SelfSuffix;
         }
@@ -190,23 +189,18 @@ namespace TownOfHost
                 Utils.NotifyRoles();
             }
         }
-        public static void FixedUpdate()
+        public static void FixedUpdate(PlayerControl pc)
         {
-            bool DoNotifyRoles = false;
-            foreach (var pc in PlayerControl.AllPlayerControls)
+            if (!pc.Is(CustomRoles.EvilTracker)) return;
+            var target = pc.GetTarget();
+            //EvilTrackerのターゲット削除
+            if (pc != target && target != null && (target.Data.IsDead || target.Data.Disconnected))
             {
-                if (!pc.Is(CustomRoles.EvilTracker)) continue;
-                var target = pc.GetTarget();
-                //EvilTrackerのターゲット削除
-                if (pc != target && target != null && (target.Data.IsDead || target.Data.Disconnected))
-                {
-                    Target[pc.PlayerId] = null;
-                    pc.RemoveTarget();
-                    Logger.Info($"{pc.GetNameWithRole()}のターゲットが無効だったため、ターゲットを削除しました", "EvilTracker");
-                    DoNotifyRoles = true;
-                }
+                Target[pc.PlayerId] = null;
+                pc.RemoveTarget();
+                Logger.Info($"{pc.GetNameWithRole()}のターゲットが無効だったため、ターゲットを削除しました", "EvilTracker");
+                Utils.NotifyRoles();
             }
-            if (DoNotifyRoles) Utils.NotifyRoles();
         }
     }
 }

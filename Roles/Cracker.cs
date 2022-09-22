@@ -23,14 +23,14 @@ namespace TownOfHost
         public static CustomOption CloseAllDoors;
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.Cracker);
-            EnablePoweredLightsOut = CustomOption.Create(Id + 10, Color.white, "EnablePoweredLightsOut", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            LightsOutMinimum = CustomOption.Create(Id + 11, Color.white, "LightsOutMinimum", 5, 0, 20, 1, EnablePoweredLightsOut);
-            EnablePoweredComms = CustomOption.Create(Id + 12, Color.white, "EnablePoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            NormaToFixComms = CustomOption.Create(Id + 13, Color.white, "NormaToFixComms", 2, 2, 5, 1, EnablePoweredComms);
-            EnablePoweredO2 = CustomOption.Create(Id + 14, Color.white, "EnablePoweredO2", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            EnablePoweredReactor = CustomOption.Create(Id + 15, Color.white, "EnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
-            CloseAllDoors = CustomOption.Create(Id + 16, Color.white, "CloseAllDoors", true, EnablePoweredReactor);
+            Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.Cracker);
+            EnablePoweredLightsOut = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "CrackerEnablePoweredLightsOut", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            LightsOutMinimum = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "CrackerLightsOutMinimum", 5, 0, 20, 1, EnablePoweredLightsOut);
+            EnablePoweredComms = CustomOption.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "CrackerEnablePoweredComms", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            NormaToFixComms = CustomOption.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "CrackerNormaToFixComms", 2, 2, 5, 1, EnablePoweredComms);
+            EnablePoweredO2 = CustomOption.Create(Id + 14, TabGroup.ImpostorRoles, Color.white, "CrackerEnablePoweredO2", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            EnablePoweredReactor = CustomOption.Create(Id + 15, TabGroup.ImpostorRoles, Color.white, "CrackerEnablePoweredReactor", true, Options.CustomRoleSpawnChances[CustomRoles.Cracker]);
+            CloseAllDoors = CustomOption.Create(Id + 16, TabGroup.ImpostorRoles, Color.white, "CrackerCloseAllDoors", true, EnablePoweredReactor);
         }
         public static void Init()
         {

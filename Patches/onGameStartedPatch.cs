@@ -1,6 +1,6 @@
-using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using Hazel;
 using static TownOfHost.Translator;
@@ -15,7 +15,6 @@ namespace TownOfHost
             //注:この時点では役職は設定されていません。
             PlayerState.Init();
 
-            Main.currentWinner = CustomWinner.Default;
             Main.CustomWinTrigger = false;
             Main.AllPlayerCustomRoles = new Dictionary<byte, CustomRoles>();
             Main.AllPlayerCustomSubRoles = new Dictionary<byte, CustomRoles>();
@@ -28,7 +27,6 @@ namespace TownOfHost
             Main.CursedPlayers = new Dictionary<byte, PlayerControl>();
             Main.isCurseAndKill = new Dictionary<byte, bool>();
             Main.AirshipMeetingTimer = new Dictionary<byte, float>();
-            Main.ExecutionerTarget = new Dictionary<byte, byte>();
             Main.SKMadmateNowCount = 0;
             Main.isCursed = false;
             Main.PuppeteerList = new Dictionary<byte, byte>();
@@ -47,6 +45,8 @@ namespace TownOfHost
             Main.RealOptionsData = PlayerControl.GameOptions.DeepCopy();
 
             Main.introDestroyed = false;
+
+            RandomSpawn.CustomNetworkTransformPatch.NumOfTP = new();
 
             Main.DiscussionTime = Main.RealOptionsData.DiscussionTime;
             Main.VotingTime = Main.RealOptionsData.VotingTime;
@@ -77,6 +77,8 @@ namespace TownOfHost
                 Main.PlayerColors[pc.PlayerId] = Palette.PlayerColors[pc.Data.DefaultOutfit.ColorId];
                 Main.AllPlayerSpeed[pc.PlayerId] = Main.RealOptionsData.PlayerSpeedMod; //移動速度をデフォルトの移動速度に変更
                 pc.cosmetics.nameText.text = pc.name;
+
+                RandomSpawn.CustomNetworkTransformPatch.NumOfTP.Add(pc.PlayerId, 0);
             }
             Main.VisibleTasksCount = true;
             if (__instance.AmHost)
@@ -100,10 +102,14 @@ namespace TownOfHost
             TimeThief.Init();
             Mare.Init();
             Egoist.Init();
+            Executioner.Init();
             Sheriff.Init();
             EvilTracker.Init();
             Cracker.Init();
+            CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
+
+            GameStates.MeetingCalled = false;
         }
     }
     [HarmonyPatch(typeof(RoleManager), nameof(RoleManager.SelectRoles))]
@@ -310,7 +316,7 @@ namespace TownOfHost
                     switch (pc.GetCustomRole())
                     {
                         case CustomRoles.BountyHunter:
-                            BountyHunter.Add(pc);
+                            BountyHunter.Add(pc.PlayerId);
                             break;
                         case CustomRoles.SerialKiller:
                             SerialKiller.Add(pc.PlayerId);
@@ -326,7 +332,7 @@ namespace TownOfHost
                             FireWorks.Add(pc.PlayerId);
                             break;
                         case CustomRoles.TimeThief:
-                            TimeThief.Add(pc, pc.PlayerId);
+                            TimeThief.Add(pc.PlayerId);
                             break;
                         case CustomRoles.Sniper:
                             Sniper.Add(pc.PlayerId);
@@ -340,20 +346,7 @@ namespace TownOfHost
                                 Main.isDoused.Add((pc.PlayerId, ar.PlayerId), false);
                             break;
                         case CustomRoles.Executioner:
-                            List<PlayerControl> targetList = new();
-                            rand = new Random();
-                            foreach (var target in PlayerControl.AllPlayerControls)
-                            {
-                                if (pc == target) continue;
-                                else if (!Options.ExecutionerCanTargetImpostor.GetBool() && target.GetCustomRole().IsImpostor()) continue;
-                                else if (!Options.ExecutionerCanTargetNeutralKiller.GetBool() && target.IsNeutralKiller()) continue;
-
-                                targetList.Add(target);
-                            }
-                            var Target = targetList[rand.Next(targetList.Count)];
-                            Main.ExecutionerTarget.Add(pc.PlayerId, Target.PlayerId);
-                            RPC.SendExecutionerTarget(pc.PlayerId, Target.PlayerId);
-                            Logger.Info($"{pc.GetNameWithRole()}:{Target.GetNameWithRole()}", "Executioner");
+                            Executioner.Add(pc.PlayerId);
                             break;
                         case CustomRoles.Egoist:
                             Egoist.Add(pc.PlayerId);

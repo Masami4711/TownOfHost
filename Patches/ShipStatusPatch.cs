@@ -37,7 +37,6 @@ namespace TownOfHost
                     Logger.Info("キル能力解禁", "HideAndSeek");
                 }
             }
-            if (CustomRoles.EvilTracker.IsEnable()) EvilTracker.FixedUpdate();
         }
     }
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.RepairSystem))]
@@ -144,6 +143,19 @@ namespace TownOfHost
             Logger.CurrentMethod();
 
             //ホストの役職初期設定はここで行うべき？
+        }
+    }
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CheckTaskCompletion))]
+    class CheckTaskCompletionPatch
+    {
+        public static bool Prefix(ref bool __result)
+        {
+            if (Options.DisableTaskWin.GetBool())
+            {
+                __result = false;
+                return false;
+            }
+            return true;
         }
     }
 }
