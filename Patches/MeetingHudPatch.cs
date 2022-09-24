@@ -304,6 +304,15 @@ namespace TownOfHost
                 }
                 switch (seer.GetCustomRole())
                 {
+                    case CustomRoles.BountyHunter:
+                        pva.NameText.text += BountyHunter.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.EvilTracker:
+                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.Insider:
+                        pva.NameText.text += Insider.GetOtherImpostorMarks(seer, target);
+                        break;
                     case CustomRoles.MadSnitch:
                     case CustomRoles.Snitch:
                         if (seer.GetPlayerTaskState().IsTaskFinished) //seerがタスクを終えている
@@ -333,9 +342,6 @@ namespace TownOfHost
                         target.Is(CustomRoles.Snitch) && //変更対象がSnitch
                         target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
                             pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
                         break;
                     case CustomRoles.EgoSchrodingerCat:
                         LocalPlayerKnowsEgoist = true;
@@ -379,24 +385,6 @@ namespace TownOfHost
                 if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null)
                     pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
-                //インサイダーからの味方の能力表示
-                bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
-
-                if (seer.Is(CustomRoles.BountyHunter) && BountyHunter.Targets[seer.PlayerId] == target)
-                {
-                    pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⊕");
-                }
-                else if (InsiderKnowsImpostorAbilities)
-                {
-                    foreach (var kvp in BountyHunter.Targets)
-                    {
-                        bool TargetIsTargeted = target.PlayerId == kvp.Value.PlayerId;
-                        if (TargetIsTargeted)
-                        {
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⊕");
-                        }
-                    }
-                }
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。
             }
         }

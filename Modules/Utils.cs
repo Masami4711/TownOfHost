@@ -813,49 +813,21 @@ namespace TownOfHost
                                 TargetMark += $"<color={GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
                             }
                         }
-                        //インサイダーからの味方の能力表示
-                        bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
 
-                        if (seer.Is(CustomRoles.BountyHunter) || InsiderKnowsImpostorAbilities)
-                        {
-                            foreach (var kvp in BountyHunter.Targets)
-                            {
-                                if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Value.PlayerId)
-                                {
-                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "⊕");
-                                }
-                            }
-                        }
-
-                        if (seer.Is(CustomRoles.Puppeteer) || InsiderKnowsImpostorAbilities)
-                        {
-                            foreach (var kvp in Main.PuppeteerList)
-                            {
-                                if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key)
-                                {
-                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "◆");
-                                }
-                            }
-                        }
-                        // if (((seer.Is(CustomRoles.Puppeteer) && Main.PuppeteerList.ContainsValue(seer.PlayerId))
-                        //     || InsiderCanSeeImpostorAbility)
-                        //     && Main.PuppeteerList.ContainsKey(target.PlayerId))
-                        // {
-                        //     TargetMark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
-                        // }
-                        if (seer.Is(CustomRoles.Vampire) || InsiderKnowsImpostorAbilities)
-                        {
-                            foreach (var kvp in Main.BitPlayers)
-                            {
-                                if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key && !target.Data.IsDead)
-                                {
-                                    TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Impostor), "×");
-                                }
-                            }
-                        }
+                        if (seer.Is(CustomRoles.BountyHunter))
+                            TargetMark += BountyHunter.GetTargetMark(seer, target);
 
                         if (seer.Is(CustomRoles.EvilTracker))
                             TargetMark += EvilTracker.GetTargetMark(seer, target);
+
+                        if (seer.Is(CustomRoles.Insider))
+                            TargetMark += Insider.GetOtherImpostorMarks(seer, target);
+
+                        if (seer.Is(CustomRoles.Puppeteer))
+                            TargetMark += GetPuppeteerMark(seer, target);
+
+                        if (seer.Is(CustomRoles.Vampire))
+                            TargetMark += GetVampireMark(seer, target);
 
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                         string TargetRoleText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
@@ -1052,6 +1024,20 @@ namespace TownOfHost
                 obj.SetActive(t != 1f);
                 obj.GetComponent<SpriteRenderer>().color = new(color.r, color.g, color.b, Mathf.Clamp01((-2f * Mathf.Abs(t - 0.5f) + 1) * color.a)); //アルファ値を0→目標→0に変化させる
             })));
+        }
+        public static string GetVampireMark(PlayerControl seer, PlayerControl target)
+        {
+            string TargetMark = "";
+            if (GameStates.IsInTask && Main.BitPlayers.TryGetValue(target.PlayerId, out var vampire) && vampire.Item1 == seer.PlayerId)
+                TargetMark += Helpers.ColorString(Palette.ImpostorRed, "×");
+            return TargetMark;
+        }
+        public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
+        {
+            string TargetMark = "";
+            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
+                TargetMark += Helpers.ColorString(Palette.ImpostorRed, "◆");
+            return TargetMark;
         }
     }
 }

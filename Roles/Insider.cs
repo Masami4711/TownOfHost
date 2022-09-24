@@ -122,5 +122,31 @@ namespace TownOfHost
         }
         public static bool DisableTaskText(PlayerControl pc) => false;
         //=> Utils.HasTasks(pc.Data) && AssassinAndMarin.IsEnable(); && !Marin.HasTasks.GetBool();
+
+        public static string GetOtherImpostorMarks(PlayerControl Insider, PlayerControl target)
+        {
+            if (!KnowImpostorAbiliies(Insider)) return "";
+            string Mark = "";
+            foreach (var seer in PlayerControl.AllPlayerControls)
+            {
+                if (!seer.Is(RoleType.Impostor)) continue;
+                switch (seer.GetCustomRole())
+                {
+                    case CustomRoles.BountyHunter:
+                        Mark += BountyHunter.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.EvilTracker:
+                        Mark += EvilTracker.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.Vampire:
+                        Mark += Utils.GetVampireMark(seer, target);
+                        break;
+                    case CustomRoles.Puppeteer:
+                        Mark += Utils.GetPuppeteerMark(seer, target);
+                        break;
+                }
+            }
+            return Mark;
+        }
     }
 }

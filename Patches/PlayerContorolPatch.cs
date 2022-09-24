@@ -825,53 +825,27 @@ namespace TownOfHost
                     }
                     Mark += Executioner.TargetMark(seer, target);
 
-                    //インサイダーからの味方の能力表示
-                    bool InsiderKnowsImpostorAbilities = Insider.KnowImpostorAbiliies(seer);
+                    if (seer.Is(CustomRoles.BountyHunter))
+                        Mark += BountyHunter.GetTargetMark(seer, target);
 
-                    if (seer.Is(CustomRoles.BountyHunter) || InsiderKnowsImpostorAbilities)
-                    {
-                        foreach (var kvp in BountyHunter.Targets)
-                        {
-                            if (((seer.Is(CustomRoles.BountyHunter) && seer.PlayerId == kvp.Key) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Value.PlayerId)
-                            {
-                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "⊕");
-                            }
-                        }
-                    }
+                    if (seer.Is(CustomRoles.EvilTracker))
+                        Mark += EvilTracker.GetTargetMark(seer, target);
 
-                    // if (((seer.Is(CustomRoles.Puppeteer) && Main.PuppeteerList.ContainsValue(seer.PlayerId))
-                    //     || InsiderCanSeeImpostorAbility)
-                    //     && Main.PuppeteerList.ContainsKey(target.PlayerId))
-                    // {
-                    //     Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
-                    // }
-                    if (seer.Is(CustomRoles.Puppeteer) || InsiderKnowsImpostorAbilities)
-                    {
-                        foreach (var kvp in Main.PuppeteerList)
-                        {
-                            if (((seer.Is(CustomRoles.Puppeteer) && seer.PlayerId == kvp.Value) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key)
-                            {
-                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "◆");
-                            }
-                        }
-                    }
-                    if (seer.Is(CustomRoles.Vampire) || InsiderKnowsImpostorAbilities)
-                    {
-                        foreach (var kvp in Main.BitPlayers)
-                        {
-                            if (((seer.Is(CustomRoles.Vampire) && seer.PlayerId == kvp.Value.Item1) || InsiderKnowsImpostorAbilities) && target.PlayerId == kvp.Key && !target.Data.IsDead)
-                            {
-                                Mark += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "×");
-                            }
-                        }
-                    }
+                    if (seer.Is(CustomRoles.Insider))
+                        Mark += Insider.GetOtherImpostorMarks(seer, target);
+
+                    if (seer.Is(CustomRoles.Puppeteer))
+                        Mark += Utils.GetPuppeteerMark(seer, target);
+
+                    if (seer.Is(CustomRoles.Vampire))
+                        Mark += Utils.GetVampireMark(seer, target);
+
                     if (Sniper.IsEnable() && target.AmOwner)
                     {
                         //銃声が聞こえるかチェック
                         Mark += Sniper.GetShotNotify(target.PlayerId);
 
                     }
-                    if (seer.Is(CustomRoles.EvilTracker)) Mark += EvilTracker.GetTargetMark(seer, target);
                     //タスクが終わりそうなSnitchがいるとき、インポスター/キル可能な第三陣営に警告が表示される
                     if (!GameStates.IsMeeting && (target.GetCustomRole().IsImpostor()
                         || (Options.SnitchCanFindNeutralKiller.GetBool() && target.IsNeutralKiller())))
