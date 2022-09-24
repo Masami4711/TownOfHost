@@ -67,7 +67,8 @@ namespace TownOfHost
             if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false; //タスクフェーズでTargetが死んでいる
             if (Insider == Target) return false; //自分自身
             if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
-            if (CanSeeImpostorAbilities.GetBool() && Target.GetCustomRole().IsImpostor()) return true; //味方インポスターのケース
+            if (CanSeeImpostorAbilities.GetBool() && Target.Is(RoleType.Impostor)) return true; //味方インポスターのケース
+            if (KnowMadmates(Insider) && Target.Is(RoleType.Madmate)) return true; //マッドメイトが分かるケース
             if (Target.Data.IsDead) //幽霊の役職が見えるケース
                 if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
                 else if (IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
@@ -96,8 +97,8 @@ namespace TownOfHost
             {
                 int killCount = KillCount(Utils.GetPlayerById(playerId));
                 int Norma = KillCountToSeeMadmates.GetInt();
-                if (killCount < Norma) ProgressText += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>({killCount}/{Norma})</color>";
-                else ProgressText += $" <color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>★</color>";
+                if (killCount < Norma) ProgressText += Helpers.ColorString(Palette.ImpostorRed, $"({killCount}/{Norma})");
+                else ProgressText += Helpers.ColorString(Palette.ImpostorRed, " ★");
             }
             return ProgressText;
         }
@@ -120,6 +121,6 @@ namespace TownOfHost
             return (RoleName, RoleColor);
         }
         public static bool DisableTaskText(PlayerControl pc) => false;
-        //=> Utils.HasTasks(pc.Data) && CustomRoles.Marin.IsEnable() && !Marin.HasTasks.GetBool();
+        //=> Utils.HasTasks(pc.Data) && AssassinAndMarin.IsEnable(); && !Marin.HasTasks.GetBool();
     }
 }
