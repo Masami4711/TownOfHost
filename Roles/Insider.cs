@@ -15,7 +15,7 @@ namespace TownOfHost
         private static CustomOption KillCountToSeeMadmates;
         static Dictionary<CustomRoles, CustomRoles> ReplaceRoles = new()
         {
-            {CustomRoles.Bait, CustomRoles.Crewmate}
+            // {CustomRoles.Marin, CustomRoles.Crewmate}
         };
         public static void SetupCustomOption()
         {
@@ -120,7 +120,7 @@ namespace TownOfHost
             }
             return (RoleName, RoleColor);
         }
-        public static bool DisableTaskText(PlayerControl pc)
-        => Utils.HasTasks(pc.Data) && CustomRoles.Bait.IsEnable();
+        public static bool DisableTaskText(PlayerControl pc) => false;
+        //=> Utils.HasTasks(pc.Data) && CustomRoles.Marin.IsEnable() && !Marin.HasTasks.GetBool();
     }
 }
