@@ -60,6 +60,7 @@ namespace TownOfHost
             }
             Utils.NotifyRoles();
         }
+        public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
         public static bool KnowOtherRole(PlayerControl Insider, PlayerControl Target) //Insider能力で役職が分かるケースのみ
         {
             if (!Insider.Is(CustomRoles.Insider)) return false; //Insider以外
@@ -71,6 +72,12 @@ namespace TownOfHost
                 if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
                 else if (IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
             return false;
+        }
+        public static bool KnowMadmates(PlayerControl seer)
+        {
+            if (!seer.Is(CustomRoles.Insider) || !CanSeeMadmates.GetBool()) return false;
+            int killCount = KillCount(seer);
+            return killCount >= KillCountToSeeMadmates.GetInt();
         }
         public static int KillCount(PlayerControl Insider)
         {
@@ -94,14 +101,6 @@ namespace TownOfHost
             }
             return ProgressText;
         }
-        public static bool KnowMadmates(PlayerControl seer)
-        {
-            if (!seer.Is(CustomRoles.Insider) || !CanSeeMadmates.GetBool()) return false;
-            int killCount = KillCount(seer);
-            return killCount >= KillCountToSeeMadmates.GetInt();
-
-        }
-        public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
         public static string GetRoleText(PlayerControl target, string TargetTaskText, string fontSize)
         {
             if (DisableTaskText(target)) TargetTaskText = "";
