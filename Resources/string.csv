@@ -379,7 +379,7 @@ KillFlashDuration,Kill Flash Duration(s),キルフラッシュの長さ(秒),击
 InsiderCanSeeImpostorAbilities,Insider Can See Impostor Abilities,味方インポスターの能力が分かる,,,
 InsiderCanSeeWholeRolesOfGhosts,Insider Can See Whole Roles Of Ghosts,幽霊全員の役職が分かる,,,
 InsiderCanSeeMadmates,Insider Can See Madmates,マッドメイトが分かる,,,
-InsiderKillCountToSeeMadmates,Insider's Kill Count To See Madmates,マッドメイトが分かるキル数,,,
+InsiderKillCountToSeeMadmates,Insider's Kill Count To See Madmates,必要なキル数,,,
 
 ## かくれんぼ設定
 HideAndSeekOptions,HideAndSeek Options,かくれんぼの設定,躲猫猫设置,躲貓貓設定,Настройки Пряток
