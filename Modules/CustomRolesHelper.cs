@@ -61,6 +61,15 @@ namespace TownOfHost
                 CustomRoles.Impostor or
                 CustomRoles.Shapeshifter;
         }
+        public static bool IsKilledSchrodingerCat(this CustomRoles role)
+        {
+            return role is
+                CustomRoles.SchrodingerCat or
+                CustomRoles.MSchrodingerCat or
+                CustomRoles.CSchrodingerCat or
+                CustomRoles.EgoSchrodingerCat or
+                CustomRoles.JSchrodingerCat;
+        }
 
         public static RoleType GetRoleType(this CustomRoles role)
         {
