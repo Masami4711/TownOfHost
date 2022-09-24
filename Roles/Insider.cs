@@ -60,16 +60,16 @@ namespace TownOfHost
             }
             Utils.NotifyRoles();
         }
-        public static bool KnowOtherRole(PlayerControl Insider, PlayerControl Target)
+        public static bool KnowOtherRole(PlayerControl Insider, PlayerControl Target) //Insider能力で役職が分かるケースのみ
         {
-            if (!Insider.Is(CustomRoles.Insider)) return false;
-            if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false;
-            if (Insider == Target) return false;
-            if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false;
-            if (CanSeeImpostorAbilities.GetBool() && Target.GetCustomRole().IsImpostor()) return true;
-            if (Target.Data.IsDead)
-                if (CanSeeWholeRolesOfGhosts.GetBool()) return true;
-                else if (IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true;
+            if (!Insider.Is(CustomRoles.Insider)) return false; //Insider以外
+            if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false; //タスクフェーズでTargetが死んでいる
+            if (Insider == Target) return false; //自分自身
+            if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
+            if (CanSeeImpostorAbilities.GetBool() && Target.GetCustomRole().IsImpostor()) return true; //味方インポスターのケース
+            if (Target.Data.IsDead) //幽霊の役職が見えるケース
+                if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
+                else if (IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
             return false;
         }
         public static int KillCount(PlayerControl Insider)
