@@ -736,7 +736,7 @@ namespace TownOfHost
                         RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示
                         if (!__instance.AmOwner) __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
                     }
-                    if (Main.VisibleTasksCount && !PlayerControl.LocalPlayer.Is(CustomRoles.FireWorks)) //他プレイヤーでVisibleTasksCountは有効なら
+                    if (Main.VisibleTasksCount) //他プレイヤーでVisibleTasksCountは有効なら
                         RoleText.text += $" {Utils.GetProgressText(__instance)}"; //ロールの横にタスクなど進行状況表示
 
 
@@ -795,10 +795,10 @@ namespace TownOfHost
                         var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                         RealName = ncd.OpenTag + RealName + ncd.CloseTag;
                     }
-                    if (Insider.KnowMadmates(seer) && target.GetCustomRole().IsMadmate()) //seerがインサイダー
-                    {
-                        RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Madmate), RealName);
-                    }
+                    // if (Insider.KnowMadmates(seer) && target.Is(RoleType.Madmate)) //seerがインサイダー
+                    // {
+                    //     RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Madmate), RealName);
+                    // }
 
 
                     //インポスター/キル可能な第三陣営がタスクが終わりそうなSnitchを確認できる
