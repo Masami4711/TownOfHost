@@ -32,7 +32,6 @@ namespace TownOfHost
         SetCurrentDousingTarget,
         SetEvilTrackerTarget,
         InsiderKill,
-        setPlayerKIlledByInsider,
     }
     public enum Sounds
     {
