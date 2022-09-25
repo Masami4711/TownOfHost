@@ -717,8 +717,6 @@ namespace TownOfHost
                         SeerKnowsImpostors = true;
                 }
 
-                bool SeerKnowsMadmate = Insider.KnowMadmates(seer);
-
                 if (seer.Is(CustomRoles.EvilTracker)) SelfSuffix += EvilTracker.UtilsGetTargetArrow(isMeeting, seer);
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
@@ -739,7 +737,6 @@ namespace TownOfHost
                 //seerが死んでいる場合など、必要なときのみ第二ループを実行する
                 if (seer.Data.IsDead //seerが死んでいる
                     || SeerKnowsImpostors //seerがインポスターを知っている状態
-                    || SeerKnowsMadmate
                     || seer.GetCustomRole().IsImpostor() //seerがインポスター
                     || seer.Is(CustomRoles.EgoSchrodingerCat) //seerがエゴイストのシュレディンガーの猫
                     || seer.Is(CustomRoles.JSchrodingerCat) //seerがJackal陣営のシュレディンガーの猫
@@ -861,12 +858,6 @@ namespace TownOfHost
                             //NameColorManager準拠の処理
                             var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                             TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
-                        }
-                        if (SeerKnowsMadmate)
-                        {
-                            var insiderOption = seer.Is(CustomRoles.Insider) && target.Is(RoleType.Madmate); //インサイダーの条件
-                            if (insiderOption)
-                                TargetPlayerName = Helpers.ColorString(target.GetRoleColor(), TargetPlayerName);
                         }
                         if (seer.Is(RoleType.Impostor) && target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
                             TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.MadSnitch), "★");

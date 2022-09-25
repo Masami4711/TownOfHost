@@ -795,11 +795,6 @@ namespace TownOfHost
                         var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                         RealName = ncd.OpenTag + RealName + ncd.CloseTag;
                     }
-                    // if (Insider.KnowMadmates(seer) && target.Is(RoleType.Madmate)) //seerがインサイダー
-                    // {
-                    //     RealName = Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Madmate), RealName);
-                    // }
-
 
                     //インポスター/キル可能な第三陣営がタスクが終わりそうなSnitchを確認できる
                     var canFindSnitchRole = seer.GetCustomRole().IsImpostor() || //LocalPlayerがインポスター

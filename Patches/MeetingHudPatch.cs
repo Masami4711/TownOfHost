@@ -377,13 +377,6 @@ namespace TownOfHost
                         pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
                 }
 
-                bool LocalPlayerKnowsMadmate = Insider.KnowMadmates(seer);
-                if (LocalPlayerKnowsMadmate)
-                {
-                    if (target != null && target.GetCustomRole().IsMadmate()) //変更先がマッドメイト
-                        pva.NameText.color = Palette.ImpostorRed;
-                }
-
                 //呪われている場合
                 if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null)
                     pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");

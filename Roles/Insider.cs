@@ -119,7 +119,7 @@ namespace TownOfHost
             switch (target.GetCustomRole()) //本人には表示しないケースのみ
             {
                 case CustomRoles.FireWorks:
-                    TargetTaskText += $" {FireWorks.GetFireWorksCount(target.PlayerId)}";
+                    TargetTaskText += FireWorks.GetFireWorksCount(target.PlayerId);
                     break;
                 case CustomRoles.Witch:
                     TargetTaskText += Helpers.ColorString(Palette.ImpostorRed, $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
