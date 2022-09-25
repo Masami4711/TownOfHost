@@ -324,9 +324,6 @@ namespace TownOfHost
                 case CustomRoles.EvilTracker:
                     ProgressText += EvilTracker.GetMarker(playerId);
                     break;
-                case CustomRoles.FireWorks: //インサイダー視点専用
-                    ProgressText += $" {FireWorks.GetFireWorksCount(playerId)}";
-                    break;
                 case CustomRoles.Insider:
                     ProgressText += Insider.GetKillCount(playerId);
                     break;
@@ -635,7 +632,6 @@ namespace TownOfHost
 
                 //タスクなど進行状況を含むテキスト
                 string SelfTaskText = GetProgressText(seer);
-                if (seer.Is(CustomRoles.FireWorks)) SelfTaskText = "";
 
                 //名前の後ろに付けるマーカー
                 string SelfMark = "";
@@ -737,7 +733,6 @@ namespace TownOfHost
                 //適用
                 seer.RpcSetNamePrivate(SelfName, true, force: NoCache);
 
-
                 //seerが死んでいる場合など、必要なときのみ第二ループを実行する
                 if (seer.Data.IsDead //seerが死んでいる
                     || SeerKnowsImpostors //seerがインポスターを知っている状態
@@ -765,7 +760,7 @@ namespace TownOfHost
                         TownOfHost.Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
                         //他人のタスクはtargetがタスクを持っているかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetTaskText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || seer.Is(CustomRoles.Insider) ? $"{GetProgressText(target)}" : "";
+                        string TargetTaskText = (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.KnowOtherRole(seer, target) ? $"{GetProgressText(target)}" : "";
 
                         //名前の後ろに付けるマーカー
                         string TargetMark = "";

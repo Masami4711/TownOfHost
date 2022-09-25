@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
+using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -105,6 +106,15 @@ namespace TownOfHost
         public static string GetRoleText(PlayerControl target, string TargetTaskText, string fontSize)
         {
             if (DisableTaskText(target)) TargetTaskText = "";
+            switch (target.GetCustomRole()) //本人には表示しないケースのみ
+            {
+                case CustomRoles.FireWorks:
+                    TargetTaskText += $" {FireWorks.GetFireWorksCount(target.PlayerId)}";
+                    break;
+                case CustomRoles.Witch:
+                    TargetTaskText += Helpers.ColorString(Palette.ImpostorRed, $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
+                    break;
+            }
             var Role = RoleTextData(target);
             var RoleText = $"<size={fontSize}>{Helpers.ColorString(Role.Item2, Role.Item1)}{TargetTaskText}</size>\r\n";
             return RoleText;
