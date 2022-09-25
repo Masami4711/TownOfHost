@@ -31,10 +31,9 @@ namespace TownOfHost
             IsKilledByInsider = new Dictionary<byte, PlayerControl>();
             playerIdList = new();
         }
-        public static void Add(PlayerControl pc)
+        public static void Add(byte playerId)
         {
-            if (CanSeeMadmates.GetBool()) Logger.Info($"{pc.GetNameWithRole()} : 現在{KillCount(pc)}/{KillCountToSeeMadmates.GetInt()}キル", "Insider");
-            playerIdList.Add(pc.PlayerId);
+            playerIdList.Add(playerId);
         }
         public static bool IsEnable() => playerIdList.Count > 0;
         public static void ReceiveRPC(MessageReader msg)
