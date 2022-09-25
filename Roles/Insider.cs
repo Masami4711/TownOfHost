@@ -51,13 +51,11 @@ namespace TownOfHost
         }
         public static void OnCheckMurder(PlayerControl killer, PlayerControl target)
         {
-            if (!IsKilledByInsider.ContainsKey(target.PlayerId) && !target.Is(CustomRoles.SchrodingerCat) && !(target.Is(CustomRoles.MadGuardian) && target.GetPlayerTaskState().IsTaskFinished))
-            {
-                float Norma = KillCountToSeeMadmates.GetInt();
-                IsKilledByInsider.Add(target.PlayerId, killer);
-                RpcInsiderKill(killer.PlayerId, target.PlayerId);
-                if (CanSeeMadmates.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{KillCount(killer)}/{Norma}キル", "Insider");
-            }
+            if (IsKilledByInsider.ContainsKey(target.PlayerId)) return;
+            float Norma = KillCountToSeeMadmates.GetInt();
+            IsKilledByInsider.Add(target.PlayerId, killer);
+            RpcInsiderKill(killer.PlayerId, target.PlayerId);
+            if (CanSeeMadmates.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{KillCount(killer)}/{Norma}キル", "Insider");
             Utils.NotifyRoles();
         }
         public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
