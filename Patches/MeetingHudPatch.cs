@@ -366,7 +366,7 @@ namespace TownOfHost
                         break;
                     case CustomRoles.Lovers:
                         if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead
-                        || (seer.Is(CustomRoles.Insider) && target.Data.IsDead && Insider.KnowOtherRole(seer, target)))
+                        || Insider.KnowGhostRole(seer, target))
                             pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
                         break;
                 }
