@@ -343,7 +343,7 @@ namespace TownOfHost
                             Mare.Add(pc.PlayerId);
                             break;
                         case CustomRoles.Insider:
-                            Insider.Add(pc);
+                            Insider.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Arsonist:
