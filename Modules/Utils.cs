@@ -321,6 +321,9 @@ namespace TownOfHost
                 case CustomRoles.Sniper:
                     ProgressText += $" {Sniper.GetBulletCount(playerId)}";
                     break;
+                case CustomRoles.TimeThief:
+                    ProgressText += TimeThief.GetDecreacedTime(playerId);
+                    break;
                 case CustomRoles.EvilTracker:
                     ProgressText += EvilTracker.GetMarker(playerId);
                     break;
@@ -825,6 +828,9 @@ namespace TownOfHost
                         if (seer.Is(CustomRoles.Vampire))
                             TargetMark += GetVampireMark(seer, target);
 
+                        if (seer.Is(CustomRoles.Warlock))
+                            TargetMark += GetWarlockMark(seer, target);
+
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                         string TargetRoleText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"<size={fontSize}>{Helpers.ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
                         if (Insider.KnowOtherRole(seer, target)) TargetRoleText = Insider.GetRoleText(target, TargetTaskText, fontSize);
@@ -1021,6 +1027,13 @@ namespace TownOfHost
                 obj.GetComponent<SpriteRenderer>().color = new(color.r, color.g, color.b, Mathf.Clamp01((-2f * Mathf.Abs(t - 0.5f) + 1) * color.a)); //アルファ値を0→目標→0に変化させる
             })));
         }
+        public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
+        {
+            string TargetMark = "";
+            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
+                TargetMark += Helpers.ColorString(Palette.ImpostorRed, "◆");
+            return TargetMark;
+        }
         public static string GetVampireMark(PlayerControl seer, PlayerControl target)
         {
             string TargetMark = "";
@@ -1028,11 +1041,11 @@ namespace TownOfHost
                 TargetMark += Helpers.ColorString(Palette.ImpostorRed, "×");
             return TargetMark;
         }
-        public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
+        public static string GetWarlockMark(PlayerControl seer, PlayerControl target)
         {
             string TargetMark = "";
-            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
-                TargetMark += Helpers.ColorString(Palette.ImpostorRed, "◆");
+            if (Main.CursedPlayers.TryGetValue(seer.PlayerId, out var cursedPlayer) && cursedPlayer == target)
+                TargetMark += Helpers.ColorString(Palette.ImpostorRed, "＊");
             return TargetMark;
         }
     }

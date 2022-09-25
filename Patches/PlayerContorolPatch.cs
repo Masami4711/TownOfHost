@@ -208,6 +208,7 @@ namespace TownOfHost
                             Main.CursedPlayers[killer.PlayerId] = target;
                             Main.WarlockTimer.Add(killer.PlayerId, 0f);
                             Main.isCurseAndKill[killer.PlayerId] = true;
+                            Utils.NotifyRoles();
                             return false;
                         }
                         if (Main.CheckShapeshift[killer.PlayerId])
@@ -839,6 +840,9 @@ namespace TownOfHost
 
                     if (seer.Is(CustomRoles.Vampire))
                         Mark += Utils.GetVampireMark(seer, target);
+
+                    if (seer.Is(CustomRoles.Warlock))
+                        Mark += Utils.GetWarlockMark(seer, target);
 
                     if (Sniper.IsEnable() && target.AmOwner)
                     {

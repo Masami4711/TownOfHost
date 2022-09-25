@@ -313,6 +313,9 @@ namespace TownOfHost
                     case CustomRoles.Insider:
                         pva.NameText.text += Insider.GetOtherImpostorMarks(seer, target);
                         break;
+                    case CustomRoles.Warlock:
+                        pva.NameText.text += Utils.GetWarlockMark(seer, target);
+                        break;
                     case CustomRoles.MadSnitch:
                     case CustomRoles.Snitch:
                         if (seer.GetPlayerTaskState().IsTaskFinished) //seerがタスクを終えている

@@ -148,11 +148,14 @@ namespace TownOfHost
                     case CustomRoles.EvilTracker:
                         Mark += EvilTracker.GetTargetMark(seer, target);
                         break;
+                    case CustomRoles.Puppeteer:
+                        Mark += Utils.GetPuppeteerMark(seer, target);
+                        break;
                     case CustomRoles.Vampire:
                         Mark += Utils.GetVampireMark(seer, target);
                         break;
-                    case CustomRoles.Puppeteer:
-                        Mark += Utils.GetPuppeteerMark(seer, target);
+                    case CustomRoles.Warlock:
+                        Mark += Utils.GetWarlockMark(seer, target);
                         break;
                 }
             }
