@@ -62,17 +62,27 @@ namespace TownOfHost
             Utils.NotifyRoles();
         }
         public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
-        public static bool KnowOtherRole(PlayerControl Insider, PlayerControl Target) //Insider能力で役職が分かるケースのみ
+        public static bool KnowOtherRole(PlayerControl Insider, PlayerControl target) //Insider能力で役職が分かるケースのみ
         {
             if (!Insider.Is(CustomRoles.Insider)) return false; //Insider以外
-            if (!GameStates.IsMeeting && !Insider.Data.IsDead && Target.Data.IsDead) return false; //タスクフェーズでTargetが死んでいる
-            if (Insider == Target) return false; //自分自身
+            if (!GameStates.IsMeeting && !Insider.Data.IsDead && target.Data.IsDead) return false; //タスクフェーズでTargetが死んでいる
+            if (Insider == target) return false; //自分自身
             if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
-            if (CanSeeImpostorAbilities.GetBool() && Target.Is(RoleType.Impostor)) return true; //味方インポスターのケース
-            if (KnowMadmates(Insider) && Target.Is(RoleType.Madmate)) return true; //マッドメイトが分かるケース
-            if (Target.Data.IsDead) //幽霊の役職が見えるケース
-                if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
-                else if (IsKilledByInsider.TryGetValue(Target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
+            // ここまで前提条件
+            if (CanSeeImpostorAbilities.GetBool() && target.Is(RoleType.Impostor)) return true; //味方インポスターのケース
+            if (KnowMadmates(Insider) && target.Is(RoleType.Madmate)) return true; //マッドメイトが分かるケース
+            return KnowGhostRole(Insider, target);
+        }
+        public static bool KnowGhostRole(PlayerControl Insider, PlayerControl target) //幽霊の役職が見えるケース
+        {
+            if (!Insider.Is(CustomRoles.Insider)) return false; //Insider以外
+            if (!GameStates.IsMeeting && !Insider.Data.IsDead && target.Data.IsDead) return false; //タスクフェーズでTargetが死んでいる
+            if (Insider == target) return false; //自分自身
+            if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
+            // ここまで前提条件
+            if (!target.Data.IsDead) return false;
+            if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
+            else if (IsKilledByInsider.TryGetValue(target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
             return false;
         }
         public static bool KnowMadmates(PlayerControl seer)

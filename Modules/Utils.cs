@@ -792,8 +792,7 @@ namespace TownOfHost
                             TargetMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
                         }
                         //インサイダーからのラバーズ表示
-                        else if (seer.Is(CustomRoles.Insider) && !seer.Data.IsDead && target.Data.IsDead && target.Is(CustomRoles.Lovers)
-                            && Insider.KnowOtherRole(seer, target))
+                        else if (Insider.KnowGhostRole(seer, target) && target.Is(CustomRoles.Lovers))
                         {
                             TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.Lovers), "♡");
                         }
@@ -842,14 +841,11 @@ namespace TownOfHost
                         string TargetPlayerName = target.GetRealName(isMeeting);
 
                         //ターゲットのプレイヤー名の色を書き換えます。
-                        if (SeerKnowsImpostors || SeerKnowsMadmate) //Seerがインポスター/マッドメイトが誰かわかる状態
+                        if (SeerKnowsImpostors) //Seerがインポスターが誰かわかる状態
                         {
                             //スニッチはオプション有効なら第三陣営のキル可能役職も見れる
-                            var snitchOption = SeerKnowsImpostors && seer.Is(CustomRoles.Snitch)
-                                && (target.GetCustomRole().IsImpostor() || (Options.SnitchCanFindNeutralKiller.GetBool() && target.IsNeutralKiller()));
-                            var madOption = SeerKnowsImpostors && seer.Is(CustomRoles.MadSnitch) && target.GetCustomRole().IsImpostor(); //インサイダーの条件
-                            var insiderOption = SeerKnowsMadmate && seer.Is(CustomRoles.Insider) && target.GetCustomRole().IsMadmate(); //インサイダーの条件
-                            var foundCheck = snitchOption || madOption || insiderOption;
+                            var snitchOption = seer.Is(CustomRoles.Snitch) && Options.SnitchCanFindNeutralKiller.GetBool();
+                            var foundCheck = target.GetCustomRole().IsImpostor() || (snitchOption && target.IsNeutralKiller());
                             if (foundCheck)
                                 TargetPlayerName = Helpers.ColorString(target.GetRoleColor(), TargetPlayerName);
                         }
@@ -865,6 +861,12 @@ namespace TownOfHost
                             //NameColorManager準拠の処理
                             var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                             TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
+                        }
+                        if (SeerKnowsMadmate)
+                        {
+                            var insiderOption = seer.Is(CustomRoles.Insider) && target.Is(RoleType.Madmate); //インサイダーの条件
+                            if (insiderOption)
+                                TargetPlayerName = Helpers.ColorString(target.GetRoleColor(), TargetPlayerName);
                         }
                         if (seer.Is(RoleType.Impostor) && target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
                             TargetMark += Helpers.ColorString(GetRoleColor(CustomRoles.MadSnitch), "★");
