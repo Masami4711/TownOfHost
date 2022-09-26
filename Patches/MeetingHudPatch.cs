@@ -240,8 +240,8 @@ namespace TownOfHost
                     //     NekoKabocha.RevengeOnExile(playerId);
                     //     break;
                     default:
-                        if (exiledplayer.Is(RoleType.Madmate)
-                        && Options.MadmateExileCrewmate.GetBool() && !candidate.Is(RoleType.Impostor))
+                        if (exiledplayer.Is(RoleType.Madmate) && Options.MadmateExileCrewmate.GetBool()
+                        && !candidate.Is(RoleType.Impostor))
                             TargetList.Add(candidate);
                         break;
                 }
