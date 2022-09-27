@@ -205,29 +205,11 @@ namespace TownOfHost
         {
             if (deathReason == PlayerState.DeathReason.Suicide) return;
             var player = Utils.GetPlayerById(playerId);
-            // switch (player.GetCustomRole())
-            // {
-            //     // case CustomRoles.NekoKabocha:
-            //     //     NekoKabocha.RevengeOnExile(playerId);
-            //     //     break;
-            //     default:
-            //         if (player.Is(RoleType.Madmate) && Options.MadmateExileCrewmate.GetBool())
-            //             MadmatesRevengeOnExile(playerId);
-            //         break;
-            // }
             var target = PickRevengeTarget(player);
             if (target == null) return;
             TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
             Logger.Info($"{player.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "MadmatesRevengeOnExile");
         }
-        // public static void MadmatesRevengeOnExile(byte playerId)
-        // {
-        //     var madmate = Utils.GetPlayerById(playerId);
-        //     var target = PickRevengeTarget(madmate);
-        //     if (target == null) return;
-        //     TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
-        //     Logger.Info($"{madmate.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "MadmatesRevengeOnExile");
-        // }
         public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
         {
             List<PlayerControl> TargetList = new();
@@ -236,11 +218,9 @@ namespace TownOfHost
                 if (candidate == exiledplayer || candidate.Data.IsDead || Main.AfterMeetingDeathPlayers.ContainsKey(candidate.PlayerId)) continue;
                 switch (exiledplayer.GetCustomRole())
                 {
-                    // case CustomRoles.NekoKabocha:
-                    //     NekoKabocha.RevengeOnExile(playerId);
-                    //     break;
+                    //ここに道連れ役職を追加
                     default:
-                        if (exiledplayer.Is(RoleType.Madmate) && Options.MadmateExileCrewmate.GetBool()
+                        if (exiledplayer.Is(RoleType.Madmate) && Options.MadmateExileCrewmate.GetBool() //黒猫オプション
                         && !candidate.Is(RoleType.Impostor))
                             TargetList.Add(candidate);
                         break;
