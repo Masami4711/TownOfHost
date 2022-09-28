@@ -47,6 +47,7 @@ namespace TownOfHost
 
             var gameSettings = GameObject.Find("Game Settings");
             if (gameSettings == null) return;
+            gameSettings.transform.FindChild("GameGroup").GetComponent<Scroller>().ScrollWheelSpeed = 1f;
 
             var gameSettingMenu = Object.FindObjectsOfType<GameSettingMenu>().FirstOrDefault();
             if (gameSettingMenu == null) return;
@@ -108,7 +109,7 @@ namespace TownOfHost
                 menus.Add(tohSettings.gameObject);
 
                 var tohTab = Object.Instantiate(roleTab, roleTab.transform.parent);
-                tohTab.transform.FindChild("Hat Button").FindChild("Icon").GetComponent<SpriteRenderer>().sprite = Helpers.LoadSpriteFromResources($"TownOfHost.Resources.TabIcon_{tab}.png", 100f);
+                tohTab.transform.FindChild("Hat Button").FindChild("Icon").GetComponent<SpriteRenderer>().sprite = Utils.LoadSprite($"TownOfHost.Resources.TabIcon_{tab}.png", 100f);
                 tabs.Add(tohTab);
                 var tohTabHighlight = tohTab.transform.FindChild("Hat Button").FindChild("Tab Background").GetComponent<SpriteRenderer>();
                 highlights.Add(tohTabHighlight);

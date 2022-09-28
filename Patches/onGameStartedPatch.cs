@@ -41,6 +41,8 @@ namespace TownOfHost
             Main.MayorUsedButtonCount = new Dictionary<byte, int>();
             Main.targetArrows = new();
 
+            ReportDeadBodyPatch.CanReport = new();
+
             Options.UsedButtonCount = 0;
             Main.RealOptionsData = PlayerControl.GameOptions.DeepCopy();
 
@@ -76,9 +78,13 @@ namespace TownOfHost
 
                 Main.PlayerColors[pc.PlayerId] = Palette.PlayerColors[pc.Data.DefaultOutfit.ColorId];
                 Main.AllPlayerSpeed[pc.PlayerId] = Main.RealOptionsData.PlayerSpeedMod; //移動速度をデフォルトの移動速度に変更
+                ReportDeadBodyPatch.CanReport[pc.PlayerId] = true;
+                ReportDeadBodyPatch.WaitReport[pc.PlayerId] = new();
                 pc.cosmetics.nameText.text = pc.name;
 
                 RandomSpawn.CustomNetworkTransformPatch.NumOfTP.Add(pc.PlayerId, 0);
+                var outfit = pc.Data.DefaultOutfit;
+                Camouflage.PlayerSkins[pc.PlayerId] = (outfit.ColorId, outfit.HatId, outfit.SkinId, outfit.VisorId, outfit.PetId);
             }
             Main.VisibleTasksCount = true;
             if (__instance.AmHost)
@@ -101,6 +107,7 @@ namespace TownOfHost
             Sniper.Init();
             TimeThief.Init();
             Mare.Init();
+            SabotageMaster.Init();
             Egoist.Init();
             Executioner.Init();
             Jackal.Init();
@@ -109,7 +116,8 @@ namespace TownOfHost
             CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
 
-            GameStates.MeetingCalled = false;
+            MeetingStates.MeetingCalled = false;
+            MeetingStates.FirstMeeting = true;
             GameStates.AlreadyDied = false;
         }
     }

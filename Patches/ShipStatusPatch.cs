@@ -92,9 +92,10 @@ namespace TownOfHost
             new LateTask(
                 () =>
                 {
+                    PlayerControl.AllPlayerControls.ToArray().Do(pc => Camouflage.RpcSetSkin(pc));
                     if (!GameStates.IsMeeting)
                         Utils.NotifyRoles(ForceLoop: true);
-                }, 0.1f, "RepairSystem NotifyRoles");
+                }, 0.1f, "RepairSystem.Postfix");
         }
         public static void CheckAndOpenDoorsRange(ShipStatus __instance, int amount, int min, int max)
         {
@@ -139,6 +140,15 @@ namespace TownOfHost
             Logger.Info("-----------ゲーム開始-----------", "Phase");
 
             Utils.CountAliveImpostors();
+        }
+    }
+    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.StartMeeting))]
+    class StartMeetingPatch
+    {
+        public static void Prefix(ShipStatus __instance, PlayerControl reporter, GameData.PlayerInfo target)
+        {
+            MeetingStates.ReportTarget = target;
+            MeetingStates.DeadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
         }
     }
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Begin))]
