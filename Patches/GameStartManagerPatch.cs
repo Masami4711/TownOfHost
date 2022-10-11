@@ -30,8 +30,11 @@ namespace TownOfHost
                 {
                     new LateTask(() =>
                     {
-                        Main.isChatCommand = true;
-                        Utils.ShowLastResult();
+                        if (!AmongUsClient.Instance.IsGameStarted)
+                        {
+                            Main.isChatCommand = true;
+                            Utils.ShowLastResult();
+                        }
                     }, 5f, "DisplayLastRoles");
                 }
                 HideName = Object.Instantiate(__instance.GameRoomNameCode, __instance.GameRoomNameCode.transform);
@@ -40,10 +43,7 @@ namespace TownOfHost
                         : $"<color={Main.ModColor}>{Main.HideName.Value}</color>";
 
                 // Make Public Button
-                bool NameIncludeMod = SaveManager.PlayerName.ToLower().Contains("mod");
-                bool NameIncludeTOH = SaveManager.PlayerName.ToUpper().Contains("TOH");
-                if (ModUpdater.isBroken || ModUpdater.hasUpdate || (NameIncludeMod && !NameIncludeTOH) ||
-                    !Main.AllowPublicRoom)
+                if (ModUpdater.isBroken || ModUpdater.hasUpdate || !Main.AllowPublicRoom)
                 {
                     __instance.MakePublicButton.color = Palette.DisabledClear;
                     __instance.privatePublicText.color = Palette.DisabledClear;

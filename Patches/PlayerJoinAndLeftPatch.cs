@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using InnerNet;
+using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -14,6 +15,8 @@ namespace TownOfHost
             RPC.RpcVersionCheck();
             SoundManager.Instance.ChangeMusicVolume(SaveManager.MusicVolume);
 
+            ChatUpdatePatch.DoBlockChat = false;
+            GameStates.InGame = false;
             NameColorManager.Begin();
             Options.Load();
             ErrorText.Instance.Clear();
@@ -41,7 +44,9 @@ namespace TownOfHost
             {
                 new LateTask(() =>
                 {
-                    if (client.Character != null) ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
+                    if (client.Character == null) return;
+                    if (AmongUsClient.Instance.IsGamePublic) Utils.SendMessage(string.Format(GetString("Message.AnnounceUsingTOH"), Main.PluginVersion), client.Character.PlayerId);
+                    ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
                 }, 3f, "Welcome Message");
             }
         }
@@ -75,7 +80,7 @@ namespace TownOfHost
                 }
                 AntiBlackout.OnDisconnect(data.Character.Data);
             }
-            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason})", "Session");
+            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason}, ping:{AmongUsClient.Instance.Ping})", "Session");
         }
     }
 }
