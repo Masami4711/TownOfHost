@@ -60,7 +60,9 @@ namespace TownOfHost
         {
             return player == null || player.Object == null ? CustomRoles.Crewmate : player.Object.GetCustomRole();
         }
-
+        /// <summary>
+        /// ※サブロールは取得できません。
+        /// </summary>
         public static CustomRoles GetCustomRole(this PlayerControl player)
         {
             var cRole = CustomRoles.Crewmate;
@@ -231,6 +233,14 @@ namespace TownOfHost
                 ホストのクールダウンは直接リセットします。
             */
         }
+        public static void RpcDesyncRepairSystem(this PlayerControl target, SystemTypes systemType, int amount)
+        {
+            MessageWriter messageWriter = AmongUsClient.Instance.StartRpcImmediately(ShipStatus.Instance.NetId, (byte)RpcCalls.RepairSystem, SendOption.Reliable, target.GetClientId());
+            messageWriter.Write((byte)systemType);
+            messageWriter.WriteNetObject(target);
+            messageWriter.Write((byte)amount);
+            AmongUsClient.Instance.FinishRpcImmediately(messageWriter);
+        }
         public static byte GetRoleCount(this Dictionary<CustomRoles, byte> dic, CustomRoles role)
         {
             if (!dic.ContainsKey(role))
@@ -387,7 +397,7 @@ namespace TownOfHost
             opt.DiscussionTime = Mathf.Clamp(Main.DiscussionTime, 0, 300);
             opt.VotingTime = Mathf.Clamp(Main.VotingTime, TimeThief.LowerLimitVotingTime.GetInt(), 300);
 
-            if (Options.AllAliveMeeting.GetBool() && GameData.Instance.AllPlayers.ToArray().All(x => !x.IsDead))
+            if (Options.AllAliveMeeting.GetBool() && GameData.Instance.AllPlayers.ToArray().Where(x => !x.Object.Is(CustomRoles.GM)).All(x => !x.IsDead))
             {
                 opt.DiscussionTime = 0;
                 opt.VotingTime = Options.AllAliveMeetingTime.GetInt();
@@ -618,10 +628,12 @@ namespace TownOfHost
             Logger.Info($"{target?.Data?.PlayerName}はTrapperだった", "Trapper");
             var tmpSpeed = Main.AllPlayerSpeed[killer.PlayerId];
             Main.AllPlayerSpeed[killer.PlayerId] = Main.MinSpeed;    //tmpSpeedで後ほど値を戻すので代入しています。
+            ReportDeadBodyPatch.CanReport[killer.PlayerId] = false;
             killer.CustomSyncSettings();
             new LateTask(() =>
             {
                 Main.AllPlayerSpeed[killer.PlayerId] = Main.AllPlayerSpeed[killer.PlayerId] - Main.MinSpeed + tmpSpeed;
+                ReportDeadBodyPatch.CanReport[killer.PlayerId] = true;
                 killer.CustomSyncSettings();
                 RPC.PlaySoundRPC(killer.PlayerId, Sounds.TaskComplete);
             }, Options.TrapperBlockMoveTime.GetFloat(), "Trapper BlockMove");
@@ -713,6 +725,11 @@ namespace TownOfHost
                 CustomRoles.Egoist or
                 CustomRoles.Jackal;
         }
+        public static bool KnowDeathReason(this PlayerControl seer, PlayerControl target)
+            => (seer.Is(CustomRoles.Doctor)
+            || (seer.Is(RoleType.Madmate) && Options.MadmateCanSeeDeathReason.GetBool())
+            || (seer.Data.IsDead && Options.GhostCanSeeDeathReason.GetBool()))
+            && target.Data.IsDead;
 
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>

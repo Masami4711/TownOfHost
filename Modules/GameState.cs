@@ -143,10 +143,28 @@ namespace TownOfHost
 
         }
     }
+    public class PlayerVersion
+    {
+        public readonly Version version;
+        public readonly string tag;
+        public readonly string forkId;
+        [Obsolete] public PlayerVersion(string ver, string tag_str) : this(Version.Parse(ver), tag_str, "") { }
+        [Obsolete] public PlayerVersion(Version ver, string tag_str) : this(ver, tag_str, "") { }
+        public PlayerVersion(string ver, string tag_str, string forkId) : this(Version.Parse(ver), tag_str, forkId) { }
+        public PlayerVersion(Version ver, string tag_str, string forkId)
+        {
+            version = ver;
+            tag = tag_str;
+            this.forkId = forkId;
+        }
+        public bool IsEqual(PlayerVersion pv)
+        {
+            return pv.version == version && pv.tag == tag;
+        }
+    }
     public static class GameStates
     {
         public static bool InGame = false;
-        public static bool MeetingCalled = false;
         public static bool AlreadyDied = false;
         public static bool IsLobby => AmongUsClient.Instance.GameState == AmongUsClient.GameStates.Joined;
         public static bool IsInGame => InGame;
@@ -158,5 +176,14 @@ namespace TownOfHost
         public static bool IsInTask => InGame && !MeetingHud.Instance;
         public static bool IsMeeting => InGame && MeetingHud.Instance;
         public static bool IsCountDown => GameStartManager.InstanceExists && GameStartManager.Instance.startState == GameStartManager.StartingStates.Countdown;
+    }
+    public static class MeetingStates
+    {
+        public static DeadBody[] DeadBodies = null;
+        public static GameData.PlayerInfo ReportTarget = null;
+        public static bool IsEmergencyMeeting => ReportTarget == null;
+        public static bool IsExistDeadBody => DeadBodies.Length > 0;
+        public static bool MeetingCalled = false;
+        public static bool FirstMeeting = true;
     }
 }

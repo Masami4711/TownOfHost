@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using InnerNet;
+using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -14,8 +15,11 @@ namespace TownOfHost
             RPC.RpcVersionCheck();
             SoundManager.Instance.ChangeMusicVolume(SaveManager.MusicVolume);
 
+            ChatUpdatePatch.DoBlockChat = false;
+            GameStates.InGame = false;
             NameColorManager.Begin();
             Options.Load();
+            ErrorText.Instance.Clear();
             if (AmongUsClient.Instance.AmHost) //以下、ホストのみ実行
             {
                 if (PlayerControl.GameOptions.killCooldown == 0.1f)
@@ -40,7 +44,9 @@ namespace TownOfHost
             {
                 new LateTask(() =>
                 {
-                    if (client.Character != null) ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
+                    if (client.Character == null) return;
+                    if (AmongUsClient.Instance.IsGamePublic) Utils.SendMessage(string.Format(GetString("Message.AnnounceUsingTOH"), Main.PluginVersion), client.Character.PlayerId);
+                    ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
                 }, 3f, "Welcome Message");
             }
         }
@@ -72,8 +78,9 @@ namespace TownOfHost
                     PlayerState.SetDeathReason(data.Character.PlayerId, PlayerState.DeathReason.Disconnected);
                     PlayerState.SetDead(data.Character.PlayerId);
                 }
+                AntiBlackout.OnDisconnect(data.Character.Data);
             }
-            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason})", "Session");
+            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason}, ping:{AmongUsClient.Instance.Ping})", "Session");
         }
     }
 }

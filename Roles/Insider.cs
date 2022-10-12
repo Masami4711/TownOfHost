@@ -11,7 +11,7 @@ namespace TownOfHost
         static List<byte> playerIdList = new();
         public static Dictionary<byte, PlayerControl> IsKilledByInsider = new();
         private static CustomOption CanSeeImpostorAbilities;
-        private static CustomOption CanSeeWholeRolesOfGhosts;
+        private static CustomOption CanSeeAllGhostsRoles;
         private static CustomOption CanSeeMadmates;
         private static CustomOption KillCountToSeeMadmates;
         static Dictionary<CustomRoles, CustomRoles> ReplaceRoles = new()
@@ -22,7 +22,7 @@ namespace TownOfHost
         {
             Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.Insider);
             CanSeeImpostorAbilities = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeImpostorAbilities", true, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            CanSeeWholeRolesOfGhosts = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeWholeRolesOfGhosts", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            CanSeeAllGhostsRoles = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeAllGhostsRoles", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
             CanSeeMadmates = CustomOption.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
             KillCountToSeeMadmates = CustomOption.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "InsiderKillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
         }
@@ -78,7 +78,7 @@ namespace TownOfHost
             if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
             // ここまで前提条件
             if (!target.Data.IsDead) return false;
-            if (CanSeeWholeRolesOfGhosts.GetBool()) return true; //全員見える
+            if (CanSeeAllGhostsRoles.GetBool()) return true; //全員見える
             else if (IsKilledByInsider.TryGetValue(target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
             return false;
         }
@@ -105,8 +105,8 @@ namespace TownOfHost
             {
                 int killCount = KillCount(Utils.GetPlayerById(playerId));
                 int Norma = KillCountToSeeMadmates.GetInt();
-                if (killCount < Norma) ProgressText += Helpers.ColorString(Palette.ImpostorRed, $"({killCount}/{Norma})");
-                else ProgressText += Helpers.ColorString(Palette.ImpostorRed, " ★");
+                if (killCount < Norma) ProgressText += Utils.ColorString(Palette.ImpostorRed, $"({killCount}/{Norma})");
+                else ProgressText += Utils.ColorString(Palette.ImpostorRed, " ★");
             }
             return ProgressText;
         }
@@ -119,11 +119,11 @@ namespace TownOfHost
                     TargetTaskText += FireWorks.GetFireWorksCount(target.PlayerId);
                     break;
                 case CustomRoles.Witch:
-                    TargetTaskText += Helpers.ColorString(Palette.ImpostorRed, $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
+                    TargetTaskText += Utils.ColorString(Palette.ImpostorRed, $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
                     break;
             }
             var Role = RoleTextData(target);
-            var RoleText = $"<size={fontSize}>{Helpers.ColorString(Role.Item2, Role.Item1)}{TargetTaskText}</size>\r\n";
+            var RoleText = $"<size={fontSize}>{Utils.ColorString(Role.Item2, Role.Item1)}{TargetTaskText}</size>\r\n";
             return RoleText;
         }
         public static (string, Color) RoleTextData(PlayerControl target)

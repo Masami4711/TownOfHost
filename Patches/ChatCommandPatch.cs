@@ -132,8 +132,8 @@ namespace TownOfHost
                                 GetRolesInfo(subArgs);
                                 break;
 
-                            case "att":
-                            case "attributes":
+                            case "a":
+                            case "addons":
                                 subArgs = args.Length < 3 ? "" : args[2];
                                 switch (subArgs)
                                 {
@@ -301,8 +301,8 @@ namespace TownOfHost
                 { CustomRoles.SchrodingerCat, "sc" },
                 { CustomRoles.Terrorist, "te" },
                 { CustomRoles.Jackal, "jac" },
-                //Sub役職
-                { (CustomRoles)(-6), $"== {GetString("SubRole")} ==" }, //区切り用
+                //属性
+                { (CustomRoles)(-6), $"== {GetString("Addons")} ==" }, //区切り用
                 {CustomRoles.Lovers, "lo" },
                 //HAS
                 { (CustomRoles)(-7), $"== {GetString("HideAndSeek")} ==" }, //区切り用
@@ -436,9 +436,11 @@ namespace TownOfHost
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
     class ChatUpdatePatch
     {
+        public static bool DoBlockChat = false;
         public static void Postfix(ChatController __instance)
         {
             if (!AmongUsClient.Instance.AmHost || Main.MessagesToSend.Count < 1 || (Main.MessagesToSend[0].Item2 == byte.MaxValue && Main.MessageWait.Value > __instance.TimeSinceLastMessage)) return;
+            if (DoBlockChat) return;
             var player = PlayerControl.AllPlayerControls.ToArray().OrderBy(x => x.PlayerId).Where(x => !x.Data.IsDead).FirstOrDefault();
             if (player == null) return;
             (string msg, byte sendTo, string title) = Main.MessagesToSend[0];
@@ -490,6 +492,8 @@ namespace TownOfHost
                 __result = false;
                 return false;
             }
+            int return_count = PlayerControl.LocalPlayer.name.Count(x => x == '\n');
+            chatText = new StringBuilder(chatText).Insert(0, "\n", return_count).ToString();
             if (AmongUsClient.Instance.AmClient && DestroyableSingleton<HudManager>.Instance)
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(__instance, chatText);
             if (chatText.IndexOf("who", StringComparison.OrdinalIgnoreCase) >= 0)

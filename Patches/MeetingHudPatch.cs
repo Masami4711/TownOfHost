@@ -55,7 +55,11 @@ namespace TownOfHost
                     if (voter == null || voter.Data == null || voter.Data.Disconnected) continue;
                     if (Options.VoteMode.GetBool())
                     {
-                        if (ps.VotedFor == 253 && !voter.Data.IsDead)//スキップ
+                        if (ps.VotedFor == 253 && !voter.Data.IsDead && //スキップ
+                            !(Options.WhenSkipVoteIgnoreFirstMeeting.GetBool() && MeetingStates.FirstMeeting) && //初手会議を除く
+                            !(Options.WhenSkipVoteIgnoreNoDeadBody.GetBool() && !MeetingStates.IsExistDeadBody) && //死体がない時を除く
+                            !(Options.WhenSkipVoteIgnoreEmergency.GetBool() && MeetingStates.IsEmergencyMeeting) //緊急ボタンを除く
+                            )
                         {
                             switch (Options.GetWhenSkipVote())
                             {
@@ -223,11 +227,13 @@ namespace TownOfHost
         public static void Prefix(MeetingHud __instance)
         {
             Logger.Info("------------会議開始------------", "Phase");
+            ChatUpdatePatch.DoBlockChat = true;
             GameStates.AlreadyDied |= GameData.Instance.AllPlayers.ToArray().Any(x => x.IsDead);
+            PlayerControl.AllPlayerControls.ToArray().Do(x => ReportDeadBodyPatch.WaitReport[x.PlayerId].Clear());
             Main.witchMeeting = true;
             Utils.NotifyRoles(isMeeting: true, NoCache: true);
             Main.witchMeeting = false;
-            GameStates.MeetingCalled = true;
+            MeetingStates.MeetingCalled = true;
         }
         public static void Postfix(MeetingHud __instance)
         {
@@ -270,6 +276,7 @@ namespace TownOfHost
                     {
                         pc.RpcSetNameEx(pc.GetRealName(isMeeting: true));
                     }
+                    ChatUpdatePatch.DoBlockChat = false;
                 }, 3f, "SetName To Chat");
             }
 
@@ -287,6 +294,9 @@ namespace TownOfHost
 
                 //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
 
+                if (seer.KnowDeathReason(target))
+                    pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
+
                 //インポスター表示
                 bool LocalPlayerKnowsImpostor = false; //203行目のif文で使う trueの時にインポスターの名前を赤くする
                 bool LocalPlayerKnowsJackal = false; //trueの時にジャッカルの名前の色を変える
@@ -296,10 +306,10 @@ namespace TownOfHost
                     case RoleType.Impostor:
                         LocalPlayerKnowsEgoist = true;
                         if (target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.MadSnitch), "★"); //変更対象にSnitchマークをつける
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.MadSnitch), "★"); //変更対象にSnitchマークをつける
                         else if (target.Is(CustomRoles.Snitch) && //変更対象がSnitch
                         target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
                         break;
                 }
                 switch (seer.GetCustomRole())
@@ -328,13 +338,9 @@ namespace TownOfHost
                             }
                         }
                         break;
-                    case CustomRoles.Doctor:
-                        if (target.Data.IsDead) //変更対象が死人
-                            pva.NameText.text += $"({Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
-                        break;
                     case CustomRoles.Arsonist:
                         if (seer.IsDousedPlayer(target)) //seerがtargetに既にオイルを塗っている(完了)
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
                         break;
                     case CustomRoles.Executioner:
                         pva.NameText.text += Executioner.TargetMark(seer, target);
@@ -344,7 +350,7 @@ namespace TownOfHost
                         if (Options.SnitchCanFindNeutralKiller.GetBool() &&
                         target.Is(CustomRoles.Snitch) && //変更対象がSnitch
                         target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
                         break;
                     case CustomRoles.EgoSchrodingerCat:
                         LocalPlayerKnowsEgoist = true;
@@ -364,10 +370,13 @@ namespace TownOfHost
                         if (LocalPlayerKnowsJackal)
                             pva.NameText.color = Utils.GetRoleColor(CustomRoles.Jackal); //変更対象の名前をジャッカル色にする
                         break;
+                }
+                switch (target.GetCustomSubRole())
+                {
                     case CustomRoles.Lovers:
                         if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead
                         || Insider.KnowGhostRole(seer, target))
-                            pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
                         break;
                 }
 
@@ -379,7 +388,7 @@ namespace TownOfHost
 
                 //呪われている場合
                 if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null)
-                    pva.NameText.text += Helpers.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
+                    pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。
             }
@@ -421,9 +430,13 @@ namespace TownOfHost
     {
         public static void Postfix()
         {
+            MeetingStates.FirstMeeting = false;
             Logger.Info("------------会議終了------------", "Phase");
             if (AmongUsClient.Instance.AmHost)
+            {
                 AntiBlackout.SetIsDead();
+                PlayerControl.AllPlayerControls.ToArray().Do(pc => RandomSpawn.CustomNetworkTransformPatch.NumOfTP[pc.PlayerId] = 0);
+            }
         }
     }
 }

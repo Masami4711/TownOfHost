@@ -45,6 +45,7 @@ namespace TownOfHost
         }
         public static void RpcSetKillCount(this PlayerControl player)
         {
+            if (!AmongUsClient.Instance.AmHost) return;
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetTimeThiefKillCount, Hazel.SendOption.Reliable, -1);
             writer.Write(player.PlayerId);
             writer.Write(TimeThiefKillCount[player.PlayerId]);
@@ -71,6 +72,7 @@ namespace TownOfHost
             }
             Utils.CustomSyncAllSettings();
         }
-        public static string GetDecreacedTime(byte playerId) => Helpers.ColorString(Color.yellow, TimeThiefKillCount[playerId] > 0 ? $" -{DecreaseMeetingTime.GetInt() * TimeThiefKillCount[playerId]}s" : "");
+        public static string GetDecreacedTime(byte playerId)
+            => Utils.ColorString(Color.yellow, TimeThiefKillCount[playerId] > 0 ? $" -{DecreaseMeetingTime.GetInt() * TimeThiefKillCount[playerId]}s" : "");
     }
 }
