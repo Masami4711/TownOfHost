@@ -91,11 +91,8 @@ namespace TownOfHost
         public static int KillCount(PlayerControl Insider)
         {
             int KillCount = 0;
-            foreach (var target in PlayerControl.AllPlayerControls)
-            {
-                if (!IsKilledByInsider.TryGetValue(target.PlayerId, out var killer)) continue;
-                if (Insider == killer) KillCount += 1;
-            }
+            foreach (var kvp in IsKilledByInsider)
+                if (kvp.Value == Insider) KillCount++;
             return KillCount;
         }
         public static string GetKillCount(byte playerId)
