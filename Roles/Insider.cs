@@ -28,7 +28,7 @@ namespace TownOfHost
         }
         public static void Init()
         {
-            IsKilledByInsider = new Dictionary<byte, PlayerControl>();
+            IsKilledByInsider = new();
             playerIdList = new();
         }
         public static void Add(byte playerId)
