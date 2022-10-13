@@ -822,39 +822,43 @@ namespace TownOfHost
                     {
                         Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Snitch)}>★</color>"; //Snitch警告をつける
                     }
-                    if (seer.Is(CustomRoles.Arsonist))
+                    switch (seer.GetCustomRole())
                     {
-                        if (seer.IsDousedPlayer(target))
-                        {
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
-                        }
-                        else if (
-                            Main.currentDousingTarget != 255 &&
-                            Main.currentDousingTarget == target.PlayerId
-                        )
-                        {
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
-                        }
+                        case CustomRoles.Arsonist:
+                            if (seer.IsDousedPlayer(target))
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
+                            }
+                            else if (
+                                Main.currentDousingTarget != 255 &&
+                                Main.currentDousingTarget == target.PlayerId
+                            )
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
+                            }
+                            break;
+                        case CustomRoles.BountyHunter:
+                            Mark += BountyHunter.GetTargetMark(seer, target);
+                            break;
+                        case CustomRoles.EvilTracker:
+                            Mark += EvilTracker.GetTargetMark(seer, target);
+                            break;
+                        case CustomRoles.Executioner:
+                            Mark += Executioner.TargetMark(seer, target);
+                            break;
+                        case CustomRoles.Insider:
+                            Mark += Insider.GetOtherImpostorMarks(seer, target);
+                            break;
+                        case CustomRoles.Puppeteer:
+                            Mark += Utils.GetPuppeteerMark(seer, target);
+                            break;
+                        case CustomRoles.Vampire:
+                            Mark += Utils.GetVampireMark(seer, target);
+                            break;
+                        case CustomRoles.Warlock:
+                            Mark += Utils.GetWarlockMark(seer, target);
+                            break;
                     }
-                    Mark += Executioner.TargetMark(seer, target);
-
-                    if (seer.Is(CustomRoles.BountyHunter))
-                        Mark += BountyHunter.GetTargetMark(seer, target);
-
-                    if (seer.Is(CustomRoles.EvilTracker))
-                        Mark += EvilTracker.GetTargetMark(seer, target);
-
-                    if (seer.Is(CustomRoles.Insider))
-                        Mark += Insider.GetOtherImpostorMarks(seer, target);
-
-                    if (seer.Is(CustomRoles.Puppeteer))
-                        Mark += Utils.GetPuppeteerMark(seer, target);
-
-                    if (seer.Is(CustomRoles.Vampire))
-                        Mark += Utils.GetVampireMark(seer, target);
-
-                    if (seer.Is(CustomRoles.Warlock))
-                        Mark += Utils.GetWarlockMark(seer, target);
 
                     if (Sniper.IsEnable() && target.AmOwner)
                     {
