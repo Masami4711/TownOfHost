@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
 using UnhollowerBaseLib;
 using UnityEngine;
@@ -28,7 +26,7 @@ namespace TownOfHost
             //壁抜け
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                if ((AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started || GameStates.IsFreePlay)
+                if ((!AmongUsClient.Instance.IsGameStarted || !GameStates.IsOnlineGame)
                     && player.MyAnim.ClipName is "Idle" or "Walk")
                 {
                     player.Collider.offset = new Vector2(0f, 127f);
@@ -37,7 +35,7 @@ namespace TownOfHost
             //壁抜け解除
             if (player.Collider.offset.y == 127f)
             {
-                if (!Input.GetKey(KeyCode.LeftControl) || AmongUsClient.Instance.IsGameStarted)
+                if (!Input.GetKey(KeyCode.LeftControl) || (AmongUsClient.Instance.IsGameStarted && GameStates.IsOnlineGame))
                 {
                     player.Collider.offset = new Vector2(0f, -0.3636f);
                 }
@@ -135,14 +133,9 @@ namespace TownOfHost
 
             if (!player.GetCustomRole().IsVanilla())
             {
-                TaskTextPrefix = Helpers.ColorString(player.GetRoleColor(), $"{player.GetRoleName()}\r\n");
-                if (player.Is(CustomRoles.Mafia))
-                    TaskTextPrefix += GetString(player.CanUseKillButton() ? "AfterMafiaInfo" : "BeforeMafiaInfo");
-                else if (player.Is(CustomRoles.EvilWatcher) || player.Is(CustomRoles.NiceWatcher))
-                    TaskTextPrefix += GetString("WatcherInfo");
-                else
-                    TaskTextPrefix += GetString(player.GetCustomRole() + "Info");
-                TaskTextPrefix += "</color>\r\n";
+                var RoleWithInfo = $"{player.GetRoleName()}\r\n";
+                RoleWithInfo += player.GetRoleInfo();
+                TaskTextPrefix = Utils.ColorString(player.GetRoleColor(), RoleWithInfo);
             }
             switch (player.GetCustomRole())
             {
@@ -237,6 +230,8 @@ namespace TownOfHost
         public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] bool active, [HarmonyArgument(1)] RoleTeamTypes team)
         {
             var player = PlayerControl.LocalPlayer;
+            if (!GameStates.IsInTask) return;
+
             if ((player.GetCustomRole() == CustomRoles.Sheriff ||
                 player.GetCustomRole() == CustomRoles.Arsonist ||
                 player.GetCustomRole() == CustomRoles.Jackal)
@@ -274,11 +269,7 @@ namespace TownOfHost
                     __instance.AbilityButton.ToggleVisible(false);
                     break;
                 case CustomRoles.Jackal:
-                    if (player.Data.Role.Role != RoleTypes.GuardianAngel)
-                        __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
-                    __instance.SabotageButton.ToggleVisible(isActive && Options.JackalCanUseSabotage.GetBool());
-                    __instance.ImpostorVentButton.ToggleVisible(isActive && Options.JackalCanVent.GetBool());
-                    __instance.AbilityButton.ToggleVisible(false);
+                    Jackal.SetHudActive(__instance, isActive, player);
                     break;
             }
         }

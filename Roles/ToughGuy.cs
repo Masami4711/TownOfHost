@@ -14,7 +14,7 @@ namespace TownOfHost
 
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.ToughGuy);
+            Options.SetupRoleOptions(Id, TabGroup.CrewmateRoles, CustomRoles.ToughGuy);
         }
         public static void Init()
         {
@@ -118,7 +118,7 @@ namespace TownOfHost
         }
         public static string GetMark(PlayerControl seer, PlayerControl target)
         {
-            return Helpers.ColorString(Utils.GetRoleColor(CustomRoles.ToughGuy),
+            return Utils.ColorString(Utils.GetRoleColor(CustomRoles.ToughGuy),
                 (WillDieAfterMeeting.ContainsKey(target.PlayerId) && (seer.Data.IsDead
                 || seer == WillDieAfterMeeting[target.PlayerId].Item1)) ? "＊" : "");
         }

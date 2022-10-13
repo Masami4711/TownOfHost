@@ -20,6 +20,7 @@ namespace TownOfHost
                 CustomRoles.Mafia or
                 CustomRoles.FireWorks or
                 CustomRoles.Sniper or
+                CustomRoles.EvilTracker or
                 CustomRoles.LastImpostor;
         }
         public static bool IsMadmate(this CustomRoles role)
@@ -58,6 +59,15 @@ namespace TownOfHost
                 CustomRoles.GuardianAngel or
                 CustomRoles.Impostor or
                 CustomRoles.Shapeshifter;
+        }
+        public static bool IsKilledSchrodingerCat(this CustomRoles role)
+        {
+            return role is
+                CustomRoles.SchrodingerCat or
+                CustomRoles.MSchrodingerCat or
+                CustomRoles.CSchrodingerCat or
+                CustomRoles.EgoSchrodingerCat or
+                CustomRoles.JSchrodingerCat;
         }
 
         public static RoleType GetRoleType(this CustomRoles role)

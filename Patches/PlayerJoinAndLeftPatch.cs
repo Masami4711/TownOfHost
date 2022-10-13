@@ -1,7 +1,7 @@
-using System.Linq;
 using System.Collections.Generic;
 using HarmonyLib;
 using InnerNet;
+using static TownOfHost.Translator;
 
 namespace TownOfHost
 {
@@ -13,9 +13,13 @@ namespace TownOfHost
             Logger.Info($"{__instance.GameId}に参加", "OnGameJoined");
             Main.playerVersion = new Dictionary<byte, PlayerVersion>();
             RPC.RpcVersionCheck();
+            SoundManager.Instance.ChangeMusicVolume(SaveManager.MusicVolume);
 
+            ChatUpdatePatch.DoBlockChat = false;
+            GameStates.InGame = false;
             NameColorManager.Begin();
             Options.Load();
+            ErrorText.Instance.Clear();
             if (AmongUsClient.Instance.AmHost) //以下、ホストのみ実行
             {
                 if (PlayerControl.GameOptions.killCooldown == 0.1f)
@@ -40,7 +44,9 @@ namespace TownOfHost
             {
                 new LateTask(() =>
                 {
-                    if (client.Character != null) ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
+                    if (client.Character == null) return;
+                    if (AmongUsClient.Instance.IsGamePublic) Utils.SendMessage(string.Format(GetString("Message.AnnounceUsingTOH"), Main.PluginVersion), client.Character.PlayerId);
+                    ChatCommands.SendTemplate("welcome", client.Character.PlayerId, true);
                 }, 3f, "Welcome Message");
             }
         }
@@ -63,32 +69,18 @@ namespace TownOfHost
                         Main.LoversPlayers.Remove(lovers);
                         Main.AllPlayerCustomSubRoles[lovers.PlayerId] = CustomRoles.NoSubRoleAssigned;
                     }
-                if (data.Character.Is(CustomRoles.Executioner) && Main.ExecutionerTarget.ContainsKey(data.Character.PlayerId))
-                {
-                    data.Character.RpcSetCustomRole(Options.CRoleExecutionerChangeRoles[Options.ExecutionerChangeRolesAfterTargetKilled.GetSelection()]);
-                    Main.ExecutionerTarget.Remove(data.Character.PlayerId);
-                    RPC.RemoveExecutionerKey(data.Character.PlayerId);
-                }
-                if (Main.ExecutionerTarget.ContainsValue(data.Character.PlayerId))
-                {
-                    byte Executioner = 0x73;
-                    Main.ExecutionerTarget.Do(x =>
-                    {
-                        if (x.Value == data.Character.PlayerId)
-                            Executioner = x.Key;
-                    });
-                    Utils.GetPlayerById(Executioner).RpcSetCustomRole(Options.CRoleExecutionerChangeRoles[Options.ExecutionerChangeRolesAfterTargetKilled.GetSelection()]);
-                    Main.ExecutionerTarget.Remove(Executioner);
-                    RPC.RemoveExecutionerKey(Executioner);
-                    Utils.NotifyRoles();
-                }
+                if (data.Character.Is(CustomRoles.Executioner) && Executioner.Target.ContainsKey(data.Character.PlayerId))
+                    Executioner.ChangeRole(data.Character);
+                if (Executioner.Target.ContainsValue(data.Character.PlayerId))
+                    Executioner.ChangeRoleByTarget(data.Character);
                 if (PlayerState.GetDeathReason(data.Character.PlayerId) == PlayerState.DeathReason.etc) //死因が設定されていなかったら
                 {
                     PlayerState.SetDeathReason(data.Character.PlayerId, PlayerState.DeathReason.Disconnected);
                     PlayerState.SetDead(data.Character.PlayerId);
                 }
+                AntiBlackout.OnDisconnect(data.Character.Data);
             }
-            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason})", "Session");
+            Logger.Info($"{data.PlayerName}(ClientID:{data.Id})が切断(理由:{reason}, ping:{AmongUsClient.Instance.Ping})", "Session");
         }
     }
 }

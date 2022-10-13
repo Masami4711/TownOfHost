@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Hazel;
 using UnityEngine;
 
 namespace TownOfHost
@@ -22,13 +20,13 @@ namespace TownOfHost
 
         public static void SetupCustomOption()
         {
-            Options.SetupRoleOptions(Id, CustomRoles.SabotageMaster);
-            SkillLimit = CustomOption.Create(Id + 10, Color.white, "SabotageMasterSkillLimit", 1, 0, 99, 1, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
-            FixesDoors = CustomOption.Create(Id + 11, Color.white, "SabotageMasterFixesDoors", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
-            FixesReactors = CustomOption.Create(Id + 12, Color.white, "SabotageMasterFixesReactors", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
-            FixesOxygens = CustomOption.Create(Id + 13, Color.white, "SabotageMasterFixesOxygens", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
-            FixesComms = CustomOption.Create(Id + 14, Color.white, "SabotageMasterFixesCommunications", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
-            FixesElectrical = CustomOption.Create(Id + 15, Color.white, "SabotageMasterFixesElectrical", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
+            Options.SetupRoleOptions(Id, TabGroup.CrewmateRoles, CustomRoles.SabotageMaster);
+            SkillLimit = CustomOption.Create(Id + 10, TabGroup.CrewmateRoles, Color.white, "SabotageMasterSkillLimit", 1, 0, 99, 1, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster], format: "Times");
+            FixesDoors = CustomOption.Create(Id + 11, TabGroup.CrewmateRoles, Color.white, "SabotageMasterFixesDoors", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
+            FixesReactors = CustomOption.Create(Id + 12, TabGroup.CrewmateRoles, Color.white, "SabotageMasterFixesReactors", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
+            FixesOxygens = CustomOption.Create(Id + 13, TabGroup.CrewmateRoles, Color.white, "SabotageMasterFixesOxygens", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
+            FixesComms = CustomOption.Create(Id + 14, TabGroup.CrewmateRoles, Color.white, "SabotageMasterFixesCommunications", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
+            FixesElectrical = CustomOption.Create(Id + 15, TabGroup.CrewmateRoles, Color.white, "SabotageMasterFixesElectrical", false, Options.CustomRoleSpawnChances[CustomRoles.SabotageMaster]);
         }
         public static void Init()
         {
@@ -49,14 +47,8 @@ namespace TownOfHost
                     if (SkillLimit.GetFloat() > 0 && UsedSkillCount >= SkillLimit.GetFloat()) break;
                     if (amount is 64 or 65)
                     {
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 67);
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 66);
-                        UsedSkillCount++;
-                    }
-                    if (amount is 16 or 17)
-                    {
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 19);
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 18);
+                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 16);
+                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Reactor, 17);
                         UsedSkillCount++;
                     }
                     break;
@@ -83,12 +75,12 @@ namespace TownOfHost
                 case SystemTypes.Comms:
                     if (!FixesComms.GetBool()) break;
                     if (SkillLimit.GetFloat() > 0 && UsedSkillCount >= SkillLimit.GetFloat()) break;
-                    if (amount is 16 or 17)
+                    if (amount is 64 or 65)
                     {
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 19);
-                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 18);
+                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 16);
+                        ShipStatus.Instance.RpcRepairSystem(SystemTypes.Comms, 17);
+                        UsedSkillCount++;
                     }
-                    UsedSkillCount++;
                     break;
                 case SystemTypes.Doors:
                     if (!FixesDoors.GetBool()) break;

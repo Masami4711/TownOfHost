@@ -1,6 +1,6 @@
+using System.Globalization;
 using HarmonyLib;
 using UnityEngine;
-using System.Globalization;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -18,11 +18,9 @@ namespace TownOfHost
                 Logger.SendInGame(message);
                 return false;
             }
-            // 名前確認による公開ルームブロック
-            bool NameIncludeTOH = SaveManager.PlayerName.ToUpper().Contains("TOH");
-            if (ModUpdater.isBroken || ModUpdater.hasUpdate || !NameIncludeTOH)
+            if (ModUpdater.isBroken || ModUpdater.hasUpdate)
             {
-                var message = GetString("NameIncludeTOH");
+                var message = "";
                 if (ModUpdater.isBroken) message = GetString("ModBrokenMessage");
                 if (ModUpdater.hasUpdate) message = GetString("CanNotJoinPublicRoomNoLatest");
                 Logger.Info(message, "MakePublicPatch");
@@ -46,8 +44,8 @@ namespace TownOfHost
                 var textObj = Object.Instantiate<TMPro.TextMeshPro>(obj.transform.FindChild("Text_TMP").GetComponent<TMPro.TextMeshPro>());
                 textObj.transform.position = new Vector3(1f, -0.3f, 0);
                 textObj.name = "CanNotJoinPublic";
-                var message = ModUpdater.isBroken ? $"<size=2>{Helpers.ColorString(Color.red, GetString("ModBrokenMessage"))}</size>"
-                    : $"<size=2>{Helpers.ColorString(Color.red, GetString("CanNotJoinPublicRoomNoLatest"))}</size>";
+                var message = ModUpdater.isBroken ? $"<size=2>{Utils.ColorString(Color.red, GetString("ModBrokenMessage"))}</size>"
+                    : $"<size=2>{Utils.ColorString(Color.red, GetString("CanNotJoinPublicRoomNoLatest"))}</size>";
                 new LateTask(() => { textObj.text = message; }, 0.01f, "CanNotJoinPublic");
             }
         }
@@ -70,6 +68,29 @@ namespace TownOfHost
         public static void Prefix(ref bool canOnline)
         {
             if (ThisAssembly.Git.Branch != "main" && CultureInfo.CurrentCulture.Name != "ja-JP") canOnline = false;
+        }
+    }
+    [HarmonyPatch(typeof(BanMenu), nameof(BanMenu.SetVisible))]
+    class BanMenuSetVisiblePatch
+    {
+        public static bool Prefix(BanMenu __instance, bool show)
+        {
+            if (!AmongUsClient.Instance.AmHost) return true;
+            show &= PlayerControl.LocalPlayer && PlayerControl.LocalPlayer.Data != null;
+            __instance.BanButton.gameObject.SetActive(AmongUsClient.Instance.CanBan());
+            __instance.KickButton.gameObject.SetActive(AmongUsClient.Instance.CanKick());
+            __instance.MenuButton.gameObject.SetActive(show);
+            __instance.hotkeyGlyph.SetActive(show);
+            return false;
+        }
+    }
+    [HarmonyPatch(typeof(InnerNet.InnerNetClient), nameof(InnerNet.InnerNetClient.CanBan))]
+    class InnerNetClientCanBanPatch
+    {
+        public static bool Prefix(InnerNet.InnerNetClient __instance, ref bool __result)
+        {
+            __result = __instance.AmHost;
+            return false;
         }
     }
 }
