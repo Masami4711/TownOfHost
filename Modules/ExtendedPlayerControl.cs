@@ -758,6 +758,39 @@ namespace TownOfHost
                 };
             return GetString($"{Prefix}{text}Info" + (InfoLong ? "Long" : ""));
         }
+        public static string GetRoomName(this PlayerControl player)
+        {
+            var room = GetPlainShipRoom(player);
+            if (room == null) return "Invalid";
+            return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
+        }
+        //Haoming参考
+        public static PlainShipRoom GetPlainShipRoom(PlayerControl p)
+        {
+            UnhollowerBaseLib.Il2CppReferenceArray<Collider2D> buffer = new Collider2D[10];
+            ContactFilter2D filter = default;
+            filter.layerMask = Constants.PlayersOnlyMask;
+            filter.useLayerMask = true;
+            filter.useTriggers = false;
+            PlainShipRoom[] array = ShipStatus.Instance.AllRooms;
+            if (array == null) return null;
+            foreach (PlainShipRoom plainShipRoom in array)
+            {
+                if (plainShipRoom.roomArea)
+                {
+                    int hitCount = plainShipRoom.roomArea.OverlapCollider(filter, buffer);
+                    if (hitCount == 0) continue;
+                    for (int i = 0; i < hitCount; i++)
+                    {
+                        if (buffer[i]?.gameObject == p.gameObject)
+                        {
+                            return plainShipRoom;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>
