@@ -102,8 +102,8 @@ namespace TownOfHost
             {
                 int killCount = KillCount(Utils.GetPlayerById(playerId));
                 int Norma = KillCountToSeeMadmates.GetInt();
-                if (killCount < Norma) ProgressText += Utils.ColorString(Palette.ImpostorRed, $"({killCount}/{Norma})");
-                else ProgressText += Utils.ColorString(Palette.ImpostorRed, " ★");
+                if (killCount < Norma) ProgressText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $"({killCount}/{Norma})");
+                else ProgressText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), " ★");
             }
             return ProgressText;
         }
@@ -116,7 +116,7 @@ namespace TownOfHost
                     TargetTaskText += FireWorks.GetFireWorksCount(target.PlayerId);
                     break;
                 case CustomRoles.Witch:
-                    TargetTaskText += Utils.ColorString(Palette.ImpostorRed, $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
+                    TargetTaskText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
                     break;
             }
             var Role = RoleTextData(target);
