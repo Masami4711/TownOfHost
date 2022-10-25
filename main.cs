@@ -7,8 +7,8 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
-using UnityEngine;
 using UnhollowerRuntimeLib;
+using UnityEngine;
 
 [assembly: AssemblyFileVersionAttribute(TownOfHost.Main.PluginVersion)]
 [assembly: AssemblyInformationalVersionAttribute(TownOfHost.Main.PluginVersion)]
@@ -49,10 +49,8 @@ namespace TownOfHost
         public static ConfigEntry<bool> ForceJapanese { get; private set; }
         public static ConfigEntry<bool> JapaneseRoleName { get; private set; }
         public static ConfigEntry<bool> AmDebugger { get; private set; }
-        public static ConfigEntry<string> ShowPopUpVersion { get; private set; }
         public static ConfigEntry<int> MessageWait { get; private set; }
 
-        public static LanguageUnit EnglishLang { get; private set; }
         public static Dictionary<byte, PlayerVersion> playerVersion = new();
         //Preset Name Options
         public static ConfigEntry<string> Preset1 { get; private set; }
@@ -63,6 +61,7 @@ namespace TownOfHost
         //Other Configs
         public static ConfigEntry<bool> IgnoreWinnerCommand { get; private set; }
         public static ConfigEntry<string> WebhookURL { get; private set; }
+        public static ConfigEntry<string> BetaBuildURL { get; private set; }
         public static ConfigEntry<float> LastKillCooldown { get; private set; }
         public static GameOptionsData RealOptionsData;
         public static Dictionary<byte, string> AllPlayerNames;
@@ -94,7 +93,7 @@ namespace TownOfHost
         public static Dictionary<byte, (byte, float)> BitPlayers = new();
         public static Dictionary<byte, float> WarlockTimer = new();
         public static Dictionary<byte, PlayerControl> CursedPlayers = new();
-        public static List<PlayerControl> SpelledPlayer = new();
+        public static Dictionary<byte, PlayerControl> SpelledPlayer = new();
         public static Dictionary<byte, bool> KillOrSpell = new();
         public static Dictionary<byte, bool> isCurseAndKill = new();
         public static Dictionary<(byte, byte), bool> isDoused = new();
@@ -151,7 +150,7 @@ namespace TownOfHost
             BitPlayers = new Dictionary<byte, (byte, float)>();
             WarlockTimer = new Dictionary<byte, float>();
             CursedPlayers = new Dictionary<byte, PlayerControl>();
-            SpelledPlayer = new List<PlayerControl>();
+            SpelledPlayer = new Dictionary<byte, PlayerControl>();
             isDoused = new Dictionary<(byte, byte), bool>();
             ArsonistTimer = new Dictionary<byte, (PlayerControl, float)>();
             MayorUsedButtonCount = new Dictionary<byte, int>();
@@ -167,8 +166,8 @@ namespace TownOfHost
             Preset5 = Config.Bind("Preset Name Options", "Preset5", "Preset_5");
             IgnoreWinnerCommand = Config.Bind("Other", "IgnoreWinnerCommand", true);
             WebhookURL = Config.Bind("Other", "WebhookURL", "none");
+            BetaBuildURL = Config.Bind("Other", "BetaBuildURL", "");
             AmDebugger = Config.Bind("Other", "AmDebugger", false);
-            ShowPopUpVersion = Config.Bind("Other", "ShowPopUpVersion", "0");
             MessageWait = Config.Bind("Other", "MessageWait", 1);
             LastKillCooldown = Config.Bind("Other", "LastKillCooldown", (float)30);
 
@@ -277,16 +276,6 @@ namespace TownOfHost
             ClassInjector.RegisterTypeInIl2Cpp<ErrorText>();
 
             Harmony.PatchAll();
-        }
-
-        [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.Initialize))]
-        class TranslationControllerInitializePatch
-        {
-            public static void Postfix(TranslationController __instance)
-            {
-                var english = __instance.Languages.Where(lang => lang.languageID == SupportedLangs.English).FirstOrDefault();
-                EnglishLang = new LanguageUnit(english);
-            }
         }
     }
     public enum CustomRoles
