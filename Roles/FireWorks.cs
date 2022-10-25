@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Hazel;
 using UnityEngine;
-using static TownOfHost.CheckGameEndPatch;
+using System.Linq;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -33,8 +33,8 @@ namespace TownOfHost
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.FireWorks);
-            FireWorksCount = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "FireWorksMaxCount", 1f, 1f, 3f, 1f, Options.CustomRoleSpawnChances[CustomRoles.FireWorks]);
-            FireWorksRadius = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "FireWorksRadius", 1f, 0.5f, 3f, 0.5f, Options.CustomRoleSpawnChances[CustomRoles.FireWorks]);
+            FireWorksCount = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "FireWorksMaxCount", 1f, 1f, 3f, 1f, Options.CustomRoleSpawnChances[CustomRoles.FireWorks], format: "Pieces");
+            FireWorksRadius = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "FireWorksRadius", 1f, 0.5f, 3f, 0.5f, Options.CustomRoleSpawnChances[CustomRoles.FireWorks], format: "Multiplier");
         }
 
         public static void Init()
@@ -128,9 +128,9 @@ namespace TownOfHost
                     }
                     if (suicide)
                     {
-                        var statistics = new PlayerStatistics(null);
+                        var totalAlive = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.IsAlive()).Count();
                         //自分が最後の生き残りの場合は勝利のために死なない
-                        if (statistics.TotalAlive != 1)
+                        if (totalAlive != 1)
                         {
                             PlayerState.SetDeathReason(pc.PlayerId, PlayerState.DeathReason.Misfire);
                             pc.RpcMurderPlayer(pc);

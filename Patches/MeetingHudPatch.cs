@@ -167,11 +167,15 @@ namespace TownOfHost
                     ExileControllerWrapUpPatch.AntiBlackout_LastExiled = exiledPlayer;
                 }
                 else __instance.RpcVotingComplete(states, exiledPlayer, tie); //通常処理
-                if (!Utils.GetPlayerById(exileId).Is(CustomRoles.Witch))
+                if (Utils.GetPlayerById(exileId).Is(CustomRoles.Witch))
                 {
-                    foreach (var p in Main.SpelledPlayer)
-                        Main.AfterMeetingDeathPlayers.TryAdd(p.PlayerId, PlayerState.DeathReason.Spell);
+                    var which = Utils.GetPlayerById(exileId);
+                    foreach (var pc in PlayerControl.AllPlayerControls)
+                        if (Main.SpelledPlayer.TryGetValue(pc.PlayerId, out var killer) && killer == which)
+                            Main.SpelledPlayer.Remove(pc.PlayerId);
                 }
+                foreach (var sp in Main.SpelledPlayer.Keys)
+                    Main.AfterMeetingDeathPlayers.TryAdd(sp, PlayerState.DeathReason.Spell);
                 Main.SpelledPlayer.Clear();
 
 
@@ -387,7 +391,7 @@ namespace TownOfHost
                 }
 
                 //呪われている場合
-                if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null)
+                if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
                     pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。

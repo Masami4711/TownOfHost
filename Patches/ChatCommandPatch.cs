@@ -196,10 +196,7 @@ namespace TownOfHost
                         canceled = true;
                         var role = PlayerControl.LocalPlayer.GetCustomRole();
                         if (GameStates.IsInGame)
-                        {
-                            if (role.IsVanilla()) HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString("Message.NoDescription"));
-                            else HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString(role.ToString()) + GetString($"{role}InfoLong"));
-                        }
+                            HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, GetString(role.ToString()) + PlayerControl.LocalPlayer.GetRoleInfo(true));
                         break;
 
                     case "/t":
@@ -416,10 +413,7 @@ namespace TownOfHost
                 case "/myrole":
                     var role = player.GetCustomRole();
                     if (GameStates.IsInGame)
-                    {
-                        if (role.IsVanilla()) Utils.SendMessage(GetString("Message.NoDescription"), player.PlayerId);
-                        else Utils.SendMessage(GetString(role.ToString()) + GetString($"{role}InfoLong"), player.PlayerId);
-                    }
+                        Utils.SendMessage(GetString(role.ToString()) + player.GetRoleInfo(true), player.PlayerId);
                     break;
 
                 case "/t":
@@ -446,11 +440,12 @@ namespace TownOfHost
             (string msg, byte sendTo, string title) = Main.MessagesToSend[0];
             Main.MessagesToSend.RemoveAt(0);
             int clientId = sendTo == byte.MaxValue ? -1 : Utils.GetPlayerById(sendTo).GetClientId();
+            var name = player.Data.PlayerName;
             if (clientId == -1)
             {
                 player.SetName(title);
                 DestroyableSingleton<HudManager>.Instance.Chat.AddChat(player, msg);
-                player.SetName(player.Data.PlayerName);
+                player.SetName(name);
             }
             var writer = CustomRpcSender.Create("MessagesToSend", SendOption.None);
             writer.StartMessage(clientId);

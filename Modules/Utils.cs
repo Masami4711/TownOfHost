@@ -1,3 +1,4 @@
+using System.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using AmongUs.Data;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -342,17 +344,14 @@ namespace TownOfHost
                     var taskState = PlayerState.taskState?[playerId];
                     if (taskState.hasTasks)
                     {
-                        Color color = Color.yellow;
-                        if (GameStates.IsInGame)
-                        {
-                            var pc = GetPlayerById(playerId);
-                            var afterFinishingColor = HasTasks(pc.Data) ? Color.green : Color.red; //タスク完了後の色
-                            var beforeFinishingColor = HasTasks(pc.Data) ? Color.yellow : Color.white; //カウントされない人外は白色
-                            var nonCommsColor = taskState.IsTaskFinished ? afterFinishingColor : beforeFinishingColor;
-                            color = comms ? Color.gray : nonCommsColor;
-                        }
+                        Color TextColor = Color.yellow;
+                        var info = GetPlayerInfoById(playerId);
+                        var TaskCompleteColor = HasTasks(info) ? Color.green : GetRoleColor(role).ShadeColor(0.5f); //タスク完了後の色
+                        var NonCompleteColor = HasTasks(info) ? Color.yellow : Color.white; //カウントされない人外は白色
+                        var NormalColor = taskState.IsTaskFinished ? TaskCompleteColor : NonCompleteColor;
+                        TextColor = comms ? Color.gray : NormalColor;
                         string Completed = comms ? "?" : $"{taskState.CompletedTasksCount}";
-                        ProgressText = ColorString(color, $"({Completed}/{taskState.AllTasksCount})");
+                        ProgressText = ColorString(TextColor, $"({Completed}/{taskState.AllTasksCount})");
                     }
                     break;
             }
@@ -585,7 +584,7 @@ namespace TownOfHost
         public static void ApplySuffix()
         {
             if (!AmongUsClient.Instance.AmHost) return;
-            string name = SaveManager.PlayerName;
+            string name = DataManager.player.Customization.Name;
             if (Main.nickName != "") name = Main.nickName;
             if (AmongUsClient.Instance.IsGameStarted)
             {
@@ -612,7 +611,7 @@ namespace TownOfHost
                         name += $"\r\n<color={Main.ModColor}>{GetString("SuffixMode.RoomHost")}</color>";
                         break;
                     case SuffixModes.OriginalName:
-                        name += $"\r\n<color={Main.ModColor}>{SaveManager.PlayerName}</color>";
+                        name += $"\r\n<color={Main.ModColor}>{DataManager.player.Customization.Name}</color>";
                         break;
                 }
             }
@@ -622,6 +621,8 @@ namespace TownOfHost
         {
             return PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == PlayerId).FirstOrDefault();
         }
+        public static GameData.PlayerInfo GetPlayerInfoById(int PlayerId) =>
+            GameData.Instance.AllPlayers.ToArray().Where(info => info.PlayerId == PlayerId).FirstOrDefault();
         public static void NotifyRoles(bool isMeeting = false, PlayerControl SpecifySeer = null, bool NoCache = false, bool ForceLoop = false)
         {
             if (!AmongUsClient.Instance.AmHost) return;
@@ -699,7 +700,7 @@ namespace TownOfHost
                 if (seer.Is(CustomRoles.Lovers)) SelfMark += $"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>";
 
                 //呪われている場合
-                if (Main.SpelledPlayer.Find(x => x.PlayerId == seer.PlayerId) != null && isMeeting)
+                if (Main.SpelledPlayer.ContainsKey(seer.PlayerId) && isMeeting)
                     SelfMark += "<color=#ff0000>†</color>";
 
                 if (Sniper.IsEnable())
@@ -783,7 +784,7 @@ namespace TownOfHost
                     || NameColorManager.Instance.GetDataBySeer(seer.PlayerId).Count > 0 //seer視点用の名前色データが一つ以上ある
                     || seer.Is(CustomRoles.Arsonist)
                     || seer.Is(CustomRoles.Lovers)
-                    || Main.SpelledPlayer.Count > 0
+                    || Main.SpelledPlayer != null || Main.SpelledPlayer.Count > 0
                     || seer.Is(CustomRoles.Executioner)
                     || seer.Is(CustomRoles.Doctor) //seerがドクター
                     || seer.Is(CustomRoles.Puppeteer)
@@ -806,7 +807,7 @@ namespace TownOfHost
                         //名前の後ろに付けるマーカー
                         string TargetMark = "";
                         //呪われている人
-                        if (Main.SpelledPlayer.Find(x => x.PlayerId == target.PlayerId) != null && isMeeting)
+                        if (Main.SpelledPlayer.ContainsKey(target.PlayerId) && isMeeting)
                             TargetMark += "<color=#ff0000>†</color>";
                         //タスク完了直前のSnitchにマークを表示
                         canFindSnitchRole = seer.GetCustomRole().IsImpostor() || //Seerがインポスター
@@ -1116,6 +1117,16 @@ namespace TownOfHost
         {
             f = Mathf.Clamp01(f);
             return (byte)(f * 255);
+        }
+        private static Color ShadeColor(this Color color, float Darkness = 0) //マイナスだと逆に明るく
+        {
+            bool IsDarker = Darkness >= 0;
+            if (!IsDarker) Darkness = -Darkness;
+            float Weight = IsDarker ? 0 : Darkness;
+            float R = (color.r + Weight) / (Darkness + 1);
+            float G = (color.g + Weight) / (Darkness + 1);
+            float B = (color.b + Weight) / (Darkness + 1);
+            return new Color(R, G, B, color.a);
         }
     }
 }
