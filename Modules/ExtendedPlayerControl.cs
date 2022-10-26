@@ -778,7 +778,7 @@ namespace TownOfHost
             {
                 if (!plainShipRoom.roomArea) continue;
                 if (plainShipRoom.roomArea.OverlapCollider(filter2d, result) == 0) continue;
-                if (result.ToArray().Any(x => x?.gameObject == pc.gameObject)) return plainShipRoom;
+                if (result.Any(x => x?.gameObject == pc.gameObject)) return plainShipRoom;
             }
             return null;
         }
