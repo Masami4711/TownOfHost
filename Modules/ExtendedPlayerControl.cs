@@ -765,29 +765,20 @@ namespace TownOfHost
             return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
         }
         //Haoming参考
-        public static PlainShipRoom GetPlainShipRoom(PlayerControl p)
+        public static PlainShipRoom GetPlainShipRoom(PlayerControl pc)
         {
-            UnhollowerBaseLib.Il2CppReferenceArray<Collider2D> buffer = new Collider2D[10];
-            ContactFilter2D filter = default;
-            filter.layerMask = Constants.PlayersOnlyMask;
-            filter.useLayerMask = true;
-            filter.useTriggers = false;
-            PlainShipRoom[] array = ShipStatus.Instance.AllRooms;
-            if (array == null) return null;
-            foreach (PlainShipRoom plainShipRoom in array)
+            UnhollowerBaseLib.Il2CppReferenceArray<Collider2D> result = new Collider2D[10];
+            ContactFilter2D filter2d = default;
+            filter2d.layerMask = Constants.PlayersOnlyMask;
+            filter2d.useLayerMask = true;
+            filter2d.useTriggers = false;
+            PlainShipRoom[] rooms = ShipStatus.Instance.AllRooms;
+            if (rooms == null) return null;
+            foreach (PlainShipRoom plainShipRoom in rooms)
             {
-                if (plainShipRoom.roomArea)
-                {
-                    int hitCount = plainShipRoom.roomArea.OverlapCollider(filter, buffer);
-                    if (hitCount == 0) continue;
-                    for (int i = 0; i < hitCount; i++)
-                    {
-                        if (buffer[i]?.gameObject == p.gameObject)
-                        {
-                            return plainShipRoom;
-                        }
-                    }
-                }
+                if (!plainShipRoom.roomArea) continue;
+                if (plainShipRoom.roomArea.OverlapCollider(filter2d, result) == 0) continue;
+                if (result.ToArray().Any(x => x?.gameObject == pc.gameObject)) return plainShipRoom;
             }
             return null;
         }
