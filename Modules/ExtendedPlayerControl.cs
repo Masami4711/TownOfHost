@@ -761,7 +761,7 @@ namespace TownOfHost
         public static string GetRoomName(this PlayerControl player)
         {
             var room = GetPlainShipRoom(player);
-            if (room == null) return "Invalid";
+            if (player.Data.IsDead || room == null) return "Invalid";
             return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
         }
         //Haoming参考
