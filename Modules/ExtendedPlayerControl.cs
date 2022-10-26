@@ -4,6 +4,7 @@ using System.Linq;
 using Hazel;
 using InnerNet;
 using UnityEngine;
+using UnhollowerBaseLib;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -767,7 +768,7 @@ namespace TownOfHost
         //Haoming参考
         public static PlainShipRoom GetPlainShipRoom(PlayerControl pc)
         {
-            UnhollowerBaseLib.Il2CppReferenceArray<Collider2D> result = new Collider2D[10];
+            Il2CppReferenceArray<Collider2D> result = new Collider2D[10];
             ContactFilter2D filter2d = default;
             filter2d.layerMask = Constants.PlayersOnlyMask;
             filter2d.useLayerMask = true;
