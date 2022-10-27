@@ -853,7 +853,7 @@ namespace TownOfHost
                             TargetRoleText = $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}</size>\r\n";
 
                         if (GameStates.IsMeeting && EvilTracker.IsTrackTarget(seer, target) && EvilTracker.CanSeeLastRoomInMeeting.GetBool())
-                            TargetRoleText = $"<size={fontSize}>{EvilTracker.GetTargetLastRoom(target)}</size>\r\n";
+                            TargetRoleText = $"<size={fontSize}>{EvilTracker.GetTargetLastRoom(seer, target)}</size>\r\n";
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isMeeting);
