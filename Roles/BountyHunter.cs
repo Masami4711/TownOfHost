@@ -166,5 +166,7 @@ namespace TownOfHost
                 }
             }
         }
+        public static string GetTargetMark(PlayerControl seer, PlayerControl target)
+            => Utils.ColorString(Palette.ImpostorRed, GetTarget(seer) == target ? "⊕" : "");
     }
 }
