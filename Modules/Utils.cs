@@ -833,9 +833,6 @@ namespace TownOfHost
                                     TargetMark += ColorString(GetRoleColor(CustomRoles.Arsonist), "△");
                                 }
                                 break;
-                            case CustomRoles.BountyHunter:
-                                TargetMark += BountyHunter.GetTargetMark(seer, target);
-                                break;
                             case CustomRoles.EvilTracker:
                                 TargetMark += EvilTracker.GetTargetMark(seer, target);
                                 break;
@@ -844,12 +841,6 @@ namespace TownOfHost
                                 break;
                             case CustomRoles.Puppeteer:
                                 TargetMark += GetPuppeteerMark(seer, target);
-                                break;
-                            case CustomRoles.Vampire:
-                                TargetMark += GetVampireMark(seer, target);
-                                break;
-                            case CustomRoles.Warlock:
-                                TargetMark += GetWarlockMark(seer, target);
                                 break;
                         }
                         if (TargetPlayerName == target.GetRealName(isMeeting))
@@ -1001,6 +992,13 @@ namespace TownOfHost
 
             return LivingImpostorsNum <= 0;
         }
+        public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
+        {
+            string TargetMark = "";
+            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
+                TargetMark += ColorString(Palette.ImpostorRed, "◆");
+            return TargetMark;
+        }
         public static void FlashColor(Color color, float duration = 1f)
         {
             var hud = DestroyableSingleton<HudManager>.Instance;
@@ -1016,27 +1014,6 @@ namespace TownOfHost
                 obj.SetActive(t != 1f);
                 obj.GetComponent<SpriteRenderer>().color = new(color.r, color.g, color.b, Mathf.Clamp01((-2f * Mathf.Abs(t - 0.5f) + 1) * color.a)); //アルファ値を0→目標→0に変化させる
             })));
-        }
-        public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
-        {
-            string TargetMark = "";
-            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
-                TargetMark += ColorString(Palette.ImpostorRed, "◆");
-            return TargetMark;
-        }
-        public static string GetVampireMark(PlayerControl seer, PlayerControl target)
-        {
-            string TargetMark = "";
-            if (GameStates.IsInTask && Main.BitPlayers.TryGetValue(target.PlayerId, out var vampire) && vampire.Item1 == seer.PlayerId)
-                TargetMark += ColorString(Palette.ImpostorRed, "×");
-            return TargetMark;
-        }
-        public static string GetWarlockMark(PlayerControl seer, PlayerControl target)
-        {
-            string TargetMark = "";
-            if (Main.CursedPlayers.TryGetValue(seer.PlayerId, out var cursedPlayer) && cursedPlayer == target)
-                TargetMark += ColorString(Palette.ImpostorRed, "＊");
-            return TargetMark;
         }
 
         public static Sprite LoadSprite(string path, float pixelsPerUnit = 1f)
