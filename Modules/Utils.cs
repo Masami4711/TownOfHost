@@ -679,19 +679,12 @@ namespace TownOfHost
                     if (arrows != "")
                         SelfMark += ColorString(GetRoleColor(CustomRoles.Snitch), "★" + arrows);
                 }
-
-                //ハートマークを付ける(自分に)
-                if (seer.Is(CustomRoles.Lovers))
-                    SelfMark += ColorString(GetRoleColor(CustomRoles.Lovers), "♡");
-
-                //呪われている場合
-                if (Main.SpelledPlayer.ContainsKey(seer.PlayerId) && isMeeting)
-                    SelfMark += ColorString(Palette.ImpostorRed, "†");
-
-                if (Sniper.IsEnable())
+                switch (seer.GetCustomSubRole())
                 {
-                    //銃声が聞こえるかチェック
-                    SelfMark += Sniper.GetShotNotify(seer.PlayerId);
+                    case CustomRoles.Lovers:
+                        //ハートマークを付ける(自分に)
+                        SelfMark += ColorString(GetRoleColor(CustomRoles.Lovers), "♡");
+                        break;
                 }
 
                 switch (seer.GetCustomRole())
@@ -727,6 +720,16 @@ namespace TownOfHost
                         if (seer.IsDouseDone())
                             SeerRealName = $"</size>\r\n{ColorString(seer.GetRoleColor(), GetString("EnterVentToWin"))}";
                         break;
+                }
+
+                //呪われている場合
+                if (Main.SpelledPlayer.ContainsKey(seer.PlayerId) && isMeeting)
+                    SelfMark += ColorString(Palette.ImpostorRed, "†");
+
+                if (Sniper.IsEnable())
+                {
+                    //銃声が聞こえるかチェック
+                    SelfMark += Sniper.GetShotNotify(seer.PlayerId);
                 }
 
                 if (!isMeeting && MeetingStates.FirstMeeting)
