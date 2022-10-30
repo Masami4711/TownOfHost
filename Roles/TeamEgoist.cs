@@ -30,5 +30,6 @@ namespace TownOfHost
                 }
             }
         }
+        public static bool IsEgoistTeam(this CustomRoles role) => role is CustomRoles.Egoist or CustomRoles.EgoSchrodingerCat;
     }
 }

@@ -728,7 +728,7 @@ namespace TownOfHost
             => (seer.KnowImpostor() && target.Is(RoleType.Impostor))
             || (!isInTask && Utils.IsActive(SystemTypes.Electrical) && target.Is(CustomRoles.Mare));
         public static bool KnowEgoist(this PlayerControl seer)
-            => seer.Is(RoleType.Impostor) || TeamEgoist.playerIdList.Contains(seer.PlayerId)
+            => seer.Is(RoleType.Impostor) || seer.GetCustomRole().IsEgoistTeam()
             || (seer.Is(CustomRoles.Snitch) && seer.GetPlayerTaskState().IsTaskFinished && Options.SnitchCanFindNeutralKiller.GetBool());
         public static bool KnowJackal(this PlayerControl seer)
             => seer.Is(CustomRoles.Jackal) || seer.Is(CustomRoles.JSchrodingerCat)
