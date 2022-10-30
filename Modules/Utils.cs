@@ -845,12 +845,9 @@ namespace TownOfHost
                                 TargetMark += GetPuppeteerMark(seer, target);
                                 break;
                         }
-                        if (TargetPlayerName == target.GetRealName(isMeeting))
-                        {
-                            //NameColorManager準拠の処理
-                            var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
-                            TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
-                        }
+                        //NameColorManager準拠の処理
+                        var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
+                        if (ncd.color != null) TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
 
                         string TargetDeathReason = "";
                         if (seer.KnowDeathReason(target))
