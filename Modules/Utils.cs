@@ -668,15 +668,17 @@ namespace TownOfHost
                 if (CustomRoles.Snitch.IsEnable() && !isMeeting)
                 {
                     var arrows = "";
+                    bool found = false;
                     foreach (var arrow in Main.targetArrows)
                     {
                         if (arrow.Key.Item1 == seer.PlayerId && !PlayerState.isDead[arrow.Key.Item2] && seer.KnowSnitch(GetPlayerById(arrow.Key.Item2)))
                         {
+                            found = true;
                             //自分用の矢印で対象が死んでない時
                             arrows += arrow.Value;
                         }
                     }
-                    if (arrows != "")
+                    if (found)
                         SelfMark += ColorString(GetRoleColor(CustomRoles.Snitch), "★" + arrows);
                 }
                 switch (seer.GetCustomSubRole())
