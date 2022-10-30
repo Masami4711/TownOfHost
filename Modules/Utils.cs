@@ -787,7 +787,7 @@ namespace TownOfHost
                         {
                             case CustomRoles.Lovers:
                                 //ハートマークを付ける(相手に) || 霊界からラバーズ視認
-                                if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead)
+                                if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
                                     TargetMark += ColorString(GetRoleColor(CustomRoles.Lovers), "♡");
                                 break;
                         }
