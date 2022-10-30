@@ -783,9 +783,6 @@ namespace TownOfHost
                         //呪われている人
                         if (Main.SpelledPlayer.ContainsKey(target.PlayerId) && isMeeting)
                             TargetMark += ColorString(Palette.ImpostorRed, "†");
-                        //タスク完了直前のSnitchにマークを表示
-                        if (seer.KnowSnitch(target))
-                            TargetMark += ColorString(GetRoleColor(CustomRoles.Snitch), "★");
                         switch (target.GetCustomSubRole())
                         {
                             case CustomRoles.Lovers:
@@ -797,7 +794,7 @@ namespace TownOfHost
                         switch (target.GetCustomRole().GetRoleType())
                         {
                             case RoleType.Impostor:
-                                if (seer.KnowSpecificImpostor(target))
+                                if (seer.KnowSpecificImpostor(target, !isMeeting))
                                     TargetPlayerName = ColorString(Palette.ImpostorRed, TargetPlayerName);
                                 break;
                         }
@@ -807,8 +804,13 @@ namespace TownOfHost
                                 TargetRoleText = $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}</size>\r\n";
                                 break;
                             case CustomRoles.MadSnitch:
-                                if (target.KnowImpostor() && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
+                                if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
                                     TargetMark += ColorString(Palette.ImpostorRed, "★");
+                                break;
+                            case CustomRoles.Snitch:
+                                //タスク完了直前のSnitchにマークを表示
+                                if (seer.KnowSnitch(target))
+                                    TargetMark += ColorString(GetRoleColor(CustomRoles.Snitch), "★");
                                 break;
                             case CustomRoles.Egoist:
                                 if (seer.KnowEgoist())
