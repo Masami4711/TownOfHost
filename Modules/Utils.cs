@@ -258,40 +258,45 @@ namespace TownOfHost
                 var cRoleFound = Main.AllPlayerCustomRoles.TryGetValue(p.PlayerId, out var cRole);
                 if (cRoleFound)
                 {
-                    if (cRole.IsImpostor()) hasTasks = false;
-                    if (cRole == CustomRoles.GM) hasTasks = false;
-                    if (cRole == CustomRoles.Jester) hasTasks = false;
-                    if (cRole == CustomRoles.MadGuardian && ForRecompute) hasTasks = false;
-                    if (cRole == CustomRoles.MadSnitch && ForRecompute) hasTasks = false;
-                    if (cRole == CustomRoles.Opportunist) hasTasks = false;
-                    if (cRole == CustomRoles.Sheriff) hasTasks = false;
-                    if (cRole == CustomRoles.Madmate) hasTasks = false;
-                    if (cRole == CustomRoles.SKMadmate) hasTasks = false;
-                    if (cRole == CustomRoles.Terrorist && ForRecompute) hasTasks = false;
-                    if (cRole == CustomRoles.Executioner)
+                    switch (cRole)
                     {
-                        if (Executioner.ChangeRolesAfterTargetKilled.GetSelection() == 0)
-                            hasTasks = !ForRecompute;
-                        else hasTasks = false;
+                        case CustomRoles.GM:
+                        case CustomRoles.Madmate:
+                        case CustomRoles.SKMadmate:
+                        case CustomRoles.Sheriff:
+                        case CustomRoles.Arsonist:
+                        case CustomRoles.Egoist:
+                        case CustomRoles.Jackal:
+                        case CustomRoles.Jester:
+                        case CustomRoles.Opportunist:
+                            hasTasks = false;
+                            break;
+                        case CustomRoles.MadGuardian:
+                        case CustomRoles.MadSnitch:
+                        case CustomRoles.Terrorist:
+                            if (ForRecompute)
+                                hasTasks = false;
+                            break;
+                        case CustomRoles.Executioner:
+                            if (Executioner.ChangeRolesAfterTargetKilled.GetSelection() == 0)
+                                hasTasks = !ForRecompute;
+                            else hasTasks = false;
+                            break;
+                        default:
+                            if (cRole.IsImpostor() || cRole.IsKilledSchrodingerCat()) hasTasks = false;
+                            break;
                     }
-                    if (cRole == CustomRoles.Impostor) hasTasks = false;
-                    if (cRole == CustomRoles.Shapeshifter) hasTasks = false;
-                    if (cRole == CustomRoles.Arsonist) hasTasks = false;
-                    if (cRole == CustomRoles.SchrodingerCat) hasTasks = false;
-                    if (cRole.IsKilledSchrodingerCat()) hasTasks = false;
-                    if (cRole == CustomRoles.Egoist) hasTasks = false;
-                    if (cRole == CustomRoles.Jackal) hasTasks = false;
                 }
                 var cSubRoleFound = Main.AllPlayerCustomSubRoles.TryGetValue(p.PlayerId, out var cSubRole);
                 if (cSubRoleFound)
                 {
-                    if (cSubRole == CustomRoles.Lovers)
+                    switch (cSubRole)
                     {
-                        //ラバーズがクルー陣営の場合タスクを付与しない
-                        if (cRole.GetRoleType() == RoleType.Crewmate)
-                        {
-                            hasTasks = false;
-                        }
+                        case CustomRoles.Lovers:
+                            //ラバーズがクルー陣営の場合タスクを付与しない
+                            if (cRole.IsCrewmate())
+                                hasTasks = false;
+                            break;
                     }
                 }
             }
@@ -761,6 +766,9 @@ namespace TownOfHost
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                 string SeerRealName = seer.GetRealName(isMeeting);
 
+                if (!isMeeting && MeetingStates.FirstMeeting)
+                    SeerRealName = seer.GetRoleInfo();
+
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
                 string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), seer.GetRoleName())}{SelfTaskText}</size>";
                 string SelfDeathReason = seer.KnowDeathReason(seer) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(seer.PlayerId))})" : "";
@@ -1108,16 +1116,7 @@ namespace TownOfHost
             }
             return sprite;
         }
-        public static string ColorString(Color color, string str)
-        {
-            return $"<color=#{ToByte(color.r):X2}{ToByte(color.g):X2}{ToByte(color.b):X2}{ToByte(color.a):X2}>{str}</color>";
-        }
-
-        private static byte ToByte(float f)
-        {
-            f = Mathf.Clamp01(f);
-            return (byte)(f * 255);
-        }
+        public static string ColorString(Color32 color, string str) => $"<color=#{color.r:x2}{color.g:x2}{color.b:x2}{color.a:x2}>{str}</color>";
         /// <summary>
         /// Darkness:１の比率で黒色と元の色を混ぜる。マイナスだと白色と混ぜる。
         /// </summary>
