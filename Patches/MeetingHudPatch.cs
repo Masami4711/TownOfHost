@@ -237,6 +237,7 @@ namespace TownOfHost
             var target = PickRevengeTarget(player);
             if (target == null) return;
             TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
+            target.SetRealKiller(player);
             Logger.Info($"{player.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "MadmatesRevengeOnExile");
         }
         public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
