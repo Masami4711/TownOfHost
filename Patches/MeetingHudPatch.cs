@@ -31,6 +31,7 @@ namespace TownOfHost
                             VotedForId = pva.VotedFor
                         }}, voteTarget.Data, false); //RPC
                         Logger.Info($"{voteTarget.GetNameWithRole()}を追放", "Dictator");
+                        FollowingSuicideOnExile(pva.VotedFor);
                         RevengeOnExile(pva.VotedFor, PlayerState.DeathReason.Vote);
                         Logger.Info("ディクテーターによる強制会議終了", "Special Phase");
                         return true;
@@ -180,10 +181,7 @@ namespace TownOfHost
                 Main.SpelledPlayer.Clear();
 
 
-                if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == exileId) != null)
-                {
-                    FixedUpdatePatch.LoversSuicide(exiledPlayer.PlayerId, true);
-                }
+                FollowingSuicideOnExile(exileId);
                 RevengeOnExile(exileId, PlayerState.DeathReason.Vote);
 
                 //霊界用暗転バグ対処
@@ -207,7 +205,18 @@ namespace TownOfHost
         {
             Logger.Info($"playerId:{Utils.GetNameWithRole(playerId)}, deathReason:{deathReason}", "TryAddAfterMeetingDeathPlayers");
             Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason);
+            FollowingSuicideOnExile(playerId);
             RevengeOnExile(playerId, deathReason);
+        }
+        public static void FollowingSuicideOnExile(byte playerId)
+        {
+            var player = Utils.GetPlayerById(playerId);
+            if (player == null) return;
+            if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == player.PlayerId) != null)
+            {
+                FixedUpdatePatch.LoversSuicide(player.PlayerId, true);
+            }
+            //ここに後追い処理を追加
         }
         public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason)
         {
