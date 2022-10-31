@@ -212,11 +212,12 @@ namespace TownOfHost
         {
             var player = Utils.GetPlayerById(playerId);
             if (player == null) return;
+
+            //Loversの後追い
             if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == player.PlayerId) != null)
             {
                 FixedUpdatePatch.LoversSuicide(player.PlayerId, true);
             }
-            //ここに後追い処理を追加
         }
         public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason = PlayerState.DeathReason.Vote)
         {
