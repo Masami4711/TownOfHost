@@ -24,13 +24,15 @@ namespace TownOfHost
                     if (pc.Is(CustomRoles.Dictator) && pva.DidVote && pc.PlayerId != pva.VotedFor && pva.VotedFor < 253 && !pc.Data.IsDead)
                     {
                         var voteTarget = Utils.GetPlayerById(pva.VotedFor);
-                        Main.AfterMeetingDeathPlayers.TryAdd(pc.PlayerId, PlayerState.DeathReason.Suicide);
+                        TryAddAfterMeetingDeathPlayers(pc.PlayerId, PlayerState.DeathReason.Suicide);
                         __instance.RpcVotingComplete(new MeetingHud.VoterState[]{ new ()
                         {
                             VoterId = pva.TargetPlayerId,
                             VotedForId = pva.VotedFor
                         }}, voteTarget.Data, false); //RPC
                         Logger.Info($"{voteTarget.GetNameWithRole()}を追放", "Dictator");
+                        FollowingSuicideOnExile(pva.VotedFor);
+                        RevengeOnExile(pva.VotedFor);
                         Logger.Info("ディクテーターによる強制会議終了", "Special Phase");
                         voteTarget.SetRealKiller(pc);
                         return true;
@@ -65,7 +67,7 @@ namespace TownOfHost
                             switch (Options.GetWhenSkipVote())
                             {
                                 case VoteMode.Suicide:
-                                    Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    TryAddAfterMeetingDeathPlayers(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
                                     Logger.Info($"スキップしたため{voter.GetNameWithRole()}を自殺させました", "Vote");
                                     break;
                                 case VoteMode.SelfVote:
@@ -81,7 +83,7 @@ namespace TownOfHost
                             switch (Options.GetWhenNonVote())
                             {
                                 case VoteMode.Suicide:
-                                    Main.AfterMeetingDeathPlayers.TryAdd(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
+                                    TryAddAfterMeetingDeathPlayers(ps.TargetPlayerId, PlayerState.DeathReason.Suicide);
                                     Logger.Info($"無投票のため{voter.GetNameWithRole()}を自殺させました", "Vote");
                                     break;
                                 case VoteMode.SelfVote:
@@ -184,16 +186,14 @@ namespace TownOfHost
                 foreach (var kvp in Main.SpelledPlayer)
                 {
                     if (Utils.GetPlayerById(kvp.Key) == null) continue;
-                    Main.AfterMeetingDeathPlayers.TryAdd(kvp.Key, PlayerState.DeathReason.Spell);
+                    TryAddAfterMeetingDeathPlayers(kvp.Key, PlayerState.DeathReason.Spell);
                     Utils.GetPlayerById(kvp.Key).SetRealKiller(kvp.Value);
                 }
                 Main.SpelledPlayer.Clear();
 
 
-                if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == exileId) != null)
-                {
-                    FixedUpdatePatch.LoversSuicide(exiledPlayer.PlayerId, true);
-                }
+                FollowingSuicideOnExile(exileId);
+                RevengeOnExile(exileId);
 
                 //霊界用暗転バグ対処
                 if (!AntiBlackout.OverrideExiledPlayer && exiledPlayer != null && Main.ResetCamPlayerList.Contains(exiledPlayer.PlayerId))
@@ -211,6 +211,55 @@ namespace TownOfHost
         {
             var player = PlayerControl.AllPlayerControls.ToArray().Where(pc => pc.PlayerId == id).FirstOrDefault();
             return player != null && player.Is(CustomRoles.Mayor);
+        }
+        public static void TryAddAfterMeetingDeathPlayers(byte playerId, PlayerState.DeathReason deathReason)
+        {
+            Logger.Info($"playerId:{Utils.GetNameWithRole(playerId)}, deathReason:{deathReason}", "TryAddAfterMeetingDeathPlayers");
+            Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason);
+            FollowingSuicideOnExile(playerId);
+            RevengeOnExile(playerId, deathReason);
+        }
+        public static void FollowingSuicideOnExile(byte playerId)
+        {
+            var player = Utils.GetPlayerById(playerId);
+            if (player == null) return;
+
+            //Loversの後追い
+            if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == player.PlayerId) != null)
+            {
+                FixedUpdatePatch.LoversSuicide(player.PlayerId, true);
+            }
+        }
+        public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason = PlayerState.DeathReason.Vote)
+        {
+            if (deathReason == PlayerState.DeathReason.Suicide) return;
+            var player = Utils.GetPlayerById(playerId);
+            var target = PickRevengeTarget(player);
+            if (target == null) return;
+            TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
+            Logger.Info($"{player.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "MadmatesRevengeOnExile");
+        }
+        public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
+        {
+            List<PlayerControl> TargetList = new();
+            foreach (var candidate in PlayerControl.AllPlayerControls)
+            {
+                if (candidate == exiledplayer || candidate.Data.IsDead || Main.AfterMeetingDeathPlayers.ContainsKey(candidate.PlayerId)) continue;
+                switch (exiledplayer.GetCustomRole())
+                {
+                    //ここに道連れ役職を追加
+                    default:
+                        if (exiledplayer.Is(RoleType.Madmate) && Options.MadmateExileCrewmate.GetBool() //黒猫オプション
+                        && !candidate.Is(RoleType.Impostor))
+                            TargetList.Add(candidate);
+                        break;
+                }
+            }
+            if (TargetList == null || TargetList.Count == 0) return null;
+            var rand = new System.Random();
+            var target = TargetList[rand.Next(TargetList.Count)];
+            Logger.Info($"{exiledplayer.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "PickRevengeTarget");
+            return target;
         }
     }
 

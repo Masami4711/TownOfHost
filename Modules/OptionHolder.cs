@@ -77,6 +77,7 @@ namespace TownOfHost
         public static CustomOption MadmateCanSeeDeathReason;
         public static CustomOption MadmateVentCooldown;
         public static CustomOption MadmateVentMaxTime;
+        public static CustomOption MadmateExileCrewmate;
 
         public static CustomOption EvilWatcherChance;
         public static CustomOption LighterTaskCompletedVision;
@@ -343,6 +344,7 @@ namespace TownOfHost
             MadmateCanSeeKillFlash = CustomOption.Create(15015, TabGroup.ImpostorRoles, Color.white, "MadmateCanSeeKillFlash", false);
             MadmateCanSeeOtherVotes = CustomOption.Create(15016, TabGroup.ImpostorRoles, Color.white, "MadmateCanSeeOtherVotes", false);
             MadmateCanSeeDeathReason = CustomOption.Create(15018, TabGroup.ImpostorRoles, Color.white, "MadmateCanSeeDeathReason", false);
+            MadmateExileCrewmate = CustomOption.Create(15017, TabGroup.ImpostorRoles, Color.white, "MadmateExileCrewmate", false);
             MadmateVentCooldown = CustomOption.Create(15213, TabGroup.ImpostorRoles, Color.white, "MadmateVentCooldown", 0f, 0f, 180f, 5f, format: "Seconds");
             MadmateVentMaxTime = CustomOption.Create(15214, TabGroup.ImpostorRoles, Color.white, "MadmateVentMaxTime", 0f, 0f, 180f, 5f, format: "Seconds");
             // Both

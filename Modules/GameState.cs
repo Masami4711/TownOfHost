@@ -65,6 +65,7 @@ namespace TownOfHost
             Misfire,
             Torched,
             Sniped,
+            Revenge,
             Execution,
             Disconnected,
             Fall,
