@@ -32,7 +32,7 @@ namespace TownOfHost
                         }}, voteTarget.Data, false); //RPC
                         Logger.Info($"{voteTarget.GetNameWithRole()}を追放", "Dictator");
                         FollowingSuicideOnExile(pva.VotedFor);
-                        RevengeOnExile(pva.VotedFor, PlayerState.DeathReason.Vote);
+                        RevengeOnExile(pva.VotedFor);
                         Logger.Info("ディクテーターによる強制会議終了", "Special Phase");
                         return true;
                     }
@@ -182,7 +182,7 @@ namespace TownOfHost
 
 
                 FollowingSuicideOnExile(exileId);
-                RevengeOnExile(exileId, PlayerState.DeathReason.Vote);
+                RevengeOnExile(exileId);
 
                 //霊界用暗転バグ対処
                 if (!AntiBlackout.OverrideExiledPlayer && exiledPlayer != null && Main.ResetCamPlayerList.Contains(exiledPlayer.PlayerId))
@@ -218,7 +218,7 @@ namespace TownOfHost
             }
             //ここに後追い処理を追加
         }
-        public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason)
+        public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason = PlayerState.DeathReason.Vote)
         {
             if (deathReason == PlayerState.DeathReason.Suicide) return;
             var player = Utils.GetPlayerById(playerId);
