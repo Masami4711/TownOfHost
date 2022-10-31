@@ -382,6 +382,7 @@
 "TimeThiefReturnStolenTimeUponDeath","Return Stolen Time After Death","死亡後に盗んだ時間を返す","蚀时者死亡后会议时间重置","時間小偷死亡後將會議時間重設","Вернуть Украденное Время После Его Смерти",""
 "EvilTrackerCanSeeKillFlash","Can See ""Kill Flash"" for Impostor Kills","インポスターキル時にフラッシュが見える","当内鬼进行击杀时邪恶的追踪者可以看到闪光","","EvilTracker Сбрасывает Цель После Каждой Встречи",""
 "EvilTrackerResetTargetAfterMeeting","Can Reset Target After Meeting","会議後に再度ターゲットを設定できる","会议后重置邪恶的追踪者追踪目标","","EvilTracker Может Сбросить Цель После Встречи",""
+"EvilTrackerCanSeeLastRoomInMeeting","Can See Target's Last Room In Meeting","会議中、追跡対象の最終位置を表示する"
 "KillFlashDuration","""Kill Flash"" Duration","キルフラッシュの長さ","击杀闪烁持续时间","殺人閃光持續時間","Длительность Вспышки Убийсва",""
 
 "## かくれんぼ設定"
@@ -560,3 +561,4 @@
 "DefaultShapeshiftText","Shift","変身","变形","變身","Превращение",""
 "DisabledBySettings","Disabled by Settings","設定で無効化されています","已在设置被中禁用","在設定中被禁用","Отключено настройкой",""
 "Disabled","Disabled","無効","禁用","已被禁用","Неполноценный",""
+"FailToTrack","Failed To Track","追跡不可"
