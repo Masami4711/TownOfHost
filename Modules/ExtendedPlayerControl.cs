@@ -736,13 +736,13 @@ namespace TownOfHost
             filter2d.layerMask = Constants.PlayersOnlyMask;
             filter2d.useLayerMask = true;
             filter2d.useTriggers = false;
-            PlainShipRoom[] rooms = ShipStatus.Instance.AllRooms;
-            if (rooms == null) return null;
-            foreach (PlainShipRoom plainShipRoom in rooms)
+            PlainShipRoom[] Rooms = ShipStatus.Instance.AllRooms;
+            if (Rooms == null) return null;
+            foreach (var room in Rooms)
             {
-                if (!plainShipRoom.roomArea) continue;
-                if (plainShipRoom.roomArea.OverlapCollider(filter2d, result) == 0) continue;
-                if (result.Any(x => x?.gameObject == pc.gameObject)) return plainShipRoom;
+                if (!room.roomArea) continue;
+                if (room.roomArea.OverlapCollider(filter2d, result) == 0) continue;
+                if (result.Any(x => x?.gameObject == pc.gameObject)) return room;
             }
             return null;
         }
