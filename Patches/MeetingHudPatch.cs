@@ -322,6 +322,7 @@ namespace TownOfHost
                     pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
                     (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
                     (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.KnowOtherRole(PlayerControl.LocalPlayer, pc);
+
                 if (EvilTracker.IsTrackTarget(PlayerControl.LocalPlayer, pc) && EvilTracker.CanSeeLastRoomInMeeting.GetBool())
                 {
                     roleTextMeeting.text = EvilTracker.GetTargetLastRoom(PlayerControl.LocalPlayer, pc);
