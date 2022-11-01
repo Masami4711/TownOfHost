@@ -175,5 +175,7 @@ namespace TownOfHost
             }
             return retText;
         }
+        public static string GetFireWorksCount(byte playerId)
+            => Utils.ColorString(Color.yellow, $" ({nowFireWorksCount[playerId]})");
     }
 }

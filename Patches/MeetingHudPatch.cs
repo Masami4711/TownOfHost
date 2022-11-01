@@ -308,19 +308,20 @@ namespace TownOfHost
                 var pc = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (pc == null) continue;
                 var RoleTextData = Utils.GetRoleText(pc);
+                if (PlayerControl.LocalPlayer.Is(CustomRoles.Insider)) RoleTextData = Insider.RoleTextData(pc);
                 var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
                 roleTextMeeting.text = RoleTextData.Item1;
-                if (Main.VisibleTasksCount) roleTextMeeting.text += Utils.GetProgressText(pc);
+                if (Main.VisibleTasksCount && !(PlayerControl.LocalPlayer.Is(CustomRoles.Insider) && Insider.DisableTaskText(pc))) roleTextMeeting.text += Utils.GetProgressText(pc);
                 roleTextMeeting.color = RoleTextData.Item2;
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
                 roleTextMeeting.enabled =
                     pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
                     (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
-                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM));
+                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.KnowOtherRole(PlayerControl.LocalPlayer, pc);
                 if (EvilTracker.IsTrackTarget(PlayerControl.LocalPlayer, pc) && EvilTracker.CanSeeLastRoomInMeeting.GetBool())
                 {
                     roleTextMeeting.text = EvilTracker.GetTargetLastRoom(PlayerControl.LocalPlayer, pc);
@@ -383,6 +384,18 @@ namespace TownOfHost
                 }
                 switch (seer.GetCustomRole())
                 {
+                    case CustomRoles.BountyHunter:
+                        pva.NameText.text += BountyHunter.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.EvilTracker:
+                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.Insider:
+                        pva.NameText.text += Insider.GetOtherImpostorMarks(seer, target);
+                        break;
+                    case CustomRoles.Warlock:
+                        pva.NameText.text += Utils.GetWarlockMark(seer, target);
+                        break;
                     case CustomRoles.MadSnitch:
                     case CustomRoles.Snitch:
                         if (seer.GetPlayerTaskState().IsTaskFinished) //seerがタスクを終えている
@@ -409,9 +422,6 @@ namespace TownOfHost
                         target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
                             pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
                         break;
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
-                        break;
                     case CustomRoles.EgoSchrodingerCat:
                         LocalPlayerKnowsEgoist = true;
                         break;
@@ -434,7 +444,8 @@ namespace TownOfHost
                 switch (target.GetCustomSubRole())
                 {
                     case CustomRoles.Lovers:
-                        if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead)
+                        if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead
+                        || Insider.KnowGhostRole(seer, target))
                             pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
                         break;
                 }
@@ -444,6 +455,7 @@ namespace TownOfHost
                     if (target != null && target.GetCustomRole().IsImpostor()) //変更先がインポスター
                         pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
                 }
+
                 //呪われている場合
                 if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
                     pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");

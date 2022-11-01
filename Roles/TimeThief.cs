@@ -47,5 +47,7 @@ namespace TownOfHost
             }
             Utils.CustomSyncAllSettings();
         }
+        public static string GetDecreacedTime(byte playerId)
+            => Utils.ColorString(Color.yellow, TimeThiefKillCount[playerId] > 0 ? $" -{DecreaseMeetingTime.GetInt() * TimeThiefKillCount[playerId]}s" : "");
     }
 }

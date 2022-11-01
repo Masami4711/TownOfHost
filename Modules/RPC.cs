@@ -31,6 +31,7 @@ namespace TownOfHost
         SetCurrentDousingTarget,
         SetEvilTrackerTarget,
         SetRealKiller,
+        InsiderKill,
     }
     public enum Sounds
     {
@@ -177,6 +178,9 @@ namespace TownOfHost
                 case CustomRPC.SendFireWorksState:
                     FireWorks.ReceiveRPC(reader);
                     break;
+                case CustomRPC.InsiderKill:
+                    Insider.ReceiveRPC(reader);
+                    break;
                 case CustomRPC.SetCurrentDousingTarget:
                     byte arsonistId = reader.ReadByte();
                     byte dousingTargetId = reader.ReadByte();
@@ -315,6 +319,9 @@ namespace TownOfHost
                     break;
                 case CustomRoles.EvilTracker:
                     EvilTracker.Add(targetId);
+                    break;
+                case CustomRoles.Insider:
+                    Insider.Add(targetId);
                     break;
 
                 case CustomRoles.Egoist:

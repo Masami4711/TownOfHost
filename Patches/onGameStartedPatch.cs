@@ -114,6 +114,7 @@ namespace TownOfHost
             Jackal.Init();
             Sheriff.Init();
             EvilTracker.Init();
+            Insider.Init();
             CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
 
@@ -310,6 +311,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.TimeThief, Impostors);
                 AssignCustomRolesFromList(CustomRoles.EvilTracker, Shapeshifters);
                 AssignCustomRolesFromList(CustomRoles.Seer, Crewmates);
+                AssignCustomRolesFromList(CustomRoles.Insider, Impostors);
 
                 //RPCによる同期
                 foreach (var pc in PlayerControl.AllPlayerControls)
@@ -359,6 +361,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.Mare:
                             Mare.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.Insider:
+                            Insider.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Arsonist:

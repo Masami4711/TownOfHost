@@ -195,6 +195,7 @@ namespace TownOfHost
                             killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
                             killer.RpcGuardAndKill(target);
                             Main.BitPlayers.Add(target.PlayerId, (killer.PlayerId, 0f));
+                            Utils.NotifyRoles();
                             return false;
                         }
                         break;
@@ -207,6 +208,7 @@ namespace TownOfHost
                             Main.CursedPlayers[killer.PlayerId] = target;
                             Main.WarlockTimer.Add(killer.PlayerId, 0f);
                             Main.isCurseAndKill[killer.PlayerId] = true;
+                            Utils.NotifyRoles();
                             return false;
                         }
                         if (Main.CheckShapeshift[killer.PlayerId])
@@ -232,12 +234,15 @@ namespace TownOfHost
                     case CustomRoles.Puppeteer:
                         Main.PuppeteerList[target.PlayerId] = killer.PlayerId;
                         Main.AllPlayerKillCooldown[killer.PlayerId] = Options.DefaultKillCooldown * 2;
-                        killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettings,NotifyRolesを実行
-                        Utils.NotifyRoles(SpecifySeer: killer);
+                        killer.CustomSyncSettings(); //負荷軽減のため、killerだけがCustomSyncSettingsを実行
+                        Utils.NotifyRoles();
                         killer.RpcGuardAndKill(target);
                         return false;
                     case CustomRoles.TimeThief:
                         TimeThief.OnCheckMurder(killer);
+                        break;
+                    case CustomRoles.Insider:
+                        Insider.OnCheckMurder(killer, target);
                         break;
 
                     //==========マッドメイト系役職==========//
@@ -745,6 +750,7 @@ namespace TownOfHost
                     RoleText.text = RoleTextData.Item1;
                     RoleText.color = RoleTextData.Item2;
                     if (__instance.AmOwner) RoleText.enabled = true; //自分ならロールを表示
+                    else if (Insider.KnowOtherRole(PlayerControl.LocalPlayer, __instance)) RoleText.enabled = true; //インサイダーの表示
                     else if (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) RoleText.enabled = true; //他プレイヤーでVisibleTasksCountが有効なおかつ自分が死んでいるならロールを表示
                     else RoleText.enabled = false; //そうでなければロールを非表示
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
@@ -821,35 +827,50 @@ namespace TownOfHost
                     {
                         Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Snitch)}>★</color>"; //Snitch警告をつける
                     }
-                    if (seer.Is(CustomRoles.Arsonist))
+                    switch (seer.GetCustomRole())
                     {
-                        if (seer.IsDousedPlayer(target))
-                        {
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
-                        }
-                        else if (
-                            Main.currentDousingTarget != 255 &&
-                            Main.currentDousingTarget == target.PlayerId
-                        )
-                        {
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
-                        }
+                        case CustomRoles.Arsonist:
+                            if (seer.IsDousedPlayer(target))
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>▲</color>";
+                            }
+                            else if (
+                                Main.currentDousingTarget != 255 &&
+                                Main.currentDousingTarget == target.PlayerId
+                            )
+                            {
+                                Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Arsonist)}>△</color>";
+                            }
+                            break;
+                        case CustomRoles.BountyHunter:
+                            Mark += BountyHunter.GetTargetMark(seer, target);
+                            break;
+                        case CustomRoles.EvilTracker:
+                            Mark += EvilTracker.GetTargetMark(seer, target);
+                            break;
+                        case CustomRoles.Executioner:
+                            Mark += Executioner.TargetMark(seer, target);
+                            break;
+                        case CustomRoles.Insider:
+                            Mark += Insider.GetOtherImpostorMarks(seer, target);
+                            break;
+                        case CustomRoles.Puppeteer:
+                            Mark += Utils.GetPuppeteerMark(seer, target);
+                            break;
+                        case CustomRoles.Vampire:
+                            Mark += Utils.GetVampireMark(seer, target);
+                            break;
+                        case CustomRoles.Warlock:
+                            Mark += Utils.GetWarlockMark(seer, target);
+                            break;
                     }
-                    Mark += Executioner.TargetMark(seer, target);
-                    if (seer.Is(CustomRoles.Puppeteer))
-                    {
-                        if (seer.Is(CustomRoles.Puppeteer) &&
-                        Main.PuppeteerList.ContainsValue(seer.PlayerId) &&
-                        Main.PuppeteerList.ContainsKey(target.PlayerId))
-                            Mark += $"<color={Utils.GetRoleColorCode(CustomRoles.Impostor)}>◆</color>";
-                    }
+
                     if (Sniper.IsEnable() && target.AmOwner)
                     {
                         //銃声が聞こえるかチェック
                         Mark += Sniper.GetShotNotify(target.PlayerId);
 
                     }
-                    if (seer.Is(CustomRoles.EvilTracker)) Mark += EvilTracker.GetTargetMark(seer, target);
                     //タスクが終わりそうなSnitchがいるとき、インポスター/キル可能な第三陣営に警告が表示される
                     if (!GameStates.IsMeeting && (target.GetCustomRole().IsImpostor()
                         || (Options.SnitchCanFindNeutralKiller.GetBool() && target.IsNeutralKiller())))
