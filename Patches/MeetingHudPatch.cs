@@ -215,9 +215,11 @@ namespace TownOfHost
         public static void TryAddAfterMeetingDeathPlayers(byte playerId, PlayerState.DeathReason deathReason)
         {
             Logger.Info($"playerId:{Utils.GetNameWithRole(playerId)}, deathReason:{deathReason}", "TryAddAfterMeetingDeathPlayers");
-            Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason);
-            FollowingSuicideOnExile(playerId);
-            RevengeOnExile(playerId, deathReason);
+            if (Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason))
+            {
+                FollowingSuicideOnExile(playerId);
+                RevengeOnExile(playerId, deathReason);
+            }
         }
         public static void FollowingSuicideOnExile(byte playerId)
         {
