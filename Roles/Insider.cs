@@ -10,10 +10,10 @@ namespace TownOfHost
         static readonly int Id = 2800;
         static List<byte> playerIdList = new();
         public static Dictionary<byte, PlayerControl> IsKilledByInsider = new();
-        private static CustomOption CanSeeImpostorAbilities;
-        private static CustomOption CanSeeAllGhostsRoles;
-        private static CustomOption CanSeeMadmates;
-        private static CustomOption KillCountToSeeMadmates;
+        private static OptionItem CanSeeImpostorAbilities;
+        private static OptionItem CanSeeAllGhostsRoles;
+        private static OptionItem CanSeeMadmates;
+        private static OptionItem KillCountToSeeMadmates;
         static Dictionary<CustomRoles, CustomRoles> ReplaceRoles = new()
         {
             // {CustomRoles.Marin, CustomRoles.Crewmate}
@@ -21,10 +21,10 @@ namespace TownOfHost
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.Insider);
-            CanSeeImpostorAbilities = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeImpostorAbilities", true, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            CanSeeAllGhostsRoles = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeAllGhostsRoles", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            CanSeeMadmates = CustomOption.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
-            KillCountToSeeMadmates = CustomOption.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "InsiderKillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
+            CanSeeImpostorAbilities = OptionItem.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeImpostorAbilities", true, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            CanSeeAllGhostsRoles = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeAllGhostsRoles", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            CanSeeMadmates = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
+            KillCountToSeeMadmates = OptionItem.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "InsiderKillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
         }
         public static void Init()
         {
