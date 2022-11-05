@@ -13,6 +13,7 @@ namespace TownOfHost
         private static OptionItem KillCooldown;
         private static OptionItem MisfireKillsTarget;
         private static OptionItem ShotLimitOpt;
+        private static OptionItem CanKillAllAlive;
         public static OptionItem CanKillMadmates;
         public static OptionItem CanKillNeutrals;
         public static OptionItem CanKillJester;
@@ -44,6 +45,7 @@ namespace TownOfHost
             KillCooldown = OptionItem.Create(Id + 10, TabGroup.CrewmateRoles, Color.white, "KillCooldown", 30, 0, 990, 1, Options.CustomRoleSpawnChances[CustomRoles.Sheriff], format: "Seconds");
             MisfireKillsTarget = OptionItem.Create(Id + 11, TabGroup.CrewmateRoles, Color.white, "SheriffMisfireKillsTarget", false, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             ShotLimitOpt = OptionItem.Create(Id + 12, TabGroup.CrewmateRoles, Color.white, "SheriffShotLimit", 15, 1, 15, 1, Options.CustomRoleSpawnChances[CustomRoles.Sheriff], format: "Times");
+            CanKillAllAlive = OptionItem.Create(Id + 24, TabGroup.CrewmateRoles, Color.white, "SheriffCanKillAllAlive", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             CanKillMadmates = OptionItem.Create(Id + 13, TabGroup.CrewmateRoles, Color.white, "SheriffCanKill%role%", true, Options.CustomRoleSpawnChances[CustomRoles.Sheriff], replacementDic: SheriffCanKillRole(CustomRoles.Madmate));
             CanKillNeutrals = OptionItem.Create(Id + 14, TabGroup.CrewmateRoles, Color.white, "SheriffCanKillNeutrals", KillOption, KillOption[0], Options.CustomRoleSpawnChances[CustomRoles.Sheriff]);
             CanKillJester = OptionItem.Create(Id + 15, TabGroup.CrewmateRoles, Color.white, "SheriffCanKill%role%", true, CanKillNeutrals, replacementDic: SheriffCanKillRole(CustomRoles.Jester));
@@ -71,24 +73,28 @@ namespace TownOfHost
 
         }
         public static bool IsEnable => playerIdList.Count > 0;
-        public static void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = CanUseKillButton(Utils.GetPlayerById(id)) ? CurrentKillCooldown[id] : 0f;
-        public static int ShotLimit(PlayerControl player)
-            => ShotLimitOpt.GetInt() - player.GetKillCount(!(PlayerState.GetDeathReason(player.PlayerId) == PlayerState.DeathReason.Misfire));
-        public static bool CanUseKillButton(PlayerControl player)
+        private static void SendRPC(byte playerId)
         {
-            if (player.Data.IsDead)
-                return false;
-
-            if (ShotLimit(player) == 0)
-            {
-                //Logger.info($"{player.GetNameWithRole()} はキル可能回数に達したため、RoleTypeを守護天使に変更しました。", "Sheriff");
-                //player.RpcSetRoleDesync(RoleTypes.GuardianAngel);
-                //Utils.hasTasks(player.Data, false);
-                //Utils.NotifyRoles();
-                return false;
-            }
-            return true;
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetSheriffShotLimit, SendOption.Reliable, -1);
+            writer.Write(playerId);
+            writer.Write(ShotLimit[playerId]);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
+        public static void ReceiveRPC(MessageReader reader)
+        {
+            byte SheriffId = reader.ReadByte();
+            float Limit = reader.ReadSingle();
+            if (ShotLimit.ContainsKey(SheriffId))
+                ShotLimit[SheriffId] = Limit;
+            else
+                ShotLimit.Add(SheriffId, ShotLimitOpt.GetFloat());
+        }
+        public static void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = CanUseKillButton(id) ? CurrentKillCooldown[id] : 0f;
+        public static bool CanUseKillButton(byte playerId)
+            => !PlayerState.isDead[playerId]
+            && (CanKillAllAlive.GetBool() || GameStates.AlreadyDied)
+            && ShotLimit[playerId] > 0;
+
         public static bool OnCheckMurder(PlayerControl killer, PlayerControl target)
         {
             if (!target.CanBeKilledBySheriff())
@@ -100,7 +106,7 @@ namespace TownOfHost
             SetKillCooldown(killer.PlayerId);
             return true;
         }
-        public static string GetShotLimit(byte playerId) => Utils.ColorString(Color.yellow, $"({ShotLimit(Utils.GetPlayerById(playerId))})");
+        public static string GetShotLimit(byte playerId) => Utils.ColorString(CanUseKillButton(playerId) ? Color.yellow : Color.white, ShotLimit.TryGetValue(playerId, out var shotLimit) ? $"({shotLimit})" : "Invalid");
         public static bool CanBeKilledBySheriff(this PlayerControl player)
         {
             var cRole = player.GetCustomRole();
