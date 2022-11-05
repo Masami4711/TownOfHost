@@ -9,9 +9,9 @@ namespace TownOfHost
         private static readonly int Id = 2900;
         public static List<byte> playerIdList = new();
 
-        public static CustomOption CanSeeKillFlash;
-        public static CustomOption CanResetTargetAfterMeeting;
-        public static CustomOption CanSeeLastRoomInMeeting;
+        public static OptionItem CanSeeKillFlash;
+        public static OptionItem CanResetTargetAfterMeeting;
+        public static OptionItem CanSeeLastRoomInMeeting;
 
         public static Dictionary<byte, PlayerControl> Target = new();
         public static Dictionary<byte, bool> CanSetTarget = new();
@@ -20,9 +20,9 @@ namespace TownOfHost
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.EvilTracker);
-            CanSeeKillFlash = CustomOption.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeKillFlash", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
-            CanResetTargetAfterMeeting = CustomOption.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "EvilTrackerResetTargetAfterMeeting", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
-            CanSeeLastRoomInMeeting = CustomOption.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeLastRoomInMeeting", false, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            CanSeeKillFlash = OptionItem.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeKillFlash", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            CanResetTargetAfterMeeting = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "EvilTrackerResetTargetAfterMeeting", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            CanSeeLastRoomInMeeting = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeLastRoomInMeeting", false, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
         }
         public static void Init()
         {
