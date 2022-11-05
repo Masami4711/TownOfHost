@@ -26,6 +26,7 @@ namespace TownOfHost
         public static OptionItem CanKillJackal;
         public static OptionItem CanKillJSchrodingerCat;
 
+        public static Dictionary<byte, float> ShotLimit = new();
         public static Dictionary<byte, float> CurrentKillCooldown = new();
         public static readonly string[] KillOption =
         {
@@ -61,6 +62,7 @@ namespace TownOfHost
         public static void Init()
         {
             playerIdList = new();
+            ShotLimit = new();
             CurrentKillCooldown = new();
         }
         public static void Add(byte playerId)
@@ -71,6 +73,8 @@ namespace TownOfHost
             if (!Main.ResetCamPlayerList.Contains(playerId))
                 Main.ResetCamPlayerList.Add(playerId);
 
+            ShotLimit.TryAdd(playerId, ShotLimitOpt.GetFloat());
+            Logger.Info($"{Utils.GetPlayerById(playerId)?.GetNameWithRole()} : 残り{ShotLimit[playerId]}発", "Sheriff");
         }
         public static bool IsEnable => playerIdList.Count > 0;
         private static void SendRPC(byte playerId)
@@ -97,6 +101,9 @@ namespace TownOfHost
 
         public static bool OnCheckMurder(PlayerControl killer, PlayerControl target)
         {
+            ShotLimit[killer.PlayerId]--;
+            Logger.Info($"{killer.GetNameWithRole()} : 残り{ShotLimit[killer.PlayerId]}発", "Sheriff");
+            SendRPC(killer.PlayerId);
             if (!target.CanBeKilledBySheriff())
             {
                 PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Misfire);
