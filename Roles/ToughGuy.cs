@@ -7,7 +7,7 @@ namespace TownOfHost
 {
     public static class ToughGuy
     {
-        private static readonly int Id = 21000;
+        private static readonly int Id = 21100;
         public static List<byte> playerIdList = new();
 
         private static Dictionary<byte, (PlayerControl, PlayerState.DeathReason)> WillDieAfterMeeting = new();
