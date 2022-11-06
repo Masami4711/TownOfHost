@@ -138,7 +138,7 @@ namespace TownOfHost
 
                     //==========クルー役職==========//
                     case CustomRoles.Sheriff:
-                        if (!Sheriff.CanUseKillButton(killer))
+                        if (!Sheriff.CanUseKillButton(killer.PlayerId))
                             return false;
                         break;
                 }
@@ -259,9 +259,7 @@ namespace TownOfHost
 
                     //==========クルー役職==========//
                     case CustomRoles.Sheriff:
-                        Sheriff.OnCheckMurder(killer, target, Process: "RemoveShotLimit");
-
-                        if (!Sheriff.OnCheckMurder(killer, target, Process: "Suicide"))
+                        if (!Sheriff.OnCheckMurder(killer, target))
                             return false;
                         break;
                 }
