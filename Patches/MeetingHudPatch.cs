@@ -37,6 +37,7 @@ namespace TownOfHost
                         voteTarget.SetRealKiller(pc);
                         return true;
                     }
+                    if (pc.Is(CustomRoles.ToughGuy)) ToughGuy.AfterMeetingDeath(pc.PlayerId);
                 }
                 foreach (var ps in __instance.playerStates)
                 {
@@ -460,6 +461,7 @@ namespace TownOfHost
                 //呪われている場合
                 if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
                     pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
+                if (target.Is(CustomRoles.ToughGuy)) pva.NameText.text += ToughGuy.GetMark(seer, target);
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。
             }

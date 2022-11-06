@@ -121,6 +121,7 @@ namespace TownOfHost
                             }
                             else
                             {
+                                if (ToughGuy.CheckAndGuardSpecificKill(pc, target, PlayerState.DeathReason.Bombed)) continue;
                                 PlayerState.SetDeathReason(target.PlayerId, PlayerState.DeathReason.Bombed);
                                 target.SetRealKiller(pc);
                                 target.RpcMurderPlayer(target);

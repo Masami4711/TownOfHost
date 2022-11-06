@@ -160,7 +160,7 @@ namespace TownOfHost
             var roleName = GetRoleName(role);
             if (role.IsImpostor() && role != CustomRoles.LastImpostor && Utils.IsLastImpostor(playerId))
             {
-                roleName = GetRoleString("Last")+ " " + roleName;
+                roleName = GetRoleString("Last") + " " + roleName;
             }
 
             return roleName;
@@ -721,6 +721,7 @@ namespace TownOfHost
                     //銃声が聞こえるかチェック
                     SelfMark += Sniper.GetShotNotify(seer.PlayerId);
                 }
+                if (seer.Is(CustomRoles.ToughGuy)) SelfMark += ToughGuy.GetMark(seer, seer);
                 //Markとは違い、改行してから追記されます。
                 string SelfSuffix = "";
 
@@ -889,6 +890,8 @@ namespace TownOfHost
                                 TargetMark += GetWarlockMark(seer, target);
                                 break;
                         }
+                        if (target.Is(CustomRoles.ToughGuy))
+                            TargetMark += ToughGuy.GetMark(seer, target);
 
                         //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                         string TargetRoleText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";

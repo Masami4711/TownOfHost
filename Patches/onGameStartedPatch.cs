@@ -309,6 +309,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.EvilTracker, Shapeshifters);
                 AssignCustomRolesFromList(CustomRoles.Seer, Crewmates);
                 AssignCustomRolesFromList(CustomRoles.Insider, Impostors);
+                AssignCustomRolesFromList(CustomRoles.ToughGuy, Crewmates);
 
                 //RPCによる同期
                 foreach (var pc in PlayerControl.AllPlayerControls)
@@ -388,6 +389,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.EvilTracker:
                             EvilTracker.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.ToughGuy:
+                            ToughGuy.Add(pc.PlayerId);
                             break;
                     }
                     pc.ResetKillCooldown();

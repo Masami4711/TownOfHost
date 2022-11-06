@@ -108,7 +108,13 @@ namespace TownOfHost
             {
                 PlayerState.SetDeathReason(killer.PlayerId, PlayerState.DeathReason.Misfire);
                 killer.RpcMurderPlayer(killer);
-                return MisfireKillsTarget.GetBool();
+                if (MisfireKillsTarget.GetBool())
+                {
+                    if (ToughGuy.CheckAndGuardSpecificKill(killer, target, PlayerState.DeathReason.Kill))
+                        return false;
+                    return true;
+                }
+                return false;
             }
             SetKillCooldown(killer.PlayerId);
             return true;

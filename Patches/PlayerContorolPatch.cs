@@ -172,6 +172,9 @@ namespace TownOfHost
                         return false;
                     }
                     break;
+                case CustomRoles.ToughGuy:
+                    if (ToughGuy.CheckAndGuardKill(killer, target)) return false;
+                    break;
             }
 
             //キル時の特殊判定
@@ -374,9 +377,11 @@ namespace TownOfHost
                         }
                         var min = cpdistance.OrderBy(c => c.Value).FirstOrDefault();//一番小さい値を取り出す
                         PlayerControl targetw = min.Key;
-                        targetw.SetRealKiller(shapeshifter);
-                        Logger.Info($"{targetw.GetNameWithRole()}was killed", "Warlock");
-                        cp.RpcMurderPlayerV2(targetw);//殺す
+                        if (!ToughGuy.CheckAndGuardSpecificKill(shapeshifter, targetw, PlayerState.DeathReason.Kill))
+                        {
+                            Logger.Info($"{targetw.GetNameWithRole()}was killed", "Warlock");
+                            cp.RpcMurderPlayerV2(targetw);//殺す
+                        }
                         shapeshifter.RpcGuardAndKill(shapeshifter);
                         Main.isCurseAndKill[shapeshifter.PlayerId] = false;
                     }
@@ -688,9 +693,12 @@ namespace TownOfHost
                             if (min.Value <= KillRange && player.CanMove && target.CanMove)
                             {
                                 var puppeteerId = Main.PuppeteerList[player.PlayerId];
-                                RPC.PlaySoundRPC(puppeteerId, Sounds.KillSound);
-                                target.SetRealKiller(Utils.GetPlayerById(puppeteerId));
-                                player.RpcMurderPlayer(target);
+                                if (!ToughGuy.CheckAndGuardSpecificKill(Utils.GetPlayerById(puppeteerId), target, PlayerState.DeathReason.Kill))
+                                {
+                                    RPC.PlaySoundRPC(Main.PuppeteerList[player.PlayerId], Sounds.KillSound);
+                                    target.SetRealKiller(Utils.GetPlayerById(puppeteerId));
+                                    player.RpcMurderPlayer(target);
+                                }
                                 Utils.CustomSyncAllSettings();
                                 Main.PuppeteerList.Remove(player.PlayerId);
                                 Utils.NotifyRoles();
@@ -942,6 +950,7 @@ namespace TownOfHost
                         }
                     }
                     if (GameStates.IsInTask && target.Is(CustomRoles.EvilTracker)) Suffix += EvilTracker.PCGetTargetArrow(seer, target);
+                    if (target.Is(CustomRoles.ToughGuy)) Mark += ToughGuy.GetMark(seer, target);
 
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
                         Mark = isBlocked ? "(true)" : "(false)";

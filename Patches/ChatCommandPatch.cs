@@ -287,6 +287,7 @@ namespace TownOfHost
                 { CustomRoles.Sheriff, "sh" },
                 { CustomRoles.Snitch, "sn" },
                 { CustomRoles.SpeedBooster, "sb" },
+                { CustomRoles.ToughGuy, "tg" },
                 { CustomRoles.Trapper, "tra" },
                 //Neutral役職
                 { (CustomRoles)(-5), $"== {GetString("Neutral")} ==" }, //区切り用

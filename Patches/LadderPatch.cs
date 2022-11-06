@@ -23,6 +23,8 @@ namespace TownOfHost
                 int chance = UnityEngine.Random.Range(1, 101);
                 if (chance <= Chance)
                 {
+                    var pc = Utils.GetPlayerById(player.myPlayer.PlayerId);
+                    if (ToughGuy.CheckAndGuardSpecificKill(pc, pc, PlayerState.DeathReason.Fall)) return;
                     TargetLadderData[player.myPlayer.PlayerId] = targetPos;
                 }
             }
