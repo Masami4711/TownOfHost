@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,6 +63,7 @@ namespace TownOfHost
         public static ConfigEntry<string> BetaBuildURL { get; private set; }
         public static ConfigEntry<float> LastKillCooldown { get; private set; }
         public static GameOptionsData RealOptionsData;
+        public static Dictionary<byte, PlayerState> PlayerStates = new();
         public static Dictionary<byte, string> AllPlayerNames;
         public static Dictionary<(byte, byte), string> LastNotifyNames;
         public static Dictionary<byte, CustomRoles> AllPlayerCustomRoles;
@@ -113,6 +114,7 @@ namespace TownOfHost
         public static byte currentDousingTarget;
         public static float DefaultCrewmateVision;
         public static float DefaultImpostorVision;
+        public static bool IsChristmas = DateTime.Now.Month == 12 && DateTime.Now.Day is 23 or 24 or 25;
 
         public static Main Instance;
 

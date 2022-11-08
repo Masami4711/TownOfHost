@@ -122,7 +122,7 @@ namespace TownOfHost
                             else
                             {
                                 if (ToughGuy.CheckAndGuardSpecificKill(pc, target, PlayerState.DeathReason.Bombed)) continue;
-                                PlayerState.SetDeathReason(target.PlayerId, PlayerState.DeathReason.Bombed);
+                                Main.PlayerStates[target.PlayerId].deathReason = PlayerState.DeathReason.Bombed;
                                 target.SetRealKiller(pc);
                                 target.RpcMurderPlayer(target);
                             }
@@ -134,7 +134,7 @@ namespace TownOfHost
                         //自分が最後の生き残りの場合は勝利のために死なない
                         if (totalAlive != 1)
                         {
-                            PlayerState.SetDeathReason(pc.PlayerId, PlayerState.DeathReason.Misfire);
+                            Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Misfire;
                             pc.RpcMurderPlayer(pc);
                         }
                     }

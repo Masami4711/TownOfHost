@@ -70,7 +70,7 @@ namespace TownOfHost
                 default:
                     if (killer == target)
                     {
-                        if (PlayerState.GetDeathReason(target.PlayerId) == PlayerState.DeathReason.Sniped)
+                        if (Main.PlayerStates[target.PlayerId].deathReason == PlayerState.DeathReason.Sniped)
                         {
                             deathReason = PlayerState.DeathReason.Sniped;
                             killer = Utils.GetPlayerById(Sniper.GetSniper(target.PlayerId));
