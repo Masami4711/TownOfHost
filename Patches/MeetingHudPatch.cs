@@ -37,7 +37,6 @@ namespace TownOfHost
                         voteTarget.SetRealKiller(pc);
                         return true;
                     }
-                    if (pc.Is(CustomRoles.ToughGuy)) ToughGuy.AfterMeetingDeath(pc.PlayerId);
                 }
                 foreach (var ps in __instance.playerStates)
                 {
@@ -191,6 +190,7 @@ namespace TownOfHost
                     Utils.GetPlayerById(kvp.Key).SetRealKiller(kvp.Value);
                 }
                 Main.SpelledPlayer.Clear();
+                ToughGuy.AfterMeetingDeath();
 
 
                 FollowingSuicideOnExile(exileId);

@@ -106,16 +106,20 @@ namespace TownOfHost
         //     return true;
         // }
 
-        public static void AfterMeetingDeath(byte playerId)
+        public static void AfterMeetingDeath()
         {
-            if (WillDieAfterMeeting.ContainsKey(playerId))
+            foreach (var kvp in WillDieAfterMeeting)
             {
-                var deathReason = WillDieAfterMeeting[playerId].Item2;
-                CheckForEndVotingPatch.TryAddAfterMeetingDeathPlayers(playerId, deathReason);
-                Logger.Info($"{Utils.GetNameWithRole(playerId)}が{deathReason}で死亡", "ToughGuy");
-                WillDieAfterMeeting.Remove(playerId);
-                Utils.GetPlayerById(playerId).SetRealKiller(WillDieAfterMeeting[playerId].Item1);
+                var playerId = kvp.Key;
+                var deathReason = kvp.Value.Item2;
+                if (!Main.PlayerStates[playerId].IsDead)
+                {
+                    CheckForEndVotingPatch.TryAddAfterMeetingDeathPlayers(playerId, deathReason);
+                    Logger.Info($"{Utils.GetNameWithRole(playerId)}が{deathReason}で死亡", "ToughGuy");
+                    Utils.GetPlayerById(playerId).SetRealKiller(WillDieAfterMeeting[playerId].Item1);
+                }
             }
+            WillDieAfterMeeting.Clear();
         }
         public static string GetMark(PlayerControl seer, PlayerControl target)
         {
