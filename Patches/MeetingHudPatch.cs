@@ -34,7 +34,6 @@ namespace TownOfHost
                         Logger.Info("ディクテーターによる強制会議終了", "Special Phase");
                         return true;
                     }
-                    if (pc.Is(CustomRoles.ToughGuy)) ToughGuy.AfterMeetingDeath(pc.PlayerId);
                 }
                 foreach (var ps in __instance.playerStates)
                 {
@@ -178,6 +177,7 @@ namespace TownOfHost
                 foreach (var sp in Main.SpelledPlayer.Keys)
                     Main.AfterMeetingDeathPlayers.TryAdd(sp, PlayerState.DeathReason.Spell);
                 Main.SpelledPlayer.Clear();
+                ToughGuy.AfterMeetingDeath();
 
 
                 if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == exileId) != null)
