@@ -767,12 +767,15 @@ namespace TownOfHost
                         RealName = Utils.ColorString(target.GetRoleColor(), RealName); //名前の色を変更
                     }
 
-                    switch (target.GetCustomSubRole())
+                    foreach (var subRole in target.GetCustomSubRoles())
                     {
-                        case CustomRoles.Lovers:
-                            if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                            break;
+                        switch (subRole)
+                        {
+                            case CustomRoles.Lovers:
+                                if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
+                                    Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
+                                break;
+                        }
                     }
 
                     switch (target.GetCustomRole().GetRoleType())
