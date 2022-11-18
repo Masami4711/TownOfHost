@@ -16,7 +16,6 @@ namespace TownOfHost
 
         public static Dictionary<byte, PlayerControl> Target = new();
         public static Dictionary<byte, bool> CanSetTarget = new();
-        public static Dictionary<byte, string> LastRoom = new();
 
         public static void SetupCustomOption()
         {
@@ -30,14 +29,12 @@ namespace TownOfHost
             playerIdList = new();
             Target = new();
             CanSetTarget = new();
-            LastRoom = new();
         }
         public static void Add(byte playerId)
         {
             playerIdList.Add(playerId);
             CanSetTarget.Add(playerId, true);
             Utils.GetPlayerById(playerId).GetTarget();
-            LastRoom.Add(playerId, "");
         }
         public static bool IsEnable()
         {
@@ -209,19 +206,11 @@ namespace TownOfHost
                 Utils.NotifyRoles();
             }
         }
-        public static void OnReportDeadBody()
-        {
-            foreach (var pc in PlayerControl.AllPlayerControls)
-            {
-                if (pc.Data.IsDead) LastRoom[pc.PlayerId] = "";
-                else LastRoom[pc.PlayerId] = pc.GetRoomName();
-            }
-        }
         public static bool IsTrackTarget(PlayerControl seer, PlayerControl target)
             => seer.Is(CustomRoles.EvilTracker) && !seer.Data.IsDead
             && seer != target && !target.Data.IsDead
             && (target.Is(RoleType.Impostor) || seer.GetTarget() == target);
-        public static string GetTargetLastRoom(PlayerControl seer, PlayerControl target)
+        public static string GetArrowAndLastRoom(PlayerControl seer, PlayerControl target)
         {
             string targetArrow = "";
             foreach (var arrow in Main.targetArrows)
@@ -232,9 +221,10 @@ namespace TownOfHost
                     break;
                 }
             }
-            string lastRoom = LastRoom[target.PlayerId];
-            if (lastRoom == "Invalid") lastRoom = Utils.ColorString(Color.gray, $"@{Translator.GetString("FailToTrack")}");
-            else lastRoom = Utils.ColorString(Palette.ImpostorRed, $"@{lastRoom}");
+            string lastRoom = "";
+            var room = Main.PlayerStates[target.PlayerId].LastRoom;
+            if (room == null) lastRoom = Utils.ColorString(Color.gray, $"@{GetString("FailToTrack")}");
+            else lastRoom = Utils.ColorString(Palette.ImpostorRed, $"@{room.RoomId.GetRoomName()}");
             return targetArrow + lastRoom;
         }
     }

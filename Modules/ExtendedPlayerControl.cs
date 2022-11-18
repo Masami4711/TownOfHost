@@ -5,7 +5,6 @@ using System.Text;
 using Hazel;
 using InnerNet;
 using UnityEngine;
-using UnhollowerBaseLib;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -714,14 +713,9 @@ namespace TownOfHost
                 };
             return GetString($"{Prefix}{text}Info" + (InfoLong ? "Long" : ""));
         }
-        public static string GetRoomName(this PlayerControl player)
+        public static PlainShipRoom GetPlainShipRoom(this PlayerControl pc)
         {
-            var room = GetPlainShipRoom(player);
-            if (player.Data.IsDead || room == null) return "Invalid";
-            return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
-        }
-        public static PlainShipRoom GetPlainShipRoom(PlayerControl pc)
-        {
+            if (pc.Data.IsDead) return null;
             PlainShipRoom[] Rooms = ShipStatus.Instance.AllRooms;
             if (Rooms == null) return null;
             foreach (var room in Rooms)

@@ -13,6 +13,7 @@ namespace TownOfHost
         public DeathReason deathReason { get; set; }
         public TaskState taskState;
         public bool IsBlackOut { get; set; }
+        public PlainShipRoom LastRoom;
         public PlayerState(byte playerId)
         {
             MainRole = CustomRoles.NotAssigned;
@@ -22,6 +23,7 @@ namespace TownOfHost
             deathReason = DeathReason.etc;
             taskState = new();
             IsBlackOut = false;
+            LastRoom = null;
         }
         public CustomRoles GetCustomRole()
         {
