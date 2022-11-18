@@ -105,7 +105,7 @@ namespace TownOfHost
                 if (!Main.PlayerStates[playerId].IsDead)
                 {
                     CheckForEndVotingPatch.TryAddAfterMeetingDeathPlayers(playerId, deathReason);
-                    Logger.Info($"{Utils.GetPlayerById(playerId)}が{deathReason}で死亡", "ToughGuy");
+                    Logger.Info($"{Utils.GetPlayerById(playerId).GetNameWithRole()}が{deathReason}で死亡", "ToughGuy");
                     Utils.GetPlayerById(playerId).SetRealKiller(WillDieAfterMeeting[playerId].Item1);
                 }
             }
