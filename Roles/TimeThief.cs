@@ -33,7 +33,7 @@ namespace TownOfHost
         {
             if (!ReturnStolenTimeUponDeath.GetBool()) return;
 
-            for (var i = 0; i < thief.GetKillCount(); i++)
+            for (var i = 0; i < Main.PlayerStates[thief.PlayerId].GetKillCount(true); i++)
                 Main.VotingTime += DecreaseMeetingTime.GetInt();
         }
         public static void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = KillCooldown.GetFloat();
@@ -51,7 +51,7 @@ namespace TownOfHost
         {
             var pc = Utils.GetPlayerById(playerId);
             if (pc = null) return "";
-            return Utils.ColorString(Color.yellow, pc.GetKillCount() > 0 ? $" -{DecreaseMeetingTime.GetInt() * pc.GetKillCount()}s" : "");
+            return Utils.ColorString(Color.yellow, Main.PlayerStates[pc.PlayerId].GetKillCount(true) > 0 ? $" -{DecreaseMeetingTime.GetInt() * Main.PlayerStates[pc.PlayerId].GetKillCount(true)}s" : "");
         }
     }
 }

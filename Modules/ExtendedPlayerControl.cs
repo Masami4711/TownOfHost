@@ -716,35 +716,17 @@ namespace TownOfHost
         }
         public static void SetRealKiller(this PlayerControl target, PlayerControl killer, bool NotOverRide = false)
         {
-            if (Main.PlayerStates[target.PlayerId].deathReason == PlayerState.DeathReason.Sniped) //スナイパー対策
+            var State = Main.PlayerStates[target.PlayerId];
+            if (State.deathReason == PlayerState.DeathReason.Sniped) //スナイパー対策
                 killer = Utils.GetPlayerById(Sniper.GetSniper(target.PlayerId));
-            if (Main.RealKiller.ContainsKey(target.PlayerId))
-            {
-                if (NotOverRide) return; //既に値がある場合上書きしない
-                Main.RealKiller[target.PlayerId] = killer;
-            }
-            else Main.RealKiller.Add(target.PlayerId, killer);
-            Logger.Info($"target:{target.GetNameWithRole()}, RealKiller:{(killer == null ? "null" : killer.GetNameWithRole())}", "SetRealKiller");
-            if (!AmongUsClient.Instance.AmHost) return;
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetRealKiller, Hazel.SendOption.Reliable, -1);
-            writer.Write(target.PlayerId);
-            int killerId = killer == null ? -1 : killer.PlayerId;
-            writer.Write(killerId);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            if (State.RealKiller.Item1 != DateTime.MinValue && NotOverRide) return; //既に値がある場合上書きしない
+            byte killerId = killer == null ? byte.MaxValue : killer.PlayerId;
+            RPC.SetRealKiller(target.PlayerId, killerId);
         }
         public static PlayerControl GetRealKiller(this PlayerControl target)
         {
-            if (!target.Data.IsDead || !Main.RealKiller.TryGetValue(target.PlayerId, out var killer)) return null;
-            return killer;
-        }
-        public static int GetKillCount(this PlayerControl killer, bool ExcludeSelfKill = false)
-        {
-            int count = 0;
-            foreach (var pc in PlayerControl.AllPlayerControls)
-                if (!(ExcludeSelfKill && pc == killer) && pc.GetRealKiller() == killer)
-                    count++;
-            // Logger.Info($"{killer.GetNameWithRole()}:{count}Kills", "GetKillCount");
-            return count;
+            var killerId = Main.PlayerStates[target.PlayerId].GetRealKiller();
+            return killerId == byte.MaxValue ? null : Utils.GetPlayerById(killerId);
         }
         public static string GetRoomName(this PlayerControl player)
         {
