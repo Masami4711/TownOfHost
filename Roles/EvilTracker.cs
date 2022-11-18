@@ -212,20 +212,11 @@ namespace TownOfHost
             && (target.Is(RoleType.Impostor) || seer.GetTarget() == target);
         public static string GetArrowAndLastRoom(PlayerControl seer, PlayerControl target)
         {
-            string targetArrow = "";
-            foreach (var arrow in Main.targetArrows)
-            {
-                if (arrow.Key.Item1 == seer.PlayerId && target == Utils.GetPlayerById(arrow.Key.Item2))
-                {
-                    targetArrow += Utils.ColorString(Palette.ImpostorRed, arrow.Value);
-                    break;
-                }
-            }
-            string lastRoom = "";
+            string text = Utils.ColorString(Palette.ImpostorRed, Main.targetArrows[(seer.PlayerId, target.PlayerId)]);
             var room = Main.PlayerStates[target.PlayerId].LastRoom;
-            if (room == null) lastRoom = Utils.ColorString(Color.gray, $"@{GetString("FailToTrack")}");
-            else lastRoom = Utils.ColorString(Palette.ImpostorRed, $"@{room.RoomId.GetRoomName()}");
-            return targetArrow + lastRoom;
+            if (room == null) text += Utils.ColorString(Color.gray, $"@{GetString("FailToTrack")}");
+            else text += Utils.ColorString(Palette.ImpostorRed, $"@{room.RoomId.GetRoomName()}");
+            return text;
         }
     }
 }
