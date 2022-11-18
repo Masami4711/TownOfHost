@@ -14,6 +14,7 @@ namespace TownOfHost
                 CustomRoles.Warlock or
                 CustomRoles.SerialKiller or
                 CustomRoles.Mare or
+                CustomRoles.Outsider or
                 CustomRoles.Puppeteer or
                 CustomRoles.EvilWatcher or
                 CustomRoles.TimeThief or

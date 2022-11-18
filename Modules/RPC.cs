@@ -311,6 +311,9 @@ namespace TownOfHost
                 case CustomRoles.EvilTracker:
                     EvilTracker.Add(targetId);
                     break;
+                case CustomRoles.Outsider:
+                    Outsider.Add(targetId);
+                    break;
 
                 case CustomRoles.Egoist:
                     Egoist.Add(targetId);

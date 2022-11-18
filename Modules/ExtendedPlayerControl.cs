@@ -552,6 +552,9 @@ namespace TownOfHost
                 case CustomRoles.Mare:
                     Mare.SetKillCooldown(player.PlayerId);
                     break;
+                case CustomRoles.Outsider:
+                    Outsider.SetKillCooldown(player.PlayerId);
+                    break;
                 case CustomRoles.Arsonist:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.ArsonistCooldown.GetFloat(); //アーソニストはアーソニストのキルクールに。
                     break;

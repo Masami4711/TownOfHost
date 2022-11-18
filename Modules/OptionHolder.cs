@@ -322,6 +322,7 @@ namespace TownOfHost
             Mare.SetupCustomOption();
             TimeThief.SetupCustomOption();
             EvilTracker.SetupCustomOption();
+            Outsider.SetupCustomOption();
 
             DefaultShapeshiftCooldown = OptionItem.Create(5011, TabGroup.ImpostorRoles, Color.white, "DefaultShapeshiftCooldown", 15, 5, 999, 5, null, true, format: OptionFormat.Seconds);
             CanMakeMadmateCount = OptionItem.Create(5012, TabGroup.ImpostorRoles, Utils.GetRoleColor(CustomRoles.Madmate), "CanMakeMadmateCount", 0, 0, 15, 1, null, true, format: OptionFormat.Times);
