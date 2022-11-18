@@ -720,21 +720,15 @@ namespace TownOfHost
             if (player.Data.IsDead || room == null) return "Invalid";
             return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
         }
-        //Haoming参考
         public static PlainShipRoom GetPlainShipRoom(PlayerControl pc)
         {
-            Il2CppReferenceArray<Collider2D> result = new Collider2D[10];
-            ContactFilter2D filter2d = default;
-            filter2d.layerMask = Constants.PlayersOnlyMask;
-            filter2d.useLayerMask = true;
-            filter2d.useTriggers = false;
             PlainShipRoom[] Rooms = ShipStatus.Instance.AllRooms;
             if (Rooms == null) return null;
             foreach (var room in Rooms)
             {
                 if (!room.roomArea) continue;
-                if (room.roomArea.OverlapCollider(filter2d, result) == 0) continue;
-                if (result.Any(x => x?.gameObject == pc.gameObject)) return room;
+                if (pc.Collider.IsTouching(room.roomArea))
+                    return room;
             }
             return null;
         }
