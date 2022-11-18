@@ -81,7 +81,7 @@ namespace TownOfHost
             }
             killer.RpcGuardAndKill(target);
             WillDieAfterMeeting.Add(target.PlayerId, (killer, deathReason));
-            Logger.Info($"{Utils.GetNameWithRole(target.PlayerId)}が{Utils.GetNameWithRole(killer.PlayerId)}に{deathReason}されて負傷", "WillDieAfterMeeting");
+            Logger.Info($"{target.GetNameWithRole()}が{killer.GetNameWithRole()}に{deathReason}されて負傷", "WillDieAfterMeeting");
             Utils.NotifyRoles();
             Utils.CustomSyncAllSettings();
             return true;
@@ -90,22 +90,12 @@ namespace TownOfHost
         {
             if (!(target.Is(CustomRoles.ToughGuy) && CanGuardDeath(target))) return false;
             WillDieAfterMeeting.Add(target.PlayerId, (killer, deathReason));
-            Logger.Info($"{Utils.GetNameWithRole(target.PlayerId)}が{Utils.GetNameWithRole(killer.PlayerId)}により負傷({deathReason})", "CheckAndGuardPuppeteerKill");
+            Logger.Info($"{target.GetNameWithRole()}が{killer.GetNameWithRole()}に{deathReason}されて負傷", "CheckAndGuardPuppeteerKill");
             // killer.RpcGuardAndKill(target);
             Utils.NotifyRoles();
             Utils.CustomSyncAllSettings();
             return true;
         }
-        // public static bool CheckAndGuardFallToDeath(PlayerControl pc)
-        // {
-        //     if (!(pc.Is(CustomRoles.ToughGuy) && CanGuardDeath(pc))) return false;
-        //     WillDieAfterMeeting.Add(pc.PlayerId, (pc, PlayerState.DeathReason.Fell));
-        //     Logger.Info($"{Utils.GetNameWithRole(pc.PlayerId)}が転落して負傷", "CheckAndGuardFallToDeath");
-        //     Utils.NotifyRoles(SpecifySeer: pc);
-        //     pc.CustomSyncSettings();
-        //     return true;
-        // }
-
         public static void AfterMeetingDeath()
         {
             foreach (var kvp in WillDieAfterMeeting)
@@ -115,7 +105,7 @@ namespace TownOfHost
                 if (!Main.PlayerStates[playerId].IsDead)
                 {
                     Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason);
-                    Logger.Info($"{Utils.GetNameWithRole(playerId)}が{deathReason}で死亡", "ToughGuy");
+                    Logger.Info($"{Utils.GetPlayerById(playerId).GetNameWithRole()}が{deathReason}で死亡", "ToughGuy");
                 }
             }
             WillDieAfterMeeting.Clear();
