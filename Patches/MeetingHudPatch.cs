@@ -376,7 +376,7 @@ namespace TownOfHost
 
                 if (LocalPlayerKnowsImpostor)
                 {
-                    if (target != null && target.GetCustomRole().IsImpostor()) //変更先がインポスター
+                    if (target != null && target.Is(RoleType.Impostor, seer.Is(CustomRoles.Snitch))) //変更先がインポスター
                         pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
                 }
                 //呪われている場合

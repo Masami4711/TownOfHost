@@ -770,7 +770,7 @@ namespace TownOfHost
                     }
                     //タスクを終わらせたMadSnitchがインポスターを確認できる
                     else if (seer.Is(CustomRoles.MadSnitch) && //seerがMadSnitch
-                        target.GetCustomRole().IsImpostor() && //targetがインポスター
+                        target.Is(RoleType.Impostor, false) && //targetがインポスター
                         seer.GetPlayerTaskState().IsTaskFinished) //seerのタスクが終わっている
                     {
                         RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), RealName); //targetの名前を赤色で表示
@@ -785,7 +785,7 @@ namespace TownOfHost
                             RealName = Utils.ColorString(target.GetRoleColor(), RealName); //targetの名前を役職色で表示
                         }
                     }
-                    else if (seer.GetCustomRole().IsImpostor()) //seerがインポスター
+                    else if (seer.Is(RoleType.Impostor, false)) //seerがインポスター
                     {
                         if (target.Is(CustomRoles.Egoist)) //targetがエゴイスト
                             RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName); //targetの名前をエゴイスト色で表示
@@ -795,7 +795,7 @@ namespace TownOfHost
 
                     else if ((seer.Is(CustomRoles.EgoSchrodingerCat) && target.Is(CustomRoles.Egoist)) || //エゴ猫 --> エゴイスト
                              (seer.Is(CustomRoles.JSchrodingerCat) && target.Is(CustomRoles.Jackal)) || //J猫 --> ジャッカル
-                             (seer.Is(CustomRoles.MSchrodingerCat) && target.Is(RoleType.Impostor)) //M猫 --> インポスター
+                             (seer.Is(CustomRoles.MSchrodingerCat) && target.Is(RoleType.Impostor, false)) //M猫 --> インポスター
                     )
                         RealName = Utils.ColorString(target.GetRoleColor(), RealName); //targetの名前をtargetの役職の色で表示
                     else if (target.Is(CustomRoles.Mare) && Utils.IsActive(SystemTypes.Electrical))

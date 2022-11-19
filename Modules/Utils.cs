@@ -862,7 +862,7 @@ namespace TownOfHost
                             TargetPlayerName = ColorString(GetRoleColor(CustomRoles.Egoist), TargetPlayerName);
                         else if ((seer.Is(CustomRoles.EgoSchrodingerCat) && target.Is(CustomRoles.Egoist)) || //エゴ猫 --> エゴイスト
                                  (seer.Is(CustomRoles.JSchrodingerCat) && target.Is(CustomRoles.Jackal)) || // J猫 --> ジャッカル
-                                 (seer.Is(CustomRoles.MSchrodingerCat) && target.Is(RoleType.Impostor))) // M猫 --> インポスター
+                                 (seer.Is(CustomRoles.MSchrodingerCat) && target.Is(RoleType.Impostor, false))) // M猫 --> インポスター
                             TargetPlayerName = ColorString(target.GetRoleColor(), TargetPlayerName);
                         else if (Utils.IsActive(SystemTypes.Electrical) && target.Is(CustomRoles.Mare) && !isMeeting)
                             TargetPlayerName = ColorString(GetRoleColor(CustomRoles.Impostor), TargetPlayerName); //targetの赤色で表示
@@ -872,7 +872,7 @@ namespace TownOfHost
                             var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                             TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
                         }
-                        if (seer.Is(RoleType.Impostor) && target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
+                        if (seer.Is(RoleType.Impostor, false) && target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
                             TargetMark += ColorString(GetRoleColor(CustomRoles.MadSnitch), "★");
                         TargetMark += Executioner.TargetMark(seer, target);
 
@@ -1010,8 +1010,8 @@ namespace TownOfHost
             int LivingImpostorsNum = 0;
             foreach (var pc in PlayerControl.AllPlayerControls)
             {
-                var role = pc.GetCustomRole();
-                if (!pc.Data.IsDead && role != CustomRoles.Mafia && role.IsImpostor()) LivingImpostorsNum++;
+                if (pc.IsAlive() && !pc.Is(CustomRoles.Mafia) && pc.Is(RoleType.Impostor, false))
+                    LivingImpostorsNum++;
             }
 
             return LivingImpostorsNum <= 0;

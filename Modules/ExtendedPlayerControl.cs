@@ -720,7 +720,8 @@ namespace TownOfHost
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>
             role > CustomRoles.NotAssigned ? target.GetCustomSubRoles().Contains(role) : target.GetCustomRole() == role;
-        public static bool Is(this PlayerControl target, RoleType type) { return target.GetCustomRole().GetRoleType() == type; }
+        public static bool Is(this PlayerControl target, RoleType type, bool includeOutsider = true) =>
+            target.GetCustomRole().GetRoleType() == type && (includeOutsider || !target.Is(CustomRoles.Outsider));
         public static bool IsAlive(this PlayerControl target) { return target != null && !Main.PlayerStates[target.PlayerId].IsDead; }
 
     }

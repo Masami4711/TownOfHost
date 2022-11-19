@@ -30,6 +30,6 @@ namespace TownOfHost
         public static bool IsEnable => playerIdList.Count > 0;
         public static void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = KillCooldown.GetFloat();
         public static bool KnowImpostor(PlayerControl seer, PlayerControl target)
-            => seer.Is(CustomRoles.Outsider) && CanSeeImpostors.GetBool() && target.Is(RoleType.Impostor);
+            => seer.Is(CustomRoles.Outsider) && CanSeeImpostors.GetBool() && target.Is(RoleType.Impostor, false);
     }
 }
