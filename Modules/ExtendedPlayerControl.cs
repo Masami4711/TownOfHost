@@ -5,7 +5,6 @@ using System.Text;
 using Hazel;
 using InnerNet;
 using UnityEngine;
-using UnhollowerBaseLib;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -728,27 +727,16 @@ namespace TownOfHost
             var killerId = Main.PlayerStates[target.PlayerId].GetRealKiller();
             return killerId == byte.MaxValue ? null : Utils.GetPlayerById(killerId);
         }
-        public static string GetRoomName(this PlayerControl player)
+        public static PlainShipRoom GetPlainShipRoom(this PlayerControl pc)
         {
-            var room = GetPlainShipRoom(player);
-            if (player.Data.IsDead || room == null) return "Invalid";
-            return DestroyableSingleton<TranslationController>.Instance.GetString(room.RoomId);
-        }
-        //Haoming参考
-        public static PlainShipRoom GetPlainShipRoom(PlayerControl pc)
-        {
-            Il2CppReferenceArray<Collider2D> result = new Collider2D[10];
-            ContactFilter2D filter2d = default;
-            filter2d.layerMask = Constants.PlayersOnlyMask;
-            filter2d.useLayerMask = true;
-            filter2d.useTriggers = false;
+            if (pc.Data.IsDead) return null;
             PlainShipRoom[] Rooms = ShipStatus.Instance.AllRooms;
             if (Rooms == null) return null;
             foreach (var room in Rooms)
             {
                 if (!room.roomArea) continue;
-                if (room.roomArea.OverlapCollider(filter2d, result) == 0) continue;
-                if (result.Any(x => x?.gameObject == pc.gameObject)) return room;
+                if (pc.Collider.IsTouching(room.roomArea))
+                    return room;
             }
             return null;
         }

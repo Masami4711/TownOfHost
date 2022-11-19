@@ -326,7 +326,7 @@ namespace TownOfHost
 
                 if (EvilTracker.IsTrackTarget(PlayerControl.LocalPlayer, pc) && EvilTracker.CanSeeLastRoomInMeeting.GetBool())
                 {
-                    roleTextMeeting.text = EvilTracker.GetTargetLastRoom(PlayerControl.LocalPlayer, pc);
+                    roleTextMeeting.text = EvilTracker.GetArrowAndLastRoom(PlayerControl.LocalPlayer, pc);
                     roleTextMeeting.enabled = true;
                 }
             }

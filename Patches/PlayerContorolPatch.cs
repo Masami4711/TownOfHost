@@ -445,10 +445,15 @@ namespace TownOfHost
                 Logger.Warn($"{__instance.GetNameWithRole()}:通報禁止中のため可能になるまで待機します", "ReportDeadBody");
                 return false;
             }
+            foreach (var kvp in Main.PlayerStates)
+            {
+                var pc = Utils.GetPlayerById(kvp.Key);
+                if (pc == null) kvp.Value.LastRoom = null;
+                else kvp.Value.LastRoom = pc.GetPlainShipRoom();
+            }
             if (!AmongUsClient.Instance.AmHost) return true;
             BountyHunter.OnReportDeadBody();
             SerialKiller.OnReportDeadBody();
-            EvilTracker.OnReportDeadBody();
             Main.ArsonistTimer.Clear();
             if (target == null) //ボタン
             {
