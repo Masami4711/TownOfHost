@@ -438,8 +438,6 @@ namespace TownOfHost
                 var pc = Utils.GetPlayerById(kvp.Key);
                 if (pc == null) kvp.Value.LastRoom = null;
                 else kvp.Value.LastRoom = pc.GetPlainShipRoom();
-                if (kvp.Value.LastRoom != null)
-                    Logger.Info($"{pc.GetNameWithRole()}({pc.IsAlive()}):{kvp.Value.LastRoom.RoomId.GetRoomName()}", "LastRoom");
             }
             if (!AmongUsClient.Instance.AmHost) return true;
             BountyHunter.OnReportDeadBody();
