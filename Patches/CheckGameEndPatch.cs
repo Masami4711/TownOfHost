@@ -119,7 +119,10 @@ namespace TownOfHost
                 if (Imp == 0 && Crew == 0 && Jackal == 0) //全滅
                 {
                     reason = GameOverReason.ImpostorByKill;
-                    CustomWinnerHolder.ResetAndSetWinner(CustomWinner.None);
+                    if (Runaway.AnyEscapeWin())
+                        CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Runaway);
+                    else
+                        CustomWinnerHolder.ResetAndSetWinner(CustomWinner.None);
                 }
                 else if (Jackal == 0 && Crew <= Imp) //インポスター勝利
                 {

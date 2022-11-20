@@ -78,6 +78,11 @@ namespace TownOfHost
                         winner.Add(pc);
                         CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.SchrodingerCat);
                     }
+                if (Runaway.IsAliveWin(pc))
+                {
+                    winner.Add(pc);
+                    CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);
+                }
             }
 
             //HideAndSeek専用

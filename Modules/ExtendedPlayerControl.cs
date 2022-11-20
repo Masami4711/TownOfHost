@@ -275,6 +275,7 @@ namespace TownOfHost
             switch (player.GetCustomRole())
             {
                 case CustomRoles.Terrorist:
+                case CustomRoles.Runaway:
                     goto InfinityVent;
                 // case CustomRoles.ShapeMaster:
                 //     opt.RoleOptions.ShapeshifterCooldown = 0.1f;

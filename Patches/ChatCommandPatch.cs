@@ -294,6 +294,7 @@ namespace TownOfHost
                 { CustomRoles.Executioner, "exe" },
                 { CustomRoles.Jester, "je" },
                 { CustomRoles.Opportunist, "op" },
+                { CustomRoles.Runaway, "ra" },
                 { CustomRoles.SchrodingerCat, "sc" },
                 { CustomRoles.Terrorist, "te" },
                 { CustomRoles.Jackal, "jac" },

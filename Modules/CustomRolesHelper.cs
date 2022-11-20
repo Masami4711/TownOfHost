@@ -46,6 +46,7 @@ namespace TownOfHost
                 CustomRoles.EgoSchrodingerCat or
                 CustomRoles.Jackal or
                 CustomRoles.JSchrodingerCat or
+                CustomRoles.Runaway or
                 CustomRoles.HASTroll or
                 CustomRoles.HASFox;
         }

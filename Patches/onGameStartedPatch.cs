@@ -146,7 +146,7 @@ namespace TownOfHost
 
                 int EngineerNum = roleOpt.GetNumPerGame(RoleTypes.Engineer);
 
-                int AdditionalEngineerNum = CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount();// - EngineerNum;
+                int AdditionalEngineerNum = CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount() + CustomRoles.Runaway.GetCount();// - EngineerNum;
 
                 if (Options.MayorHasPortableButton.GetBool())
                     AdditionalEngineerNum += CustomRoles.Mayor.GetCount();
@@ -307,6 +307,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.TimeThief, Impostors);
                 AssignCustomRolesFromList(CustomRoles.EvilTracker, Shapeshifters);
                 AssignCustomRolesFromList(CustomRoles.Seer, Crewmates);
+                AssignCustomRolesFromList(CustomRoles.Runaway, Engineers);
 
                 //RPCによる同期
                 foreach (var pc in PlayerControl.AllPlayerControls)
@@ -404,7 +405,7 @@ namespace TownOfHost
 
                 int EngineerNum = roleOpt.GetNumPerGame(RoleTypes.Engineer);
 
-                EngineerNum -= CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount();
+                EngineerNum -= CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount() + CustomRoles.Runaway.GetCount();
 
                 if (Options.MayorHasPortableButton.GetBool())
                     EngineerNum -= CustomRoles.Mayor.GetCount();

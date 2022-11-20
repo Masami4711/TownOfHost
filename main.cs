@@ -201,6 +201,7 @@ namespace TownOfHost
                     {CustomRoles.EgoSchrodingerCat, "#5600ff"},
                     {CustomRoles.Jackal, "#00b4eb"},
                     {CustomRoles.JSchrodingerCat, "#00b4eb"},
+                    {CustomRoles.Runaway, "#708090"},
                     //HideAndSeek
                     {CustomRoles.HASFox, "#e478ff"},
                     {CustomRoles.HASTroll, "#00ff00"},
@@ -316,6 +317,7 @@ namespace TownOfHost
         EgoSchrodingerCat,//エゴイスト陣営のシュレディンガーの猫
         Jester,
         Opportunist,
+        Runaway,
         SchrodingerCat,//第三陣営のシュレディンガーの猫
         Terrorist,
         Executioner,
@@ -345,6 +347,7 @@ namespace TownOfHost
         Arsonist = CustomRoles.Arsonist,
         Egoist = CustomRoles.Egoist,
         Jackal = CustomRoles.Jackal,
+        Runaway = CustomRoles.Runaway,
         HASTroll = CustomRoles.HASTroll,
     }
     public enum AdditionalWinners
@@ -353,6 +356,7 @@ namespace TownOfHost
         Opportunist = CustomRoles.Opportunist,
         SchrodingerCat = CustomRoles.SchrodingerCat,
         Executioner = CustomRoles.Executioner,
+        Runaway = CustomRoles.Runaway,
         HASFox = CustomRoles.HASFox,
     }
     /*public enum CustomRoles : byte

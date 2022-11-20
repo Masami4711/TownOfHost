@@ -85,6 +85,7 @@ namespace TownOfHost
             Execution,
             Disconnected,
             Fall,
+            Escape,
             etc = -1
         }
     }
