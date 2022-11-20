@@ -187,6 +187,9 @@ namespace TownOfHost
                 case CustomRoles.Jackal:
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
+                case CustomRoles.Runaway:
+                    Runaway.SetHudActive(__instance, player);
+                    break;
 
                 DesyncImpostor:
                     if (player.Data.Role.Role != RoleTypes.GuardianAngel)
