@@ -307,6 +307,10 @@ namespace TownOfHost
                         if (seer.KnowSpecificImpostor(target))
                             pva.NameText.color = Palette.ImpostorRed;
                         break;
+                    case RoleType.Madmate:
+                        if (Outsider.KnowMadmate(seer, target))
+                            pva.NameText.text += Utils.ColorString(Palette.ImpostorRed, "★");
+                        break;
                 }
                 switch (target.GetCustomRole())
                 {

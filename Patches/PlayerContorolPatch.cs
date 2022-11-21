@@ -668,7 +668,7 @@ namespace TownOfHost
                         foreach (var target in PlayerControl.AllPlayerControls)
                         {
                             if (!target.IsAlive()) continue;
-                            if (target.PlayerId != player.PlayerId && !target.GetCustomRole().IsImpostor())
+                            if (target.PlayerId != player.PlayerId && !target.Is(RoleType.Impostor, false))
                             {
                                 dis = Vector2.Distance(puppeteerPos, target.transform.position);
                                 targetDistance.Add(target.PlayerId, dis);
@@ -785,9 +785,12 @@ namespace TownOfHost
                     switch (target.GetCustomRole().GetRoleType())
                     {
                         case RoleType.Impostor:
-                            //タスクを終わらせたSnitchがインポスターを確認できる
                             if (seer.KnowSpecificImpostor(target, true))
                                 RealName = Utils.ColorString(Palette.ImpostorRed, RealName);
+                            break;
+                        case RoleType.Madmate:
+                            if (Outsider.KnowMadmate(seer, target))
+                                Mark += Utils.ColorString(Palette.ImpostorRed, "★");
                             break;
                     }
 

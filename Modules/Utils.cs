@@ -791,6 +791,10 @@ namespace TownOfHost
                                 if (seer.KnowSpecificImpostor(target, !isMeeting))
                                     TargetPlayerName = ColorString(Palette.ImpostorRed, TargetPlayerName);
                                 break;
+                            case RoleType.Madmate:
+                                if (Outsider.KnowMadmate(seer, target))
+                                    TargetMark += ColorString(Palette.ImpostorRed, "★");
+                                break;
                         }
                         switch (target.GetCustomRole())
                         {

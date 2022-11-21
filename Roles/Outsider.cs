@@ -39,8 +39,12 @@ namespace TownOfHost
             __instance.ImpostorVentButton.ToggleVisible(isActive);
             __instance.AbilityButton.ToggleVisible(false);
         }
-        public static bool KnowImpostor(PlayerControl seer, PlayerControl target)
-            => seer.Is(CustomRoles.Outsider) && CanSeeImpostor.GetBool() && target.Is(RoleType.Impostor, CanSeeAllTeamImpostors.GetBool());
+        public static bool KnowImpostor(PlayerControl seer, PlayerControl target = null)
+            => seer.Is(CustomRoles.Outsider) && CanSeeImpostor.GetBool()
+            && (target == null || target.Is(RoleType.Impostor, CanSeeAllTeamImpostors.GetBool()));
+        public static bool KnowMadmate(PlayerControl seer, PlayerControl target)
+            => KnowImpostor(seer) && CanSeeAllTeamImpostors.GetBool()
+            && target.Is(RoleType.Madmate);
         public static bool OnCheckMurder(PlayerControl killer, PlayerControl target)
             => killer.Is(CustomRoles.Outsider) && !KnowImpostor(killer, target);
     }

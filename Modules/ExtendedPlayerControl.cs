@@ -720,10 +720,11 @@ namespace TownOfHost
             => ((seer.Is(CustomRoles.Snitch) || seer.Is(CustomRoles.MadSnitch)) && seer.GetPlayerTaskState().IsTaskFinished)
             || seer.Is(CustomRoles.MSchrodingerCat);
         public static bool KnowSpecificImpostor(this PlayerControl seer, PlayerControl target, bool isInTask = false)
-            => (seer.KnowImpostor() && target.Is(RoleType.Impostor))
-            || (!isInTask && Utils.IsActive(SystemTypes.Electrical) && target.Is(CustomRoles.Mare));
+            => (seer.KnowImpostor() && target.Is(RoleType.Impostor, seer.Is(CustomRoles.Snitch)))
+            || (!isInTask && Utils.IsActive(SystemTypes.Electrical) && target.Is(CustomRoles.Mare))
+            || Outsider.KnowImpostor(seer, target);
         public static bool KnowEgoist(this PlayerControl seer)
-            => seer.Is(RoleType.Impostor) || seer.GetCustomRole().IsEgoistTeam()
+            => seer.Is(RoleType.Impostor, false) || Outsider.KnowImpostor(seer) || seer.GetCustomRole().IsEgoistTeam()
             || (seer.Is(CustomRoles.Snitch) && seer.GetPlayerTaskState().IsTaskFinished && Options.SnitchCanFindNeutralKiller.GetBool());
         public static bool KnowJackal(this PlayerControl seer)
             => seer.Is(CustomRoles.Jackal) || seer.Is(CustomRoles.JSchrodingerCat)
