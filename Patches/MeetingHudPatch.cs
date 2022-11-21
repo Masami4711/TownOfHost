@@ -266,7 +266,7 @@ namespace TownOfHost
             }
             if (AntiBlackout.OverrideExiledPlayer)
             {
-                Utils.SendMessage(Translator.GetString("Warning.OverrideExiledPlayer"));
+                Utils.SendMessage(GetString("Warning.OverrideExiledPlayer"));
             }
 
             if (AmongUsClient.Instance.AmHost)
@@ -290,42 +290,49 @@ namespace TownOfHost
 
                 //会議画面での名前変更
                 //自分自身の名前の色を変更
-                if (target != null && target.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
+                if (target.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
                     pva.NameText.color = seer.GetRoleColor();//名前の色を変更
 
-                //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
-
-                if (seer.KnowDeathReason(target))
-                    pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
-
-                //インポスター表示
-                bool LocalPlayerKnowsImpostor = false; //203行目のif文で使う trueの時にインポスターの名前を赤くする
-                bool LocalPlayerKnowsJackal = false; //trueの時にジャッカルの名前の色を変える
-                bool LocalPlayerKnowsEgoist = false; //trueの時にエゴイストの名前の色を変える
-                switch (seer.GetCustomRole().GetRoleType())
+                foreach (var subRole in target.GetCustomSubRoles())
+                    switch (subRole)
+                    {
+                        case CustomRoles.Lovers:
+                            if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
+                                pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
+                            break;
+                    }
+                switch (target.GetCustomRole().GetRoleType())
                 {
                     case RoleType.Impostor:
-                        LocalPlayerKnowsEgoist = true;
-                        if (target.Is(CustomRoles.MadSnitch) && target.GetPlayerTaskState().IsTaskFinished && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.MadSnitch), "★"); //変更対象にSnitchマークをつける
-                        else if (target.Is(CustomRoles.Snitch) && //変更対象がSnitch
-                        target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
+                        if (seer.KnowSpecificImpostor(target))
+                            pva.NameText.color = Palette.ImpostorRed;
                         break;
                 }
-                switch (seer.GetCustomRole())
+                switch (target.GetCustomRole())
                 {
                     case CustomRoles.MadSnitch:
+                        if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
+                            pva.NameText.text += Utils.ColorString(Palette.ImpostorRed, "★"); //変更対象にSnitchマークをつける
+                        break;
                     case CustomRoles.Snitch:
-                        if (seer.GetPlayerTaskState().IsTaskFinished) //seerがタスクを終えている
-                        {
-                            LocalPlayerKnowsImpostor = true;
-                            if (seer.Is(CustomRoles.Snitch) && Options.SnitchCanFindNeutralKiller.GetBool())
-                            {
-                                LocalPlayerKnowsJackal = true;
-                                LocalPlayerKnowsEgoist = true;
-                            }
-                        }
+                        if (seer.KnowSnitch(target))
+                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
+                        break;
+                    case CustomRoles.Egoist:
+                        if (seer.KnowEgoist())
+                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Egoist); //変更対象の名前の色変更
+                        break;
+                    case CustomRoles.Jackal:
+                        if (seer.KnowJackal())
+                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Jackal); //変更対象の名前をジャッカル色にする
+                        break;
+                }
+
+                //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
+                switch (seer.GetCustomRole())
+                {
+                    case CustomRoles.EvilTracker:
+                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
                         break;
                     case CustomRoles.Arsonist:
                         if (seer.IsDousedPlayer(target)) //seerがtargetに既にオイルを塗っている(完了)
@@ -334,56 +341,15 @@ namespace TownOfHost
                     case CustomRoles.Executioner:
                         pva.NameText.text += Executioner.TargetMark(seer, target);
                         break;
-                    case CustomRoles.Egoist:
-                    case CustomRoles.Jackal:
-                        if (Options.SnitchCanFindNeutralKiller.GetBool() &&
-                        target.Is(CustomRoles.Snitch) && //変更対象がSnitch
-                        target.GetPlayerTaskState().DoExpose) //変更対象のタスクが終わりそう)
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
-                        break;
-                    case CustomRoles.EgoSchrodingerCat:
-                        LocalPlayerKnowsEgoist = true;
-                        break;
-                    case CustomRoles.JSchrodingerCat:
-                        LocalPlayerKnowsJackal = true;
-                        break;
                 }
 
-                switch (target.GetCustomRole())
-                {
-                    case CustomRoles.Egoist:
-                        if (LocalPlayerKnowsEgoist)
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Egoist); //変更対象の名前の色変更
-                        break;
-                    case CustomRoles.Jackal:
-                        if (LocalPlayerKnowsJackal)
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Jackal); //変更対象の名前をジャッカル色にする
-                        break;
-                }
-                foreach (var subRole in target.GetCustomSubRoles())
-                {
-                    switch (subRole)
-                    {
-                        case CustomRoles.Lovers:
-                            if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead)
-                                pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                            break;
-                    }
-                }
-
-                if (LocalPlayerKnowsImpostor)
-                {
-                    if (target != null && target.Is(RoleType.Impostor, seer.Is(CustomRoles.Snitch))) //変更先がインポスター
-                        pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
-                }
                 //呪われている場合
                 if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
                     pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
-                //会議画面ではインポスター自身の名前にSnitchマークはつけません。
+                if (seer.KnowDeathReason(target))
+                    pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
+
             }
         }
     }
