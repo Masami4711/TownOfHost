@@ -668,7 +668,7 @@ namespace TownOfHost
                         foreach (var target in PlayerControl.AllPlayerControls)
                         {
                             if (!target.IsAlive()) continue;
-                            if (target.PlayerId != player.PlayerId && !target.GetCustomRole().IsImpostor())
+                            if (target.PlayerId != player.PlayerId && !target.Is(RoleType.Impostor, false))
                             {
                                 dis = Vector2.Distance(puppeteerPos, target.transform.position);
                                 targetDistance.Add(target.PlayerId, dis);

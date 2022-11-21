@@ -119,8 +119,8 @@ namespace TownOfHost
                     case PlayerState.DeathReason.Torched:
                         return false;
                     default:
-                        bool PuppeteerCheck = CustomRoles.Puppeteer.IsEnable() && !killer.GetCustomRole().IsImpostor() && Main.PuppeteerList.ContainsKey(killer.PlayerId);
-                        return killer.GetCustomRole().IsImpostor() || PuppeteerCheck; //インポスターのノーマルキル || パペッティアキル
+                        bool PuppeteerCheck = CustomRoles.Puppeteer.IsEnable() && !killer.Is(RoleType.Impostor, false) && Main.PuppeteerList.ContainsKey(killer.PlayerId);
+                        return killer.Is(RoleType.Impostor, false) || PuppeteerCheck; //インポスターのノーマルキル || パペッティアキル
                 }
             }
         }
