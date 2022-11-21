@@ -268,7 +268,7 @@ namespace TownOfHost
                         else hasTasks = false;
                         break;
                     case CustomRoles.Runaway:
-                        if (p.IsDead)
+                        if (p.IsDead && (Main.PlayerStates[p.PlayerId].deathReason != PlayerState.DeathReason.Escape || ForRecompute))
                             hasTasks = false;
                         break;
                     default:
