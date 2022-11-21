@@ -68,7 +68,7 @@
 "Egoist","Egoist","エゴイスト","野心家","利己主義者","Egoist","Egoísta"
 "Lovers","Lovers","恋人","恋人","戀人","Lovers","Amantes"
 "Jackal","Jackal","ジャッカル","豺狼","豺狼","Jackal","Chacal"
-"Runaway","Runaway","ランナウェイ","","","",""
+"Runaway","Runaway","逃亡者","","","",""
 
 "# HideAndSeek"
 "HASFox","Fox","狐","狐狸","狐妖","Fox","Raposa"
@@ -144,6 +144,7 @@
 "EgoistInfo","Take over the Impostors' victory","インポスター勝利を独占しよう","我们要把属于内鬼的胜利给夺走！","讓我們來奪取狼人的勝利","Замените победу Предателей","Ganhe no lugar do Impostor"
 "LoversInfo","Live happily ever after, together","恋人と生きて幸せを掴もう","你们坠入了爱河，成为了一对恋人，一起活到最后吧！","你墜入了愛河(心理)","Выживите со своим Любовником","Vivam felizes para sempre, juntos"
 "JackalInfo","Kill Everyone","すべてを殺せ","快去杀光所有人，一只苍蝇都不要剩下！","殺光所有人不留活口","Убей их всех","Mate todos"
+"RunawayInfo","Help the Crewmates or Escape","クルーを援助しつつ、脱出の準備をしよう","","","",""
 
 "# HideAndSeek"
 "HASFoxInfo","Just stay alive","とにかく生き残りましょう","活下去吧！活到最后你就成为了赢家！","活到最後就是屬於你和贏家的一片天","Останьтесь в живых","Sobreviva a qualquer custo"
@@ -204,6 +205,7 @@
 "OpportunistInfoLong","(Neutrals):\nSo long as you are alive at the end of the game, you will win alongside whoever the victor is.","(第三陣営):\n試合終了時に生存していれば追加勝利となる。","(独立阵营):\n若投机者在游戏结束时存活，则投机者跟随获胜玩家一同获得胜利。","(中立):\n如果投機主義者活到最後,他將跟著遊戲結束獲勝的陣營一起獲勝。","(Нейтрал):\nОн выигрывает игру с любыми другими ролями, но с условием, что он выжил.",""
 "EgoistInfoLong","(Neutrals):\nWhen all impostors are dead, you solo victory by fulfilling impostor victory conditions.\nYou and the impostors know who each other are.","(第三陣営):\n味方がすべて死んだ状態でインポスターが勝つと単独勝利する。\nインポスターは誰がエゴイストか分かる。エゴイストも、誰がインポスターか分かる。","(独立阵营):\n规则上野心家属于内鬼阵营。野心家与内鬼阵营玩家互认且不可以击杀对方。\n内鬼阵营玩家全部死亡后，若野心家存活且内鬼阵营达成胜利条件，则野心家单独获得胜利。","(中立):\n如果所有的狼人都死光了且利己主義者活著,利己主義者將獨自獲勝。\n(狼人和利己主義者互相知道對方但是不可以互刀對方)","(Нейтрал):\nПосле того, как все Предатели умрут то Egoist победит, он заменяет победу Предателей. \nПредатели и Egoist могут видеть друг друга.",""
 "JackalInfoLong","(Neutrals):\nJackal can kill all Crewmates, Impostors and Neutrals.\nTeam Jackal wins when living Jackal outnumbers living Crewmates and when there are no Impostors alive.","(第三陣営):\nジャッカルはすべてのプレイヤーを殺すことができる。\nインポスターが残っておらず、生き残っているジャッカルの人数がクルーと同じかそれ以上でジャッカルが勝利する。","(独立阵营):\n豺狼需要击杀所有人。\n存活的玩家只剩豺狼和一名其他船员时，豺狼获得胜利。","(中立):\n豺狼需要殺死所有人來獲得勝利,\n如果場上存活的玩家只剩下豺狼和另一名不帶刀職業時,豺狼將獲勝。","(Нейтрал):\nJackal может убить всех Членов Экипажа, Нейтралов и Предателей тоже. \nJackal может победить, когда в живых остался только 1 Jackal и 1 Член Экипажа.",""
+"RunawayInfoLong","(Neutrals):\n\n","(第三陣営):\n生きている間はクルー陣営に属する。\nタスクを進めるとベントに入れるようになり、入ると即座にマップから脱出し死亡扱いになる。\n脱出後タスクを全て終わらせ、クルーが敗北することで追加勝利となる。"
 
 "# HideAndSeek"
 "HASFoxInfoLong","(HideAndSeek):\nThey win the game with other Roles (except Troll) only if they are alive at the game end.","(かくれんぼ):\nトロールを除くいずれかの陣営が勝利したときに生き残っていれば、勝利した陣営に追加で勝利することができる。","（躲猫猫）:\n狐狸活到最后便与获胜阵营一同获胜。","(躲貓貓):\n除了其他的中立陣營以外,只要狐妖活下來即可獲勝\n他們將跟著遊戲結束的獲勝陣營一起獲勝。","(Прятки):\nЕсли какая-либо роль, кроме Troll побеждает и выживает, то победившая роль может одержать дополнительную победу.",""
@@ -385,6 +387,8 @@
 "EvilTrackerCanSeeKillFlash","Can See ""Kill Flash"" for Impostor Kills","インポスターキル時にフラッシュが見える","当内鬼进行击杀时邪恶的追踪者可以看到闪光","","EvilTracker Сбрасывает Цель После Каждой Встречи",""
 "EvilTrackerResetTargetAfterMeeting","Can Reset Target After Meeting","会議後に再度ターゲットを設定できる","会议后重置邪恶的追踪者追踪目标","","EvilTracker Может Сбросить Цель После Встречи",""
 "KillFlashDuration","""Kill Flash"" Duration","キルフラッシュの長さ","击杀闪烁持续时间","殺人閃光持續時間","Длительность Вспышки Убийсва",""
+"RunawayNumTasksToEscape","Runaway Task Count To Escape","脱出に必要なタスク数"
+"RunawayCanEscapeWinWithoutTask","Runaway Can Escape Win Without Completing Tasks","タスクを終えていなくても脱出勝利できる"
 
 "## かくれんぼ設定"
 "HideAndSeekOptions","Hide and Seek Settings","かくれんぼの設定","躲猫猫设置","躲貓貓設定","Настройки Пряток",""
@@ -497,6 +501,7 @@
 "FireworksPutPhase","{0} Fireworks Left","あと{0}個置け","还要安放{0}枚烟花","還需要安裝{0}枚煙火","Поставьте {0} Фейерверков",""
 "FireworksWaitPhase","Wait for it...","時を待て...","耐心等待....","等待時機...","Подожди время...",""
 "FireworksReadyFirePhase","Fire!","打ち上げろ！","烟花来咯，大型烟花秀开始！","準備就緒,煙火秀開始!","Огонь!",""
+"RunawaySuffixText","Ready to escape","脱出準備完了"
 "StandardHAS","Hide And Seek with Roles","役職入りでかくれんぼ","在躲猫猫模式中加入职业","在躲貓貓中加入多職業模式中的職業","Прятки с Ролями",""
 "StandardHASWaitingTime","Standby","待機時間","躲猫猫猎人等待时间","躲貓貓狼人等待時間","Время Ожидания",""
 "InvalidArgs","Invalid Args","無効な引数","无效参数","無效的參數","Недопустимые Аргументы",""

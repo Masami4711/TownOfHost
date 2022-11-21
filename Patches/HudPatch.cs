@@ -128,6 +128,11 @@ namespace TownOfHost
                 LowerInfoText.text = stateText;
                 LowerInfoText.enabled = true;
             }
+            else if (player.Is(CustomRoles.Runaway))
+            {
+                LowerInfoText.text = Runaway.GetSuffixText(player);
+                LowerInfoText.enabled = true;
+            }
             else
             {
                 LowerInfoText.enabled = false;

@@ -746,6 +746,7 @@ namespace TownOfHost
                 }
 
                 if (seer.Is(CustomRoles.EvilTracker)) SelfSuffix += EvilTracker.UtilsGetTargetArrow(isMeeting, seer);
+                if (seer.Is(CustomRoles.Runaway)) SelfSuffix += Runaway.GetSuffixText(seer, fontSize);
 
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                 string SeerRealName = seer.GetRealName(isMeeting);
