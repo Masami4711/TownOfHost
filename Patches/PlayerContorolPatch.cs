@@ -239,6 +239,10 @@ namespace TownOfHost
                     case CustomRoles.TimeThief:
                         TimeThief.OnCheckMurder(killer);
                         break;
+                    case CustomRoles.Outsider:
+                        if (!Outsider.OnCheckMurder(killer, target))
+                            return false;
+                        break;
 
                     //==========マッドメイト系役職==========//
 

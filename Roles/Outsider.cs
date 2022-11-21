@@ -9,15 +9,17 @@ namespace TownOfHost
         public static List<byte> playerIdList = new();
 
         private static OptionItem KillCooldown;
-        private static OptionItem CanSeeImpostors;
+        private static OptionItem CanSeeImpostor;
         private static OptionItem KillCountToSeeImpostors;
+        private static OptionItem CanSeeAllTeamImpostors;
 
         public static void SetupCustomOption()
         {
             Options.SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.Outsider);
             KillCooldown = OptionItem.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "KillCooldown", 30f, 0f, 180f, 2.5f, Options.CustomRoleSpawnChances[CustomRoles.Outsider], format: OptionFormat.Seconds);
-            CanSeeImpostors = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "OutsiderCanSeeImpostors", false, Options.CustomRoleSpawnChances[CustomRoles.Outsider]);
-            KillCountToSeeImpostors = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "OutsiderKillCountToSeeImpostors", 1, 0, 10, 1, CanSeeImpostors, format: OptionFormat.Times);
+            CanSeeImpostor = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "OutsiderCanSeeImpostor", false, Options.CustomRoleSpawnChances[CustomRoles.Outsider]);
+            KillCountToSeeImpostors = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "OutsiderKillCountToSeeImpostors", 1, 0, 10, 1, CanSeeImpostor, format: OptionFormat.Times);
+            CanSeeAllTeamImpostors = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "OutsiderCanSeeAllTeamImpostors", false, CanSeeImpostor);
         }
         public static void Init()
         {
@@ -29,7 +31,17 @@ namespace TownOfHost
         }
         public static bool IsEnable => playerIdList.Count > 0;
         public static void SetKillCooldown(byte id) => Main.AllPlayerKillCooldown[id] = KillCooldown.GetFloat();
+        public static void SetHudActive(HudManager __instance, bool isActive, PlayerControl player)
+        {
+            if (player.Data.Role.Role != RoleTypes.GuardianAngel)
+                __instance.KillButton.ToggleVisible(isActive && !player.Data.IsDead);
+            __instance.SabotageButton.ToggleVisible(isActive);
+            __instance.ImpostorVentButton.ToggleVisible(isActive);
+            __instance.AbilityButton.ToggleVisible(false);
+        }
         public static bool KnowImpostor(PlayerControl seer, PlayerControl target)
-            => seer.Is(CustomRoles.Outsider) && CanSeeImpostors.GetBool() && target.Is(RoleType.Impostor, false);
+            => seer.Is(CustomRoles.Outsider) && CanSeeImpostor.GetBool() && target.Is(RoleType.Impostor, CanSeeAllTeamImpostors.GetBool());
+        public static bool OnCheckMurder(PlayerControl killer, PlayerControl target)
+            => killer.Is(CustomRoles.Outsider) && !KnowImpostor(killer, target);
     }
 }

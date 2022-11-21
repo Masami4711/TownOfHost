@@ -390,8 +390,9 @@
 "EvilTrackerCanSeeKillFlash","Can See ""Kill Flash"" for Impostor Kills","インポスターキル時にフラッシュが見える","当内鬼进行击杀时邪恶的追踪者可以看到闪光","","EvilTracker Сбрасывает Цель После Каждой Встречи",""
 "EvilTrackerResetTargetAfterMeeting","Can Reset Target After Meeting","会議後に再度ターゲットを設定できる","会议后重置邪恶的追踪者追踪目标","","EvilTracker Может Сбросить Цель После Встречи",""
 "KillFlashDuration","""Kill Flash"" Duration","キルフラッシュの長さ","击杀闪烁持续时间","殺人閃光持續時間","Длительность Вспышки Убийсва",""
-"OutsiderCanSeeImpostors","Outsider Can See Impostor","インポスターが分かる","","","",""
+"OutsiderCanSeeImpostor","Outsider Can See Impostor","インポスターが分かる","","","",""
 "OutsiderKillCountToSeeImpostors","Outsider's Kill Count To See Impostors","必要なキル数","","","",""
+"OutsiderCanSeeAllTeamImpostors","Outsider Can See All Team Impostors","インポスター陣営全員が分かる"
 
 "## かくれんぼ設定"
 "HideAndSeekOptions","Hide and Seek Settings","かくれんぼの設定","躲猫猫设置","躲貓貓設定","Настройки Пряток",""

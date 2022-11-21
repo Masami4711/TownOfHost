@@ -55,6 +55,7 @@ namespace TownOfHost
                     pc.Is(CustomRoles.Sheriff) || //シェリフ: 無条件
                     (pc.Is(CustomRoles.Arsonist) && !CustomWinnerHolder.WinnerIds.Contains(pc.PlayerId)) || //アーソニスト: 敗北時
                     (pc.Is(CustomRoles.Jackal) && !CustomWinnerHolder.WinnerRoles.Contains(CustomRoles.Jackal)) || //ジャッカル: 敗北時
+                    (pc.Is(CustomRoles.Outsider) && !CustomWinnerHolder.WinnerRoles.Contains(CustomRoles.Impostor)) ||
                     (canEgoistWin && pc.Is(RoleType.Impostor)) || //インポスター: エゴイスト勝利
                     (!canEgoistWin && pc.Is(CustomRoles.Egoist)) //エゴイスト: インポスター勝利
                 )
