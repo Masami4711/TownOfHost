@@ -720,6 +720,7 @@ namespace TownOfHost
             role > CustomRoles.NotAssigned ? target.GetCustomSubRoles().Contains(role) : target.GetCustomRole() == role;
         public static bool Is(this PlayerControl target, RoleType type) { return target.GetCustomRole().GetRoleType() == type; }
         public static bool IsAlive(this PlayerControl target) { return target != null && !Main.PlayerStates[target.PlayerId].IsDead; }
+        public static bool Is(this PlayerControl target, PlayerState.DeathReason deathReason) { return Main.PlayerStates[target.PlayerId].deathReason == deathReason; }
 
     }
 }
