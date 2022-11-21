@@ -110,6 +110,7 @@ namespace TownOfHost
             Sheriff.Init();
             EvilTracker.Init();
             Insider.Init();
+            Outsider.Init();
             CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
             IRandom.SetInstanceById(Options.RoleAssigningAlgorithm.GetSelection());
@@ -181,6 +182,7 @@ namespace TownOfHost
                 AssignDesyncRole(CustomRoles.Sheriff, AllPlayers, senders, BaseRole: RoleTypes.Impostor);
                 AssignDesyncRole(CustomRoles.Arsonist, AllPlayers, senders, BaseRole: RoleTypes.Impostor);
                 AssignDesyncRole(CustomRoles.Jackal, AllPlayers, senders, BaseRole: RoleTypes.Impostor);
+                AssignDesyncRole(CustomRoles.Outsider, AllPlayers, senders, BaseRole: RoleTypes.Impostor);
             }
             //以下、バニラ側の役職割り当てが入る
         }
@@ -359,6 +361,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.Insider:
                             Insider.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.Outsider:
+                            Outsider.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Arsonist:

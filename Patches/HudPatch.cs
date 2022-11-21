@@ -185,6 +185,7 @@ namespace TownOfHost
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
                 case CustomRoles.Jackal:
+                case CustomRoles.Outsider:
                     player.CanUseImpostorVent();
                     goto DesyncImpostor;
 
@@ -240,7 +241,8 @@ namespace TownOfHost
 
             if ((player.GetCustomRole() == CustomRoles.Sheriff ||
                 player.GetCustomRole() == CustomRoles.Arsonist ||
-                player.GetCustomRole() == CustomRoles.Jackal)
+                player.GetCustomRole() == CustomRoles.Jackal ||
+                player.GetCustomRole() == CustomRoles.Outsider)
             && !player.Data.IsDead)
             {
                 ((Renderer)__instance.cosmetics.currentBodySprite.BodySprite).material.SetColor("_OutlineColor", Utils.GetRoleColor(player.GetCustomRole()));
@@ -276,6 +278,9 @@ namespace TownOfHost
                     break;
                 case CustomRoles.Jackal:
                     Jackal.SetHudActive(__instance, isActive, player);
+                    break;
+                case CustomRoles.Outsider:
+                    Outsider.SetHudActive(__instance, isActive, player);
                     break;
             }
         }

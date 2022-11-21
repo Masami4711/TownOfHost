@@ -258,6 +258,7 @@ namespace TownOfHost
                 { CustomRoles.Insider,"in" },
                 { CustomRoles.Mare, "ma" },
                 { CustomRoles.Mafia, "mf" },
+                { CustomRoles.Outsider, "os" },
                 { CustomRoles.SerialKiller, "sk" },
                 //{ CustomRoles.ShapeMaster, "sha" },
                 { CustomRoles.TimeThief, "tt"},

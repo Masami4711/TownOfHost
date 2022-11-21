@@ -110,7 +110,7 @@ namespace TownOfHost
             //インポスターによるキルかどうかの判別
             if (target.GetRealKiller() != null)
                 killer = target.GetRealKiller();
-            return killer.Is(RoleType.Impostor) && killer != target;
+            return killer.Is(RoleType.Impostor, false) && killer != target;
         }
         public static string GetMarker(byte playerId) => Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor).ShadeColor(0.5f), CanSetTarget[playerId] ? "◁" : "");
         public static string GetTargetMark(PlayerControl seer, PlayerControl target) => Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), seer.GetTarget() == target ? "◀" : "");
@@ -123,7 +123,7 @@ namespace TownOfHost
             {
                 var target = Utils.GetPlayerById(arrow.Key.Item2);
                 bool EvilTrackerTarget = seer.GetTarget() == target;
-                if (arrow.Key.Item1 == seer.PlayerId && !Main.PlayerStates[arrow.Key.Item2].IsDead && (target.GetCustomRole().IsImpostor() || EvilTrackerTarget))
+                if (arrow.Key.Item1 == seer.PlayerId && !Main.PlayerStates[arrow.Key.Item2].IsDead && (target.Is(RoleType.Impostor, false) || EvilTrackerTarget))
                     SelfSuffix += EvilTrackerTarget ? Utils.ColorString(Utils.GetRoleColor(CustomRoles.Crewmate), arrow.Value) : arrow.Value;
             }
             return SelfSuffix;
@@ -137,7 +137,7 @@ namespace TownOfHost
                 //発見対象じゃ無ければ次
                 if (!IsTrackTarget(target, pc)) continue;
 
-                update = FixedUpdatePatch.CheckArrowUpdate(target, pc, update, pc.GetCustomRole().IsImpostor());
+                update = FixedUpdatePatch.CheckArrowUpdate(target, pc, update, pc.Is(RoleType.Impostor, false));
                 var key = (target.PlayerId, pc.PlayerId);
                 var arrow = Main.targetArrows[key];
                 if (target.GetTarget() == pc) arrow = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Crewmate), arrow);
@@ -168,7 +168,7 @@ namespace TownOfHost
         {
             if (CanSetTarget[shapeshifter.PlayerId] && shapeshifting)
             {
-                if (!target.Data.IsDead && !target.GetCustomRole().IsImpostor())
+                if (!target.Data.IsDead && !target.Is(RoleType.Impostor, false))
                 {
                     Target[shapeshifter.PlayerId] = target;
                     CanSetTarget[shapeshifter.PlayerId] = false;
@@ -195,7 +195,7 @@ namespace TownOfHost
         public static bool IsTrackTarget(PlayerControl seer, PlayerControl target)
             => seer.Is(CustomRoles.EvilTracker) && !seer.Data.IsDead
             && seer != target && !target.Data.IsDead
-            && (target.Is(RoleType.Impostor) || seer.GetTarget() == target);
+            && (target.Is(RoleType.Impostor, false) || seer.GetTarget() == target);
         public static string GetArrowAndLastRoom(PlayerControl seer, PlayerControl target)
         {
             string text = Utils.ColorString(Palette.ImpostorRed, Main.targetArrows[(seer.PlayerId, target.PlayerId)]);

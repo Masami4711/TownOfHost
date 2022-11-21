@@ -320,6 +320,9 @@ namespace TownOfHost
                 case CustomRoles.Insider:
                     Insider.Add(targetId);
                     break;
+                case CustomRoles.Outsider:
+                    Outsider.Add(targetId);
+                    break;
 
                 case CustomRoles.Egoist:
                     Egoist.Add(targetId);

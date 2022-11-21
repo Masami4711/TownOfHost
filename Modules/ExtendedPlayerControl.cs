@@ -552,6 +552,9 @@ namespace TownOfHost
                 case CustomRoles.Mare:
                     Mare.SetKillCooldown(player.PlayerId);
                     break;
+                case CustomRoles.Outsider:
+                    Outsider.SetKillCooldown(player.PlayerId);
+                    break;
                 case CustomRoles.Arsonist:
                     Main.AllPlayerKillCooldown[player.PlayerId] = Options.ArsonistCooldown.GetFloat(); //アーソニストはアーソニストのキルクールに。
                     break;
@@ -740,11 +743,28 @@ namespace TownOfHost
             }
             return null;
         }
+        public static bool KnowImpostor(this PlayerControl seer)
+            => ((seer.Is(CustomRoles.Snitch) || seer.Is(CustomRoles.MadSnitch)) && seer.GetPlayerTaskState().IsTaskFinished)
+            || seer.Is(CustomRoles.MSchrodingerCat);
+        public static bool KnowSpecificImpostor(this PlayerControl seer, PlayerControl target, bool isInTask = false)
+            => (seer.KnowImpostor() && target.Is(RoleType.Impostor, seer.Is(CustomRoles.Snitch)))
+            || (!isInTask && Utils.IsActive(SystemTypes.Electrical) && target.Is(CustomRoles.Mare))
+            || Outsider.KnowImpostor(seer, target);
+        public static bool KnowEgoist(this PlayerControl seer)
+            => seer.Is(RoleType.Impostor, false) || Outsider.KnowImpostor(seer) || seer.GetCustomRole().IsEgoistTeam()
+            || (seer.Is(CustomRoles.Snitch) && seer.GetPlayerTaskState().IsTaskFinished && Options.SnitchCanFindNeutralKiller.GetBool());
+        public static bool KnowJackal(this PlayerControl seer)
+            => seer.Is(CustomRoles.Jackal) || seer.Is(CustomRoles.JSchrodingerCat)
+            || (seer.Is(CustomRoles.Snitch) && seer.GetPlayerTaskState().IsTaskFinished && Options.SnitchCanFindNeutralKiller.GetBool());
+        public static bool KnowSnitch(this PlayerControl seer, PlayerControl snitch)
+            => (seer.Is(RoleType.Impostor) || (seer.IsNeutralKiller() && Options.SnitchCanFindNeutralKiller.GetBool()))
+            && snitch.Is(CustomRoles.Snitch) && snitch.GetPlayerTaskState().DoExpose;
 
         //汎用
         public static bool Is(this PlayerControl target, CustomRoles role) =>
             role > CustomRoles.NotAssigned ? target.GetCustomSubRoles().Contains(role) : target.GetCustomRole() == role;
-        public static bool Is(this PlayerControl target, RoleType type) { return target.GetCustomRole().GetRoleType() == type; }
+        public static bool Is(this PlayerControl target, RoleType type, bool includeOutsider = true) =>
+            target.GetCustomRole().GetRoleType() == type && (includeOutsider || !target.Is(CustomRoles.Outsider));
         public static bool IsAlive(this PlayerControl target) { return target != null && !Main.PlayerStates[target.PlayerId].IsDead; }
 
     }

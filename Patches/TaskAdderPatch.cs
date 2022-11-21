@@ -111,6 +111,7 @@ namespace TownOfHost
             { CustomRoles.EvilTracker, RoleTypes.Shapeshifter },
             { CustomRoles.Insider, RoleTypes.Impostor },
             { CustomRoles.LastImpostor, RoleTypes.Impostor },
+            { CustomRoles.Outsider, RoleTypes.Impostor },
         };
         public static bool Prefix(TaskAddButton __instance)
         {

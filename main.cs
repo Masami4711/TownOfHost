@@ -283,6 +283,7 @@ namespace TownOfHost
         Witch,
         Warlock,
         Mare,
+        Outsider,
         Puppeteer,
         TimeThief,
         EvilTracker,

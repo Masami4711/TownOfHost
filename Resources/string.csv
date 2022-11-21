@@ -31,6 +31,7 @@
 "Sniper","Sniper","スナイパー","狙击手","狙擊手","Sniper","Sniper"
 "EvilTracker","Evil Tracker","イビルトラッカー","邪恶的追踪者","邪惡的追蹤者","EvilTracker","Rastreador do Mal"
 "Insider","Insider","インサイダー"
+"Outsider","Outsider","アウトサイダー","","","",""
 
 "# マッドメイト系役職"
 "Madmate","Madmate","マッドメイト","叛徒","叛徒","Madmate","Tripulante Louco"
@@ -401,6 +402,9 @@
 "InsiderCanSeeAllGhostsRoles","Insider Can See All Ghost's Roles","幽霊全員の役職が分かる"
 "InsiderCanSeeMadmates","Insider Can See Madmates","マッドメイトが分かる"
 "InsiderKillCountToSeeMadmates","Insider's Kill Count To See Madmates","必要なキル数"
+"OutsiderCanSeeImpostor","Outsider Can See Impostor","インポスターが分かる","","","",""
+"OutsiderKillCountToSeeImpostors","Outsider's Kill Count To See Impostors","必要なキル数","","","",""
+"OutsiderCanSeeAllTeamImpostors","Outsider Can See All Team Impostors","インポスター陣営全員が分かる"
 
 "## かくれんぼ設定"
 "HideAndSeekOptions","Hide and Seek Settings","かくれんぼの設定","躲猫猫设置","躲貓貓設定","Настройки Пряток",""
