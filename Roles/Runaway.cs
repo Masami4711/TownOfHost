@@ -35,7 +35,7 @@ namespace TownOfHost
         public static bool AnyEscapeWin() => IsEnable() && PlayerControl.AllPlayerControls.ToArray().Any(x => IsEscapeWin(x));
         public static bool IsEscapeWin(PlayerControl pc)
             => pc.Is(CustomRoles.Runaway)
-            && Main.PlayerStates[pc.PlayerId].deathReason == PlayerState.DeathReason.Escape
+            && pc.Is(PlayerState.DeathReason.Escape)
             && CustomWinnerHolder.WinnerTeam != CustomWinner.Crewmate
             && (CanEscapeWinWithoutTask.GetBool() || pc.GetPlayerTaskState().IsTaskFinished);
         public static bool IsAliveWin(PlayerControl pc)
@@ -44,8 +44,14 @@ namespace TownOfHost
             && CustomWinnerHolder.WinnerTeam == CustomWinner.Crewmate;
         public static string GetSuffixText(PlayerControl pc, string fontSize = null)
         {
-            if (!GameStates.IsInTask || !CanUseVent(pc)) return "";
-            string text = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Runaway), GetString("RunawaySuffixText"));
+            if (!GameStates.IsInTask || !pc.Is(CustomRoles.Runaway)) return "";
+            string text = "";
+            if (CanUseVent(pc))
+                text = GetString("RunawayReadyToEscape");
+            else if (pc.Is(PlayerState.DeathReason.Escape) && !IsEscapeWin(pc))
+                text = GetString("RunawayFinishTask");
+            else return "";
+            text = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Runaway), text);
             if (fontSize != null)
                 text = $"<size={fontSize}>" + text + "</size>";
             return text;
