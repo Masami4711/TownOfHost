@@ -27,7 +27,7 @@ namespace TownOfHost
         public static bool CanUseVent(PlayerControl pc)
             => pc.Is(CustomRoles.Runaway) && pc.IsAlive()
             && (pc.GetPlayerTaskState().IsTaskFinished || pc.GetPlayerTaskState().CompletedTasksCount >= NumTasksToEscape.GetInt());
-        public static void SetHudActive(HudManager __instance, PlayerControl player)
+        public static void SetAbilityButton(HudManager __instance, PlayerControl player)
         {
             __instance.AbilityButton.ToggleVisible(CanUseVent(player));
             __instance.AbilityButton.OverrideText($"{GetString("DeathReason.Escape")}");
