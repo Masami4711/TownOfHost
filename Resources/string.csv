@@ -109,6 +109,7 @@
 "LastImpostorInfo","You are the last of us","残ったのはあなただけ","你是最后的希望…","你是狼村最後的希望...","Ты остался последний","Você é o último Impostor"
 "EvilTrackerInfo","Track others","プレイヤーを追跡しろ","追杀其他玩家","你不要過來啊啊阿","Отслеживайте Игроков","Localize os outros"
 "InsiderInfo","Knowledge is power","知識は力なり"
+"OutsiderInfo","Nobody knows you are Impostor","インポスターのはみ出し者","","","",""
 
 "# マッドメイト系役職"
 "MadmateInfo","Help the Impostors","インポスターの援助をしよう","帮助内鬼","幫助狼人","Помогите Предателям","Ajude os Impostores"
@@ -173,6 +174,7 @@
 "SniperInfoLong","(Impostors):\nYou can shoot players from afar.\nYour line of fire continues as a straight line in the direction of the spot where you shapeshift to where you unshift.\nYou cannot perform normal kills until you use up all of your ammo.","(インポスター陣営):\n遠くの敵を狙撃できるインポスター。\nシェイプシフトした地点から解除した地点の延長線上の敵を一人撃ち抜く。\n撃ちきるまで通常キル出来ない。","(内鬼阵营):\n狙击手拥有远距离射杀的能力。\n方法为：变形的位置及解除变形位置的连线及其延长线上的一名玩家将被射杀。\n在狙击手的子弹耗尽前，狙击手无法进行常规击杀。","(狼人陣營):\n狙擊手\狙擊手可以進行遠程殺人\n他的子彈將從變形處延伸到取消變形處並往直線前進並殺死在這條線上非狼人陣營的人。\n在狙擊手用光子彈前,狙擊手無法正常殺人。","(Предатель):\nSniper может стрелять в игроков на расстоянии. \nОн убивает игрока который, находится с ним на одной линии, от точки Морфа до точки возвращения в свой облик. \nОн может совершать обычные убийства после того, как все его патроны закончатся.","(Impostor):\nVocê pode atirar em jogadores de longe.\nSua linha de fogo continua numa linha reta, do ponto que você se metamorfa ao ponto que você volta ao normal.\nVocê não pode fazer mortes normais até usar toda a sua munição."
 "EvilTrackerInfoLong","(Impostors):\nYou can see where others are.\nYou will see arrows pointing to the other impostors and anyone you shapeshift into.\nYou will see a ""kill flash"" when your fellow impostors kill.","(インポスター陣営):\n他人の位置が分かるインポスター。\n味方のインポスターとシェイプシフトで選んだ一人の位置が矢印で表示される。\n味方インポスターのキルによるキルフラッシュも見える。","(内鬼阵营):\n邪恶追踪者可以追踪其他内鬼以及其所变形的玩家。\n玩家名称下面的箭头代表着目标的方向。\n当内鬼队友杀人时，邪恶追踪者将会看到击杀闪烁提示。","(狼人陣營):\n邪惡的追蹤者:\他有一個箭頭指向他的隊友以及他變形的玩家,\n當他的隊友殺人時將出現閃光顯示。","(Предатель):\nEvilTracker может отслеживать других игроков. \nОн может видеть стрелки, которые указывают на Предателей или на того, в кого они Морфятся. \nОн знает, когда Предатели совершают убийства с помощью вспышки убийства.","(Impostores):\nVocê consegue ver a posição de outros.\nÉ possível ver setas apontando para outros Impostores e qualquer um em que você se transforme.\nVocê também verá uma piscada de tela quando um aliado Impostor matar alguém."
 "InsiderInfoLong","(Impostors):\nYou can see roles and abilities of Impostors.\nYou can also see roles whose you killed,\nA certain times of kill tell you Madmate as well.","(インポスター陣営):\n味方インポスターの役職と能力が見える。\nまた、キルした相手の役職が分かり、\nさらに特定回数キルするとマッドメイトも分かる。"
+"OutsiderInfoLong","(Impostors):\nOther Impostors and Madmates never know you are an Impostor.\nDepend on options, Outsider can see Impostors, other Outsiders and Madmates.\nImpostors can kill other Impostors not regarded as allies","(インポスター陣営):\n味方インポスターやマッド系役職から味方と認識されない。\nオプション次第でアウトサイダーはインポスターとマッド系役職を認識できる。\n認識できていない味方はキルすることができる。"
 
 
 "# マッドメイト系役職"
