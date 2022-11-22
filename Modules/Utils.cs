@@ -336,6 +336,9 @@ namespace TownOfHost
                 case CustomRoles.Insider:
                     ProgressText += Insider.GetKillCount(playerId);
                     break;
+                case CustomRoles.Outsider:
+                    ProgressText += Outsider.GetKillCount(playerId);
+                    break;
                 default:
                     //タスクテキスト
                     var taskState = Main.PlayerStates?[playerId].GetTaskState();
