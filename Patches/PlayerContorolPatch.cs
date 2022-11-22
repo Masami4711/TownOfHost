@@ -340,6 +340,7 @@ namespace TownOfHost
                         PlayerControl targetw = min.Key;
                         if (!ToughGuy.CheckAndGuardSpecificKill(shapeshifter, targetw, PlayerState.DeathReason.Kill))
                         {
+                            targetw.SetRealKiller(shapeshifter);
                             Logger.Info($"{targetw.GetNameWithRole()}was killed", "Warlock");
                             cp.RpcMurderPlayerV2(targetw);//殺す
                         }
@@ -661,7 +662,7 @@ namespace TownOfHost
                                 var puppeteerId = Main.PuppeteerList[player.PlayerId];
                                 if (!ToughGuy.CheckAndGuardSpecificKill(Utils.GetPlayerById(puppeteerId), target, PlayerState.DeathReason.Kill))
                                 {
-                                    RPC.PlaySoundRPC(Main.PuppeteerList[player.PlayerId], Sounds.KillSound);
+                                    RPC.PlaySoundRPC(puppeteerId, Sounds.KillSound);
                                     target.SetRealKiller(Utils.GetPlayerById(puppeteerId));
                                     player.RpcMurderPlayer(target);
                                 }
