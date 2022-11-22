@@ -14,6 +14,7 @@ namespace TownOfHost
         private static OptionItem CanSeeAllGhostsRoles;
         private static OptionItem CanSeeMadmates;
         private static OptionItem KillCountToSeeMadmates;
+        private static OptionItem CanSeeOutsider;
         static Dictionary<CustomRoles, CustomRoles> ReplaceRoles = new()
         {
             // {CustomRoles.Marin, CustomRoles.Crewmate}
@@ -25,6 +26,7 @@ namespace TownOfHost
             CanSeeAllGhostsRoles = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeAllGhostsRoles", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
             CanSeeMadmates = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeMadmates", false, Options.CustomRoleSpawnChances[CustomRoles.Insider]);
             KillCountToSeeMadmates = OptionItem.Create(Id + 13, TabGroup.ImpostorRoles, Color.white, "InsiderKillCountToSeeMadmates", 2, 0, 12, 1, CanSeeMadmates);
+            CanSeeOutsider = OptionItem.Create(Id + 14, TabGroup.ImpostorRoles, Color.white, "InsiderCanSeeOutsider", false, CanSeeMadmates);
         }
         public static void Init()
         {
@@ -66,8 +68,18 @@ namespace TownOfHost
             if (Insider == target) return false; //自分自身
             if (Insider.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) return false; //幽霊で普通に見えるパターン
             // ここまで前提条件
-            if (CanSeeImpostorAbilities.GetBool() && target.Is(RoleType.Impostor)) return true; //味方インポスターのケース
-            if (KnowMadmates(Insider) && target.Is(RoleType.Madmate)) return true; //マッドメイトが分かるケース
+            switch (target.GetCustomRole().GetRoleType())
+            {
+                case RoleType.Impostor:
+                    // if ((CanSeeImpostorAbilities.GetBool() && target.Is(RoleType.Impostor, false)) || KnowOutsider(Insider, target))
+                    if (CanSeeImpostorAbilities.GetBool())
+                        return true;
+                    break;
+                case RoleType.Madmate:
+                    if (KnowMadmates(Insider))
+                        return true;
+                    break;
+            }
             return KnowGhostRole(Insider, target);
         }
         public static bool KnowGhostRole(PlayerControl Insider, PlayerControl target) //幽霊の役職が見えるケース
@@ -88,6 +100,8 @@ namespace TownOfHost
             int killCount = KillCount(seer);
             return killCount >= KillCountToSeeMadmates.GetInt();
         }
+        // public static bool KnowOutsider(PlayerControl Insider, PlayerControl Outsider)
+        // => KnowMadmates(Insider) && CanSeeOutsider.GetBool() && Outsider.Is(CustomRoles.Outsider);
         public static int KillCount(PlayerControl Insider)
         {
             int KillCount = 0;

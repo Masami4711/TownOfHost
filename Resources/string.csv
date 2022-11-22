@@ -396,6 +396,7 @@
 "InsiderCanSeeAllGhostsRoles","Insider Can See All Ghost's Roles","幽霊全員の役職が分かる"
 "InsiderCanSeeMadmates","Insider Can See Madmates","マッドメイトが分かる"
 "InsiderKillCountToSeeMadmates","Insider's Kill Count To See Madmates","必要なキル数"
+"InsiderCanSeeOutsider","Insider Can Also See Outsider","アウトサイダーも分かる"
 
 "## かくれんぼ設定"
 "HideAndSeekOptions","Hide and Seek Settings","かくれんぼの設定","躲猫猫设置","躲貓貓設定","Настройки Пряток",""
