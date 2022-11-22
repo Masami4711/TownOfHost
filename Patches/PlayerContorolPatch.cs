@@ -245,6 +245,8 @@ namespace TownOfHost
                         TimeThief.OnCheckMurder(killer);
                         break;
                     case CustomRoles.Insider:
+                        if (Insider.KnowOutsider(killer, target))
+                            return false;
                         Insider.OnCheckMurder(killer, target);
                         break;
                     case CustomRoles.Outsider:

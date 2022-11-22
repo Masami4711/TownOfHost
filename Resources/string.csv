@@ -402,6 +402,7 @@
 "InsiderCanSeeAllGhostsRoles","Insider Can See All Ghost's Roles","幽霊全員の役職が分かる"
 "InsiderCanSeeMadmates","Insider Can See Madmates","マッドメイトが分かる"
 "InsiderKillCountToSeeMadmates","Insider's Kill Count To See Madmates","必要なキル数"
+"InsiderCanSeeOutsider","Insider Can Also See Outsider","アウトサイダーも分かる"
 "OutsiderCanSeeImpostor","Outsider Can See Impostor","インポスターが分かる","","","",""
 "OutsiderKillCountToSeeImpostors","Outsider's Kill Count To See Impostors","必要なキル数","","","",""
 "OutsiderCanSeeAllTeamImpostors","Outsider Can See All Team Impostors","インポスター陣営全員が分かる"
