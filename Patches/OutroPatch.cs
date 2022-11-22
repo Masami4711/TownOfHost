@@ -47,6 +47,7 @@ namespace TownOfHost
                 }
             }
             Egoist.OverrideCustomWinner();
+            Runaway.OverrideCustomWinner();
 
             //廃村時の処理など
             if (endGameResult.GameOverReason == GameOverReason.HumansDisconnect ||
@@ -73,6 +74,7 @@ namespace TownOfHost
                 }
             }
             TeamEgoist.SoloWin(winner);
+            Runaway.SoloWin(winner);
 
             ///以降追加勝利陣営 (winnerリセット無し)
             //Opportunist
@@ -91,7 +93,7 @@ namespace TownOfHost
                         winner.Add(pc);
                         CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.SchrodingerCat);
                     }
-                if (Runaway.IsAliveWin(pc) || Runaway.IsEscapeWin(pc))
+                if (Runaway.IsAliveWin(pc.PlayerId) || Runaway.IsEscapeWin(pc.PlayerId))
                 {
                     winner.Add(pc);
                     CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);
