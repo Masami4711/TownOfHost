@@ -1,3 +1,4 @@
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,13 +40,21 @@ namespace TownOfHost
             __instance.ImpostorVentButton.ToggleVisible(isActive);
             __instance.AbilityButton.ToggleVisible(false);
         }
+        public static int KillCount(byte playerId)
+            => Main.PlayerStates[playerId].GetKillCount(true);
         public static bool KnowImpostor(PlayerControl seer, PlayerControl target = null)
             => seer.Is(CustomRoles.Outsider) && CanSeeImpostor.GetBool()
+            && KillCount(seer.PlayerId) >= KillCountToSeeImpostors.GetInt()
             && (target == null || target.Is(RoleType.Impostor, CanSeeAllTeamImpostors.GetBool()));
         public static bool KnowMadmate(PlayerControl seer, PlayerControl target)
             => KnowImpostor(seer) && CanSeeAllTeamImpostors.GetBool()
             && target.Is(RoleType.Madmate);
         public static bool OnCheckMurder(PlayerControl killer, PlayerControl target)
             => killer.Is(CustomRoles.Outsider) && !KnowImpostor(killer, target);
+        public static string GetKillCount(byte playerId)
+        {
+            if (!CanSeeImpostor.GetBool()) return "";
+            return Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), KillCount(playerId) >= KillCountToSeeImpostors.GetInt() ? " ★" : $" ({KillCount(playerId)}/{KillCountToSeeImpostors.GetInt()})");
+        }
     }
 }
