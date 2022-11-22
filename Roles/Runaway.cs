@@ -89,6 +89,7 @@ namespace TownOfHost
             pc.RpcExileV2();
             Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Escape;
             Main.PlayerStates[pc.PlayerId].SetDead();
+            pc.SetRealKiller(pc);
             Utils.CustomSyncAllSettings();
             Utils.NotifyRoles();
         }
