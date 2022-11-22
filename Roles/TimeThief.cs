@@ -48,10 +48,6 @@ namespace TownOfHost
             Utils.CustomSyncAllSettings();
         }
         public static string GetDecreacedTime(byte playerId)
-        {
-            var pc = Utils.GetPlayerById(playerId);
-            if (pc = null) return "";
-            return Utils.ColorString(Color.yellow, Main.PlayerStates[pc.PlayerId].GetKillCount(true) > 0 ? $" -{DecreaseMeetingTime.GetInt() * Main.PlayerStates[pc.PlayerId].GetKillCount(true)}s" : "");
-        }
+            => Utils.ColorString(Color.yellow, Main.PlayerStates[playerId].GetKillCount(true) > 0 ? $" -{DecreaseMeetingTime.GetInt() * Main.PlayerStates[playerId].GetKillCount(true)}s" : "");
     }
 }

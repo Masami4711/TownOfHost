@@ -9,7 +9,6 @@ namespace TownOfHost
     {
         static readonly int Id = 2800;
         static List<byte> playerIdList = new();
-        public static Dictionary<byte, PlayerControl> IsKilledByInsider = new();
         private static OptionItem CanSeeImpostorAbilities;
         private static OptionItem CanSeeAllGhostsRoles;
         private static OptionItem CanSeeMadmates;
@@ -30,7 +29,6 @@ namespace TownOfHost
         }
         public static void Init()
         {
-            IsKilledByInsider = new();
             playerIdList = new();
         }
         public static void Add(byte playerId)
@@ -38,28 +36,6 @@ namespace TownOfHost
             playerIdList.Add(playerId);
         }
         public static bool IsEnable() => playerIdList.Count > 0;
-        public static void ReceiveRPC(MessageReader msg)
-        {
-            byte insiderId = msg.ReadByte();
-            byte insiderTargetId = msg.ReadByte();
-            IsKilledByInsider.Add(insiderTargetId, Utils.GetPlayerById(insiderId));
-        }
-        public static void RpcInsiderKill(byte insider, byte player)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.InsiderKill, Hazel.SendOption.Reliable, -1);
-            writer.Write(insider);
-            writer.Write(player);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
-        public static void OnCheckMurder(PlayerControl killer, PlayerControl target)
-        {
-            if (IsKilledByInsider.ContainsKey(target.PlayerId)) return;
-            float Norma = KillCountToSeeMadmates.GetInt();
-            IsKilledByInsider.Add(target.PlayerId, killer);
-            RpcInsiderKill(killer.PlayerId, target.PlayerId);
-            if (CanSeeMadmates.GetBool()) Logger.Info($"{killer.GetNameWithRole()} : 現在{KillCount(killer)}/{Norma}キル", "Insider");
-            Utils.NotifyRoles();
-        }
         public static bool KnowImpostorAbiliies(PlayerControl seer) => seer.Is(CustomRoles.Insider) && CanSeeImpostorAbilities.GetBool();
         public static bool KnowOtherRole(PlayerControl Insider, PlayerControl target) //Insider能力で役職が分かるケースのみ
         {
@@ -90,24 +66,16 @@ namespace TownOfHost
             // ここまで前提条件
             if (!target.Data.IsDead) return false;
             if (CanSeeAllGhostsRoles.GetBool()) return true; //全員見える
-            else if (IsKilledByInsider.TryGetValue(target.PlayerId, out var killer) && Insider == killer) return true; //自分でキルした相手
+            else if (target.GetRealKiller() == Insider) return true; //自分でキルした相手
             return false;
         }
         public static bool KnowMadmates(PlayerControl seer)
-        {
-            if (!seer.Is(CustomRoles.Insider) || !CanSeeMadmates.GetBool()) return false;
-            int killCount = KillCount(seer);
-            return killCount >= KillCountToSeeMadmates.GetInt();
-        }
+            => seer.Is(CustomRoles.Insider) && CanSeeMadmates.GetBool()
+            && KillCount(seer) >= KillCountToSeeMadmates.GetInt();
         public static bool KnowOutsider(PlayerControl Insider, PlayerControl Outsider)
         => KnowMadmates(Insider) && CanSeeOutsider.GetBool() && Outsider.Is(CustomRoles.Outsider);
         public static int KillCount(PlayerControl Insider)
-        {
-            int KillCount = 0;
-            foreach (var kvp in IsKilledByInsider)
-                if (kvp.Value == Insider) KillCount++;
-            return KillCount;
-        }
+            => Main.PlayerStates[Insider.PlayerId].GetKillCount(true);
         public static string GetKillCount(byte playerId)
         {
             string ProgressText = "";

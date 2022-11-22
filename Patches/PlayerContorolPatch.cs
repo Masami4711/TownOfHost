@@ -203,7 +203,6 @@ namespace TownOfHost
                     case CustomRoles.Insider:
                         if (Insider.KnowOutsider(killer, target))
                             return false;
-                        Insider.OnCheckMurder(killer, target);
                         break;
                     case CustomRoles.Outsider:
                         if (!Outsider.OnCheckMurder(killer, target))
