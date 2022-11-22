@@ -123,6 +123,7 @@ namespace TownOfHost
                             {
                                 if (ToughGuy.CheckAndGuardSpecificKill(pc, target, PlayerState.DeathReason.Bombed)) continue;
                                 Main.PlayerStates[target.PlayerId].deathReason = PlayerState.DeathReason.Bombed;
+                                target.SetRealKiller(pc);
                                 target.RpcMurderPlayer(target);
                             }
                         }

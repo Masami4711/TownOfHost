@@ -95,55 +95,11 @@ namespace TownOfHost
             }
 
             //キル可能判定
-            if (killer.PlayerId != target.PlayerId)
+            if (killer.PlayerId != target.PlayerId && !killer.CanUseKillButton())
             {
-                //自殺でない場合のみ役職チェック
-                switch (killer.GetCustomRole())
-                {
-                    //==========インポスター役職==========//
-                    case CustomRoles.Mafia:
-                        if (!killer.CanUseKillButton())
-                        {
-                            Logger.Info(killer?.Data?.PlayerName + "はMafiaだったので、キルはキャンセルされました。", "CheckMurder");
-                            return false;
-                        }
-                        else
-                        {
-                            Logger.Info(killer?.Data?.PlayerName + "はMafiaですが、他のインポスターがいないのでキルが許可されました。", "CheckMurder");
-                        }
-                        break;
-                    case CustomRoles.FireWorks:
-                        if (!killer.CanUseKillButton())
-                        {
-                            return false;
-                        }
-                        break;
-                    case CustomRoles.Sniper:
-                        if (!killer.CanUseKillButton())
-                        {
-                            return false;
-                        }
-                        break;
-                    case CustomRoles.Mare:
-                        if (!killer.CanUseKillButton())
-                            return false;
-                        break;
-
-                    //==========マッドメイト系役職==========//
-                    case CustomRoles.SKMadmate:
-                        //キル可能職がサイドキックされた場合
-                        return false;
-
-                    //==========第三陣営役職==========//
-
-                    //==========クルー役職==========//
-                    case CustomRoles.Sheriff:
-                        if (!Sheriff.CanUseKillButton(killer.PlayerId))
-                            return false;
-                        break;
-                }
+                Logger.Info(killer.GetNameWithRole() + "はKillできないので、キルはキャンセルされました。", "CheckMurder");
+                return false;
             }
-
 
             //キルされた時の特殊判定
             switch (target.GetCustomRole())
@@ -332,6 +288,7 @@ namespace TownOfHost
             FixedUpdatePatch.LoversSuicide(target.PlayerId);
 
             Main.PlayerStates[target.PlayerId].SetDead();
+            target.SetRealKiller(__instance, true); //既に追加されてたらスキップ
             Utils.CountAliveImpostors();
             Utils.CustomSyncAllSettings();
             Utils.NotifyRoles();
@@ -373,6 +330,7 @@ namespace TownOfHost
                         PlayerControl targetw = min.Key;
                         if (!ToughGuy.CheckAndGuardSpecificKill(shapeshifter, targetw, PlayerState.DeathReason.Kill))
                         {
+                            targetw.SetRealKiller(shapeshifter);
                             Logger.Info($"{targetw.GetNameWithRole()}was killed", "Warlock");
                             cp.RpcMurderPlayerV2(targetw);//殺す
                         }
@@ -474,6 +432,7 @@ namespace TownOfHost
                 if (bitten != null && !bitten.Data.IsDead)
                 {
                     Main.PlayerStates[bitten.PlayerId].deathReason = PlayerState.DeathReason.Bite;
+                    bitten.SetRealKiller(Utils.GetPlayerById(vampireID));
                     //Protectは強制的にはがす
                     if (bitten.protectedByGuardian)
                         bitten.RpcMurderPlayer(bitten);
@@ -541,8 +500,9 @@ namespace TownOfHost
                             if (!bitten.Data.IsDead)
                             {
                                 Main.PlayerStates[bitten.PlayerId].deathReason = PlayerState.DeathReason.Bite;
-                                bitten.RpcMurderPlayer(bitten);
                                 var vampirePC = Utils.GetPlayerById(vampireID);
+                                bitten.SetRealKiller(vampirePC);
+                                bitten.RpcMurderPlayer(bitten);
                                 Logger.Info("Vampireに噛まれている" + bitten?.Data?.PlayerName + "を自爆させました。", "Vampire");
                                 if (vampirePC.IsAlive())
                                 {
@@ -685,7 +645,9 @@ namespace TownOfHost
                             {
                                 if (!ToughGuy.CheckAndGuardSpecificKill(player, target, PlayerState.DeathReason.Kill))
                                 {
-                                    RPC.PlaySoundRPC(Main.PuppeteerList[player.PlayerId], Sounds.KillSound);
+                                    var puppeteerId = Main.PuppeteerList[player.PlayerId];
+                                    RPC.PlaySoundRPC(puppeteerId, Sounds.KillSound);
+                                    target.SetRealKiller(Utils.GetPlayerById(puppeteerId));
                                     player.RpcMurderPlayer(target);
                                 }
                                 Utils.CustomSyncAllSettings();
@@ -1093,6 +1055,7 @@ namespace TownOfHost
                             if (pc != __instance.myPlayer)
                             {
                                 //生存者は焼殺
+                                pc.SetRealKiller(__instance.myPlayer);
                                 pc.RpcMurderPlayer(pc);
                                 Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Torched;
                                 Main.PlayerStates[pc.PlayerId].SetDead();
