@@ -251,25 +251,6 @@ namespace TownOfHost
         public static void Postfix(MeetingHud __instance)
         {
             SoundManager.Instance.ChangeMusicVolume(0f);
-            foreach (var pva in __instance.playerStates)
-            {
-                var pc = Utils.GetPlayerById(pva.TargetPlayerId);
-                if (pc == null) continue;
-                var RoleTextData = Utils.GetRoleText(pc);
-                var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
-                roleTextMeeting.transform.SetParent(pva.NameText.transform);
-                roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
-                roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = RoleTextData.Item1;
-                if (Main.VisibleTasksCount) roleTextMeeting.text += Utils.GetProgressText(pc);
-                roleTextMeeting.color = RoleTextData.Item2;
-                roleTextMeeting.gameObject.name = "RoleTextMeeting";
-                roleTextMeeting.enableWordWrapping = false;
-                roleTextMeeting.enabled =
-                    pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
-                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
-                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM));
-            }
             if (Options.SyncButtonMode.GetBool())
             {
                 Utils.SendMessage(string.Format(GetString("Message.SyncButtonLeft"), Options.SyncedButtonCount.GetFloat() - Options.UsedButtonCount));
@@ -295,9 +276,20 @@ namespace TownOfHost
             foreach (var pva in __instance.playerStates)
             {
                 if (pva == null) continue;
-                PlayerControl seer = PlayerControl.LocalPlayer;
-                PlayerControl target = Utils.GetPlayerById(pva.TargetPlayerId);
+                var seer = PlayerControl.LocalPlayer;
+                var target = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (target == null) continue;
+                var RoleTextData = Utils.GetRoleText(target);
+                var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
+                roleTextMeeting.transform.SetParent(pva.NameText.transform);
+                roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
+                roleTextMeeting.fontSize = 1.5f;
+                roleTextMeeting.text = RoleTextData.Item1 + Utils.GetProgressText(target);
+                roleTextMeeting.color = RoleTextData.Item2;
+                roleTextMeeting.gameObject.name = "RoleTextMeeting";
+                roleTextMeeting.enableWordWrapping = false;
+                roleTextMeeting.enabled = seer.KnowTargetRole(target);
+
 
                 //会議画面での名前変更
                 if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)

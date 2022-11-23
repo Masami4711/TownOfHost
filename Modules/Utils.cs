@@ -775,10 +775,7 @@ namespace TownOfHost
                         if (target == seer || target.Data.Disconnected) continue;
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
-                        //他人のタスクはtargetがタスクを持っているかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetTaskText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"{GetProgressText(target)}" : "";
-                        //他人の役職とタスクは幽霊が他人の役職を見れるようになっていてかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
-                        string TargetRoleText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
+                        string TargetRoleText = seer.KnowTargetRole(target) ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())} {GetProgressText(target)}</size>\r\n" : "";
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isMeeting);
                         if (seer.KnowTargetRoleColor(target, !isMeeting))
@@ -805,9 +802,6 @@ namespace TownOfHost
                         // }
                         switch (target.GetCustomRole())
                         {
-                            case CustomRoles.GM:
-                                TargetRoleText = $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}</size>\r\n";
-                                break;
                             case CustomRoles.MadSnitch:
                                 if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
                                     TargetMark += ColorString(Palette.ImpostorRed, "★");
