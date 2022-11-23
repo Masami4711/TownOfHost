@@ -81,17 +81,21 @@ namespace TownOfHost
                 text = $"<size={fontSize}>" + text + "</size>";
             return text;
         }
-        public static void OnEnterVent(PlayerControl pc)
+        public static void OnEnterVent(PlayerControl pc, int ventId)
         {
             if (!AmongUsClient.Instance.AmHost || !AmongUsClient.Instance.IsGameStarted) return;
-            if (!pc.Is(CustomRoles.Runaway) || !CanUseVent(pc)) return;
+            pc?.MyPhysics?.RpcBootFromVent(ventId);
+            if (!CanUseVent(pc)) return;
+            new LateTask(() =>
+            {
+                Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Escape;
+                Main.PlayerStates[pc.PlayerId].SetDead();
+                pc.SetRealKiller(pc);
+                pc.RpcExileV2();
+                Utils.CustomSyncAllSettings();
+                Utils.NotifyRoles();
+            }, 0.25f, "Runaway Escape");
 
-            pc.RpcExileV2();
-            Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Escape;
-            Main.PlayerStates[pc.PlayerId].SetDead();
-            pc.SetRealKiller(pc);
-            Utils.CustomSyncAllSettings();
-            Utils.NotifyRoles();
         }
     }
 }

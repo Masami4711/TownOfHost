@@ -1028,7 +1028,7 @@ namespace TownOfHost
                     }
                     break;
                 case CustomRoles.Runaway:
-                    pc?.MyPhysics?.RpcBootFromVent(__instance.Id);
+                    Runaway.OnEnterVent(pc, __instance.Id);
                     break;
             }
         }
@@ -1063,7 +1063,6 @@ namespace TownOfHost
                     CustomWinnerHolder.WinnerIds.Add(__instance.myPlayer.PlayerId);
                     return true;
                 }
-                Runaway.OnEnterVent(__instance.myPlayer);
                 if (__instance.myPlayer.Is(CustomRoles.Sheriff) ||
                 __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
                 __instance.myPlayer.Is(CustomRoles.Arsonist) ||
