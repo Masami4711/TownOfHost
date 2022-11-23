@@ -300,9 +300,8 @@ namespace TownOfHost
                 if (target == null) continue;
 
                 //会議画面での名前変更
-                //自分自身の名前の色を変更
-                if (target.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
-                    pva.NameText.color = seer.GetRoleColor();//名前の色を変更
+                if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
+                    pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
                 foreach (var subRole in target.GetCustomSubRoles())
                     switch (subRole)
@@ -312,13 +311,10 @@ namespace TownOfHost
                                 pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
                             break;
                     }
-                switch (target.GetCustomRole().GetRoleType())
-                {
-                    case RoleType.Impostor:
-                        if (seer.KnowSpecificImpostor(target))
-                            pva.NameText.color = Palette.ImpostorRed;
-                        break;
-                }
+                // switch (target.GetCustomRole().GetRoleType())
+                // {
+
+                // }
                 switch (target.GetCustomRole())
                 {
                     case CustomRoles.MadSnitch:
@@ -328,14 +324,6 @@ namespace TownOfHost
                     case CustomRoles.Snitch:
                         if (seer.KnowSnitch(target))
                             pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.Egoist:
-                        if (seer.KnowEgoist())
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Egoist); //変更対象の名前の色変更
-                        break;
-                    case CustomRoles.Jackal:
-                        if (seer.KnowJackal())
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Jackal); //変更対象の名前をジャッカル色にする
                         break;
                 }
 

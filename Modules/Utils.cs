@@ -773,7 +773,7 @@ namespace TownOfHost
                     {
                         //targetがseer自身の場合は何もしない
                         if (target == seer || target.Data.Disconnected) continue;
-                        TownOfHost.Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
+                        Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
                         //他人のタスクはtargetがタスクを持っているかつ、seerが死んでいる場合のみ表示されます。それ以外の場合は空になります。
                         string TargetTaskText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"{GetProgressText(target)}" : "";
@@ -781,6 +781,8 @@ namespace TownOfHost
                         string TargetRoleText = seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool() ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())}{TargetTaskText}</size>\r\n" : "";
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isMeeting);
+                        if (seer.KnowTargetRoleColor(target, !isMeeting))
+                            TargetPlayerName = ColorString(target.GetRoleColor(), TargetPlayerName);
                         //名前の後ろに付けるマーカー
                         string TargetMark = "";
                         //呪われている人
@@ -797,13 +799,10 @@ namespace TownOfHost
                                     break;
                             }
                         }
-                        switch (target.GetCustomRole().GetRoleType())
-                        {
-                            case RoleType.Impostor:
-                                if (seer.KnowSpecificImpostor(target, !isMeeting))
-                                    TargetPlayerName = ColorString(Palette.ImpostorRed, TargetPlayerName);
-                                break;
-                        }
+                        // switch (target.GetCustomRole().GetRoleType())
+                        // {
+
+                        // }
                         switch (target.GetCustomRole())
                         {
                             case CustomRoles.GM:
@@ -817,14 +816,6 @@ namespace TownOfHost
                                 //タスク完了直前のSnitchにマークを表示
                                 if (seer.KnowSnitch(target))
                                     TargetMark += ColorString(GetRoleColor(CustomRoles.Snitch), "★");
-                                break;
-                            case CustomRoles.Egoist:
-                                if (seer.KnowEgoist())
-                                    TargetPlayerName = ColorString(GetRoleColor(CustomRoles.Egoist), TargetPlayerName);
-                                break;
-                            case CustomRoles.Jackal:
-                                if (seer.KnowJackal())
-                                    TargetPlayerName = ColorString(GetRoleColor(CustomRoles.Jackal), TargetPlayerName);
                                 break;
                         }
 
@@ -855,9 +846,7 @@ namespace TownOfHost
                         var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
                         if (ncd.color != null) TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
 
-                        string TargetDeathReason = "";
-                        if (seer.KnowDeathReason(target))
-                            TargetDeathReason = $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(target.PlayerId))})";
+                        string TargetDeathReason = seer.KnowDeathReason(target) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(target.PlayerId))})" : "";
 
                         if (IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool() && !isMeeting)
                             TargetPlayerName = $"<size=0%>{TargetPlayerName}</size>";

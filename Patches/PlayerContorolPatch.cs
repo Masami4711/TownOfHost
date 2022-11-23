@@ -724,7 +724,7 @@ namespace TownOfHost
 
                     //名前色変更処理
                     //自分自身の名前の色を変更
-                    if (target.AmOwner && AmongUsClient.Instance.IsGameStarted)
+                    if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
                     { //targetが自分自身
                         RealName = Utils.ColorString(target.GetRoleColor(), RealName); //名前の色を変更
                     }
@@ -740,14 +740,10 @@ namespace TownOfHost
                         }
                     }
 
-                    switch (target.GetCustomRole().GetRoleType())
-                    {
-                        case RoleType.Impostor:
-                            //タスクを終わらせたSnitchがインポスターを確認できる
-                            if (seer.KnowSpecificImpostor(target, true))
-                                RealName = Utils.ColorString(Palette.ImpostorRed, RealName);
-                            break;
-                    }
+                    // switch (target.GetCustomRole().GetRoleType())
+                    // {
+
+                    // }
 
                     switch (target.GetCustomRole())
                     {
@@ -786,14 +782,6 @@ namespace TownOfHost
                                     Utils.NotifyRoles(SpecifySeer: target);
                                 }
                             }
-                            break;
-                        case CustomRoles.Egoist:
-                            if (seer.KnowEgoist())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName);
-                            break;
-                        case CustomRoles.Jackal:
-                            if (seer.KnowJackal())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jackal), RealName);
                             break;
                     }
 
@@ -848,9 +836,6 @@ namespace TownOfHost
                         }
                     }
 
-                    /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
-                        Mark = isBlocked ? "(true)" : "(false)";
-                    }*/
                     if (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool())
                         RealName = $"<size=0>{RealName}</size> ";
 
