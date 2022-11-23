@@ -651,9 +651,6 @@ namespace TownOfHost
                 //seerが落ちているときに何もしない
                 if (seer.Data.Disconnected) continue;
 
-                //タスクなど進行状況を含むテキスト
-                string SelfTaskText = GetProgressText(seer);
-
                 //名前の後ろに付けるマーカー
                 string SelfMark = "";
 
@@ -739,7 +736,7 @@ namespace TownOfHost
                     SeerRealName = seer.GetRoleInfo();
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
-                string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), GetRoleName(seer.PlayerId))}{SelfTaskText}</size>";
+                string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), GetRoleName(seer.PlayerId))} {GetProgressText(seer)}</size>";
                 string SelfDeathReason = seer.KnowDeathReason(seer) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(seer.PlayerId))})" : "";
                 string SelfName = $"{ColorString(seer.GetRoleColor(), SeerRealName)}{SelfDeathReason}{SelfMark}";
                 SelfName = SelfRoleName + "\r\n" + SelfName;
@@ -977,6 +974,11 @@ namespace TownOfHost
             }
 
             return LivingImpostorsNum <= 0;
+        }
+        public static string GetTargetMark(PlayerControl seer, PlayerControl target, bool isintask = false)
+        {
+            string TargetMark = "";
+            return TargetMark;
         }
         public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
         {
