@@ -695,9 +695,7 @@ namespace TownOfHost
                     var seer = PlayerControl.LocalPlayer;
                     var target = __instance;
 
-                    var RoleTextData = Utils.GetRoleText(target);
-                    RoleText.text = RoleTextData.Item1 + $" {Utils.GetProgressText(target)}";
-                    RoleText.color = RoleTextData.Item2;
+                    RoleText.text = Utils.GetDisplayRoleText(seer, target);
                     RoleText.enabled = seer.KnowTargetRole(target);
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                     {

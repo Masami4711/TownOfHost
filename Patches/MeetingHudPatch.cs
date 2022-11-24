@@ -290,13 +290,11 @@ namespace TownOfHost
                 var seer = PlayerControl.LocalPlayer;
                 var target = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (target == null) continue;
-                var RoleTextData = Utils.GetRoleText(target);
                 var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = RoleTextData.Item1 + Utils.GetProgressText(target);
-                roleTextMeeting.color = RoleTextData.Item2;
+                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target);
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
                 roleTextMeeting.enabled = seer.KnowTargetRole(target);

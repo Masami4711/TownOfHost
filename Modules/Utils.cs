@@ -142,16 +142,22 @@ namespace TownOfHost
             }
             return;
         }
+        ///<summary>
+        ///最終結果にも表示する役職名
+        ///</summary>
         public static string GetRoleName(byte playerId)
         {
-            var role = Main.PlayerStates[playerId].MainRole;
-            var roleName = GetRoleName(role);
-            if (role.IsImpostor() && role != CustomRoles.LastImpostor && IsLastImpostor(playerId))
-            {
-                roleName = GetRoleString("Last") + " " + roleName;
-            }
+            var mainRole = Main.PlayerStates[playerId].MainRole;
+            var subRoles = Main.PlayerStates[playerId].SubRoles;
+            var RoleName = GetRoleName(mainRole);
+            // switch (mainRole)
+            // {
 
-            return roleName;
+            // }
+            if (mainRole.IsImpostor() && mainRole != CustomRoles.LastImpostor && IsLastImpostor(playerId))
+                RoleName = GetRoleString("Last") + RoleName;
+            Color roleColor = GetRoleColor(mainRole);
+            return ColorString(roleColor, RoleName);
         }
         public static string GetRoleName(CustomRoles role)
         {
@@ -172,20 +178,18 @@ namespace TownOfHost
             if (!Main.roleColors.TryGetValue(role, out var hexColor)) hexColor = "#ffffff";
             return hexColor;
         }
-        public static (string, Color) GetRoleText(PlayerControl player)
+        ///<summary>
+        ///seerから見たtargetの役職表示　誤認させる場合はここで書き換え
+        ///</summary>
+        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target)
         {
-            string RoleText = "Invalid Role";
-            Color TextColor = Color.red;
+            string RoleText = seer.KnowTargetRole(target) ? GetRoleName(target.PlayerId) : "";
+            string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
+            // switch (seer.GetCustomRole())
+            // {
 
-            var cRole = player.GetCustomRole();
-            /*if (player.isLastImpostor())
-            {
-                RoleText = $"{getRoleName(cRole)} ({getString("Last")})";
-            }
-            else*/
-            RoleText = GetRoleName(cRole);
-
-            return (RoleText, GetRoleColor(cRole));
+            // }
+            return RoleText + " " + TaskText;
         }
 
         public static string GetVitalText(byte playerId, bool RealKillerColor = false)
@@ -686,7 +690,7 @@ namespace TownOfHost
                 }
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
-                string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), GetRoleName(seer.PlayerId))} {GetProgressText(seer)}</size>";
+                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer)}</size>";
                 string SelfName = GetDisplayRealName(seer, seer, !isMeeting) + GetDeathReasonText(seer, seer) + GetTargetMark(seer, seer, !isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
                 if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
@@ -721,7 +725,8 @@ namespace TownOfHost
                         if (target == seer || target.Data.Disconnected) continue;
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
-                        string TargetRoleText = seer.KnowTargetRole(target) ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())} {GetProgressText(target)}</size>\r\n" : "";
+                        string TargetRoleText = GetDisplayRoleText(seer, target);
+                        if (TargetRoleText != " ") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
                         string TargetPlayerName = GetDisplayRealName(seer, target, !isMeeting);
                         string TargetDeathReason = GetDeathReasonText(seer, target);
                         string TargetMark = GetTargetMark(seer, target, !isMeeting);
