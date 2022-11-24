@@ -329,6 +329,9 @@ namespace TownOfHost
                 case CustomRoles.Jackal:
                     Jackal.Add(targetId);
                     break;
+                case CustomRoles.Runaway:
+                    Runaway.Add(targetId);
+                    break;
 
                 case CustomRoles.Sheriff:
                     Sheriff.Add(targetId);

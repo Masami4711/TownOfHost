@@ -18,7 +18,7 @@ namespace TownOfHost
             if (__instance.Role.Role == RoleTypes.Engineer)
             {
                 __instance.TitleText.color = Utils.GetRoleColor(CustomRoles.Engineer);
-                if (CustomRoles.Madmate.IsEnable() || CustomRoles.Terrorist.IsEnable() || CustomRoles.Runaway.IsEnable()) forced = true;
+                if (CustomRoles.Madmate.IsEnable() || CustomRoles.Terrorist.IsEnable() || Runaway.IsEnable) forced = true;
             }
             if (__instance.Role.Role == RoleTypes.GuardianAngel)
             {

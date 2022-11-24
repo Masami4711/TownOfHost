@@ -93,7 +93,7 @@ namespace TownOfHost
                         winner.Add(pc);
                         CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.SchrodingerCat);
                     }
-                if (Runaway.IsAliveWin(pc.PlayerId) || Runaway.IsEscapeWin(pc.PlayerId))
+                if (Runaway.IsAliveWin(pc.PlayerId) || (Runaway.IsEscapeWin(pc.PlayerId) && CustomWinnerHolder.WinnerTeam != CustomWinner.Runaway))
                 {
                     winner.Add(pc);
                     CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);

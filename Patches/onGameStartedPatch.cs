@@ -109,6 +109,7 @@ namespace TownOfHost
             Jackal.Init();
             Sheriff.Init();
             EvilTracker.Init();
+            Runaway.Init();
             CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
             IRandom.SetInstanceById(Options.RoleAssigningAlgorithm.GetSelection());
@@ -368,6 +369,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.Jackal:
                             Jackal.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.Runaway:
+                            Runaway.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Sheriff:
