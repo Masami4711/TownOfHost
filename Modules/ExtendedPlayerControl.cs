@@ -728,6 +728,15 @@ namespace TownOfHost
             var killerId = Main.PlayerStates[target.PlayerId].GetRealKiller();
             return killerId == byte.MaxValue ? null : Utils.GetPlayerById(killerId);
         }
+        public static bool KnowTargetRole(this PlayerControl seer, PlayerControl target)
+            => seer == target
+            || target.Is(CustomRoles.GM)
+            || (Main.VisibleTasksCount && seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool());
+        public static bool KnowTargetRoleColor(this PlayerControl seer, PlayerControl target, bool isInTask = false)
+            => seer == target
+            || seer.KnowSpecificImpostor(target, isInTask)
+            || (seer.KnowEgoist() && target.Is(CustomRoles.Egoist))
+            || (seer.KnowJackal() && target.Is(CustomRoles.Jackal));
         public static bool KnowImpostor(this PlayerControl seer)
             => ((seer.Is(CustomRoles.Snitch) || seer.Is(CustomRoles.MadSnitch)) && seer.GetPlayerTaskState().IsTaskFinished)
             || seer.Is(CustomRoles.MSchrodingerCat);

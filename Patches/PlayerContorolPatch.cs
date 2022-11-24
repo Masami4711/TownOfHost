@@ -695,80 +695,28 @@ namespace TownOfHost
                 }
                 if (GameStates.IsInGame)
                 {
-                    var RoleTextData = Utils.GetRoleText(__instance);
-                    //if (Options.CurrentGameMode == CustomGameMode.HideAndSeek)
-                    //{
-                    //    var hasRole = main.AllPlayerCustomRoles.TryGetValue(__instance.PlayerId, out var role);
-                    //    if (hasRole) RoleTextData = Utils.GetRoleTextHideAndSeek(__instance.Data.Role.Role, role);
-                    //}
-                    RoleText.text = RoleTextData.Item1;
-                    RoleText.color = RoleTextData.Item2;
-                    if (__instance.AmOwner) RoleText.enabled = true; //自分ならロールを表示
-                    else if (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) RoleText.enabled = true; //他プレイヤーでVisibleTasksCountが有効なおかつ自分が死んでいるならロールを表示
-                    else RoleText.enabled = false; //そうでなければロールを非表示
-                    if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
-                    {
-                        RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示
-                        if (!__instance.AmOwner) __instance.cosmetics.nameText.text = __instance?.Data?.PlayerName;
-                    }
-                    if (Main.VisibleTasksCount) //他プレイヤーでVisibleTasksCountは有効なら
-                        RoleText.text += $" {Utils.GetProgressText(__instance)}"; //ロールの横にタスクなど進行状況表示
-
-
                     //変数定義
                     var seer = PlayerControl.LocalPlayer;
                     var target = __instance;
 
-                    string RealName;
-                    string Mark = "";
+                    var RoleTextData = Utils.GetRoleText(target);
+                    RoleText.text = RoleTextData.Item1 + $" {Utils.GetProgressText(target)}";
+                    RoleText.color = RoleTextData.Item2;
+                    RoleText.enabled = seer.KnowTargetRole(target);
+                    if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
+                    {
+                        RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示
+                        if (!target.AmOwner) target.cosmetics.nameText.text = target?.Data?.PlayerName;
+                    }
+
                     string Suffix = "";
-
-                    //名前変更
-                    RealName = target.GetRealName();
-
-                    //名前色変更処理
-                    //自分自身の名前の色を変更
-                    if (target.AmOwner && AmongUsClient.Instance.IsGameStarted)
-                    { //targetが自分自身
-                        RealName = Utils.ColorString(target.GetRoleColor(), RealName); //名前の色を変更
-                    }
-
-                    foreach (var subRole in target.GetCustomSubRoles())
-                    {
-                        switch (subRole)
-                        {
-                            case CustomRoles.Lovers:
-                                if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
-                                    Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                                break;
-                        }
-                    }
-
-                    switch (target.GetCustomRole().GetRoleType())
-                    {
-                        case RoleType.Impostor:
-                            if (seer.KnowSpecificImpostor(target, true))
-                                RealName = Utils.ColorString(Palette.ImpostorRed, RealName);
-                            break;
-                        case RoleType.Madmate:
-                            if (Outsider.KnowMadmate(seer, target))
-                                Mark += Utils.ColorString(Palette.ImpostorRed, "★");
-                            break;
-                    }
 
                     switch (target.GetCustomRole())
                     {
                         case CustomRoles.EvilTracker:
                             if (GameStates.IsInTask) Suffix += EvilTracker.PCGetTargetArrow(seer, target);
                             break;
-                        case CustomRoles.MadSnitch:
-                            if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                                Mark += Utils.ColorString(Palette.ImpostorRed, "★");
-                            break;
                         case CustomRoles.Snitch:
-                            //タスク完了直前のSnitchにマークを表示
-                            if (seer.KnowSnitch(target))
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★");
                             //矢印オプションありならタスクが終わったスニッチはインポスター/キル可能な第三陣営の方角がわかる
                             if (target.KnowImpostor() && GameStates.IsInTask && Options.SnitchEnableTargetArrow.GetBool())
                             {
@@ -794,78 +742,10 @@ namespace TownOfHost
                                 }
                             }
                             break;
-                        case CustomRoles.Egoist:
-                            if (seer.KnowEgoist())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Egoist), RealName);
-                            break;
-                        case CustomRoles.Jackal:
-                            if (seer.KnowJackal())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Jackal), RealName);
-                            break;
                     }
-
-                    switch (seer.GetCustomRole())
-                    {
-                        case CustomRoles.EvilTracker:
-                            Mark += EvilTracker.GetTargetMark(seer, target);
-                            break;
-                        case CustomRoles.Puppeteer:
-                            Mark += Utils.GetPuppeteerMark(seer, target);
-                            break;
-                        case CustomRoles.Arsonist:
-                            if (target.AmOwner && seer.IsDouseDone())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), GetString("EnterVentToWin"));
-                            else if (seer.IsDousedPlayer(target))
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
-                            else if (Main.currentDousingTarget != 255 && Main.currentDousingTarget == target.PlayerId)
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "△");
-                            break;
-                        case CustomRoles.Executioner:
-                            Mark += Executioner.TargetMark(seer, target);
-                            break;
-                    }
-
-                    if (Sniper.IsEnable() && target.AmOwner)
-                    {
-                        //銃声が聞こえるかチェック
-                        Mark += Sniper.GetShotNotify(target.PlayerId);
-                    }
-
-                    //タスクが終わりそうなSnitchがいるとき、インポスター/キル可能な第三陣営に警告が表示される
-                    if (!GameStates.IsMeeting && CustomRoles.Snitch.IsEnable())
-                    { //targetがインポスターかつ自分自身
-                        var found = false;
-                        var update = false;
-                        var arrows = "";
-                        foreach (var pc in PlayerControl.AllPlayerControls)
-                        { //全員分ループ
-                            if (pc.Data.IsDead || pc.Data.Disconnected || !target.KnowSnitch(pc)) continue; //(スニッチ以外 || 死者 || 切断者)に用はない
-                            found = true;
-                            //矢印表示しないならこれ以上は不要
-                            if (!Options.SnitchEnableTargetArrow.GetBool()) break;
-                            update = CheckArrowUpdate(target, pc, update, false);
-                            var key = (target.PlayerId, pc.PlayerId);
-                            arrows += Main.targetArrows[key];
-                        }
-                        if (found && target.AmOwner) Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★" + arrows); //Snitch警告を表示
-                        if (AmongUsClient.Instance.AmHost && seer.PlayerId != target.PlayerId && update)
-                        {
-                            //更新があったら非Modに通知
-                            Utils.NotifyRoles(SpecifySeer: target);
-                        }
-                    }
-
-                    /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
-                        Mark = isBlocked ? "(true)" : "(false)";
-                    }*/
-                    if (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool())
-                        RealName = $"<size=0>{RealName}</size> ";
-
-                    //NameColorManager準拠の処理
-                    var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
-                    if (ncd.color != null) RealName = ncd.OpenTag + RealName + ncd.CloseTag;
-
-                    string DeathReason = seer.Data.IsDead && seer.KnowDeathReason(target) ? $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})" : "";
+                    string RealName = Utils.GetDisplayRealName(seer, target, true);
+                    string DeathReason = seer.Data.IsDead ? Utils.GetDeathReasonText(seer, target) : "";
+                    string Mark = Utils.GetTargetMark(seer, target, true);
                     //Mark・Suffixの適用
                     target.cosmetics.nameText.text = $"{RealName}{DeathReason}{Mark}";
 
@@ -874,7 +754,6 @@ namespace TownOfHost
                         //名前が2行になると役職テキストを上にずらす必要がある
                         RoleText.transform.SetLocalY(0.35f);
                         target.cosmetics.nameText.text += "\r\n" + Suffix;
-
                     }
                     else
                     {
