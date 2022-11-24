@@ -300,10 +300,10 @@ namespace TownOfHost
                 roleTextMeeting.enabled = seer.KnowTargetRole(target);
 
                 //会議画面での名前変更
-                if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
+                if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
                     pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
-                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, false);
+                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, true);
             }
         }
     }

@@ -737,9 +737,9 @@ namespace TownOfHost
                             }
                             break;
                     }
-                    string RealName = Utils.GetDisplayRealName(seer, target, true);
+                    string RealName = Utils.GetDisplayRealName(seer, target, false);
                     string DeathReason = seer.Data.IsDead ? Utils.GetDeathReasonText(seer, target) : "";
-                    string Mark = Utils.GetTargetMark(seer, target, true);
+                    string Mark = Utils.GetTargetMark(seer, target, false);
                     //Mark・Suffixの適用
                     target.cosmetics.nameText.text = $"{RealName}{DeathReason}{Mark}";
 
