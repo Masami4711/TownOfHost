@@ -295,51 +295,9 @@ namespace TownOfHost
                 if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
                     pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
-                foreach (var subRole in target.GetCustomSubRoles())
-                    switch (subRole)
-                    {
-                        case CustomRoles.Lovers:
-                            if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
-                                pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                            break;
-                    }
-                // switch (target.GetCustomRole().GetRoleType())
-                // {
-
-                // }
-                switch (target.GetCustomRole())
-                {
-                    case CustomRoles.MadSnitch:
-                        if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                            pva.NameText.text += Utils.ColorString(Palette.ImpostorRed, "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.Snitch:
-                        if (seer.KnowSnitch(target))
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
-                        break;
-                }
-
-                //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
-                switch (seer.GetCustomRole())
-                {
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
-                        break;
-                    case CustomRoles.Arsonist:
-                        if (seer.IsDousedPlayer(target)) //seerがtargetに既にオイルを塗っている(完了)
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
-                        break;
-                    case CustomRoles.Executioner:
-                        pva.NameText.text += Executioner.TargetMark(seer, target);
-                        break;
-                }
-
-                //呪われている場合
-                if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
-                    pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
-
                 if (seer.KnowDeathReason(target))
                     pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
+                pva.NameText.text += Utils.GetTargetMark(seer, target, false);
 
             }
         }

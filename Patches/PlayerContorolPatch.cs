@@ -706,7 +706,6 @@ namespace TownOfHost
                     }
 
                     string RealName;
-                    string Mark = "";
                     string Suffix = "";
 
                     //名前変更
@@ -716,35 +715,12 @@ namespace TownOfHost
                     if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
                         RealName = Utils.ColorString(target.GetRoleColor(), RealName); //名前の色を変更
 
-                    foreach (var subRole in target.GetCustomSubRoles())
-                    {
-                        switch (subRole)
-                        {
-                            case CustomRoles.Lovers:
-                                if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()))
-                                    Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                                break;
-                        }
-                    }
-
-                    // switch (target.GetCustomRole().GetRoleType())
-                    // {
-
-                    // }
-
                     switch (target.GetCustomRole())
                     {
                         case CustomRoles.EvilTracker:
                             if (GameStates.IsInTask) Suffix += EvilTracker.PCGetTargetArrow(seer, target);
                             break;
-                        case CustomRoles.MadSnitch:
-                            if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                                Mark += Utils.ColorString(Palette.ImpostorRed, "★");
-                            break;
                         case CustomRoles.Snitch:
-                            //タスク完了直前のSnitchにマークを表示
-                            if (seer.KnowSnitch(target))
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★");
                             //矢印オプションありならタスクが終わったスニッチはインポスター/キル可能な第三陣営の方角がわかる
                             if (target.KnowImpostor() && GameStates.IsInTask && Options.SnitchEnableTargetArrow.GetBool())
                             {
@@ -774,53 +750,10 @@ namespace TownOfHost
 
                     switch (seer.GetCustomRole())
                     {
-                        case CustomRoles.EvilTracker:
-                            Mark += EvilTracker.GetTargetMark(seer, target);
-                            break;
-                        case CustomRoles.Puppeteer:
-                            Mark += Utils.GetPuppeteerMark(seer, target);
-                            break;
                         case CustomRoles.Arsonist:
                             if (target.AmOwner && seer.IsDouseDone())
                                 RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), GetString("EnterVentToWin"));
-                            else if (seer.IsDousedPlayer(target))
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
-                            else if (Main.currentDousingTarget != 255 && Main.currentDousingTarget == target.PlayerId)
-                                Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "△");
                             break;
-                        case CustomRoles.Executioner:
-                            Mark += Executioner.TargetMark(seer, target);
-                            break;
-                    }
-
-                    if (Sniper.IsEnable() && target.AmOwner)
-                    {
-                        //銃声が聞こえるかチェック
-                        Mark += Sniper.GetShotNotify(target.PlayerId);
-                    }
-
-                    //タスクが終わりそうなSnitchがいるとき、インポスター/キル可能な第三陣営に警告が表示される
-                    if (!GameStates.IsMeeting && CustomRoles.Snitch.IsEnable())
-                    { //targetがインポスターかつ自分自身
-                        var found = false;
-                        var update = false;
-                        var arrows = "";
-                        foreach (var pc in PlayerControl.AllPlayerControls)
-                        { //全員分ループ
-                            if (pc.Data.IsDead || pc.Data.Disconnected || !target.KnowSnitch(pc)) continue; //(スニッチ以外 || 死者 || 切断者)に用はない
-                            found = true;
-                            //矢印表示しないならこれ以上は不要
-                            if (!Options.SnitchEnableTargetArrow.GetBool()) break;
-                            update = CheckArrowUpdate(target, pc, update, false);
-                            var key = (target.PlayerId, pc.PlayerId);
-                            arrows += Main.targetArrows[key];
-                        }
-                        if (found && target.AmOwner) Mark += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★" + arrows); //Snitch警告を表示
-                        if (AmongUsClient.Instance.AmHost && seer.PlayerId != target.PlayerId && update)
-                        {
-                            //更新があったら非Modに通知
-                            Utils.NotifyRoles(SpecifySeer: target);
-                        }
                     }
 
                     if (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool())
@@ -831,6 +764,7 @@ namespace TownOfHost
                     if (ncd.color != null) RealName = ncd.OpenTag + RealName + ncd.CloseTag;
 
                     string DeathReason = seer.Data.IsDead && seer.KnowDeathReason(target) ? $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})" : "";
+                    string Mark = Utils.GetTargetMark(seer, target, true);
                     //Mark・Suffixの適用
                     target.cosmetics.nameText.text = $"{RealName}{DeathReason}{Mark}";
 
