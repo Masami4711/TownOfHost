@@ -189,7 +189,7 @@ namespace TownOfHost
             // {
 
             // }
-            return RoleText + " " + TaskText;
+            return RoleText + TaskText == "" ? "" : RoleText + " " + TaskText;
         }
 
         public static string GetVitalText(byte playerId, bool RealKillerColor = false)
@@ -726,7 +726,7 @@ namespace TownOfHost
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
                         string TargetRoleText = GetDisplayRoleText(seer, target);
-                        if (TargetRoleText != " ") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
+                        if (TargetRoleText != "") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
                         string TargetPlayerName = GetDisplayRealName(seer, target, isMeeting);
                         string TargetDeathReason = GetDeathReasonText(seer, target);
                         string TargetMark = GetTargetMark(seer, target, isMeeting);
