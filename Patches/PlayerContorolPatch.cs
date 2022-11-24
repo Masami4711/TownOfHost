@@ -540,7 +540,7 @@ namespace TownOfHost
                         }
                     }
                 }
-                SerialKiller.FixedUpdate(player);
+                if (GameStates.IsInTask && CustomRoles.SerialKiller.IsEnable()) SerialKiller.FixedUpdate(player);
                 if (GameStates.IsInTask && Main.WarlockTimer.ContainsKey(player.PlayerId))//処理を1秒遅らせる
                 {
                     if (player.IsAlive())

@@ -215,7 +215,6 @@ namespace TownOfHost
         }
         public static void TryAddAfterMeetingDeathPlayers(byte playerId, PlayerState.DeathReason deathReason)
         {
-            Logger.Info($"playerId:{Utils.GetPlayerById(playerId)?.GetNameWithRole()}, deathReason:{deathReason}", "TryAddAfterMeetingDeathPlayers");
             if (Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason))
             {
                 FollowingSuicideOnExile(playerId);
@@ -228,10 +227,8 @@ namespace TownOfHost
             if (player == null) return;
 
             //Loversの後追い
-            if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead == false && Main.LoversPlayers.Find(lp => lp.PlayerId == player.PlayerId) != null)
-            {
-                FixedUpdatePatch.LoversSuicide(player.PlayerId, true);
-            }
+            if (CustomRoles.Lovers.IsEnable() && !Main.isLoversDead && Main.LoversPlayers.Find(lp => lp.PlayerId == playerId) != null)
+                FixedUpdatePatch.LoversSuicide(playerId, true);
         }
         public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason = PlayerState.DeathReason.Vote)
         {

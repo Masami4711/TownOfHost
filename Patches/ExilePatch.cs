@@ -110,6 +110,8 @@ namespace TownOfHost
                     player?.ResetPlayerCam(7f);
                 if (x.Value == PlayerState.DeathReason.Suicide)
                     player?.SetRealKiller(player, true);
+                if (!AntiBlackout.OverrideExiledPlayer && Main.ResetCamPlayerList.Contains(x.Key))
+                    player?.ResetPlayerCam(7f);
                 if (player.Is(CustomRoles.TimeThief) && x.Value == PlayerState.DeathReason.FollowingSuicide)
                     player?.ResetVotingTime();
                 if (Executioner.Target.ContainsValue(x.Key))
