@@ -720,9 +720,7 @@ namespace TownOfHost
                     var seer = PlayerControl.LocalPlayer;
                     var target = __instance;
 
-                    var RoleTextData = Utils.GetRoleText(target);
-                    RoleText.text = RoleTextData.Item1 + $" {Utils.GetProgressText(target)}";
-                    RoleText.color = RoleTextData.Item2;
+                    RoleText.text = Utils.GetDisplayRoleText(seer, target);
                     RoleText.enabled = seer.KnowTargetRole(target);
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                     {
@@ -764,9 +762,9 @@ namespace TownOfHost
                             }
                             break;
                     }
-                    string RealName = Utils.GetDisplayRealName(seer, target, true);
+                    string RealName = Utils.GetDisplayRealName(seer, target, false);
                     string DeathReason = seer.Data.IsDead ? Utils.GetDeathReasonText(seer, target) : "";
-                    string Mark = Utils.GetTargetMark(seer, target, true);
+                    string Mark = Utils.GetTargetMark(seer, target, false);
                     //Mark・Suffixの適用
                     target.cosmetics.nameText.text = $"{RealName}{DeathReason}{Mark}";
 
