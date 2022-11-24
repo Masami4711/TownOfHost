@@ -687,8 +687,7 @@ namespace TownOfHost
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
                 string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), GetRoleName(seer.PlayerId))} {GetProgressText(seer)}</size>";
-                string SelfDeathReason = seer.KnowDeathReason(seer) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(seer.PlayerId))})" : "";
-                string SelfName = GetDisplayRealName(seer, seer, !isMeeting) + SelfDeathReason + GetTargetMark(seer, seer, !isMeeting);
+                string SelfName = GetDisplayRealName(seer, seer, !isMeeting) + GetDeathReasonText(seer, seer) + GetTargetMark(seer, seer, !isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
                 if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
                 if (!isMeeting) SelfName += "\r\n";
@@ -724,7 +723,7 @@ namespace TownOfHost
 
                         string TargetRoleText = seer.KnowTargetRole(target) ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())} {GetProgressText(target)}</size>\r\n" : "";
                         string TargetPlayerName = GetDisplayRealName(seer, target, !isMeeting);
-                        string TargetDeathReason = seer.KnowDeathReason(target) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(target.PlayerId))})" : "";
+                        string TargetDeathReason = GetDeathReasonText(seer, target);
                         string TargetMark = GetTargetMark(seer, target, !isMeeting);
 
                         //全てのテキストを合成します。
@@ -981,13 +980,10 @@ namespace TownOfHost
 
             return Mark;
         }
+        public static string GetDeathReasonText(PlayerControl seer, PlayerControl target)
+            => seer.KnowDeathReason(target) ? ColorString(GetRoleColor(CustomRoles.Scientist), $"({GetVitalText(target.PlayerId)})") : "";
         public static string GetPuppeteerMark(PlayerControl seer, PlayerControl target)
-        {
-            string TargetMark = "";
-            if (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId)
-                TargetMark += ColorString(Palette.ImpostorRed, "◆");
-            return TargetMark;
-        }
+            => (GameStates.IsInTask && Main.PuppeteerList.TryGetValue(target.PlayerId, out var puppeteerId) && puppeteerId == seer.PlayerId) ? ColorString(Palette.ImpostorRed, "◆") : "";
         public static void FlashColor(Color color, float duration = 1f)
         {
             var hud = DestroyableSingleton<HudManager>.Instance;

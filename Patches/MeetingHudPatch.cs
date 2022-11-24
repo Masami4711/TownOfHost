@@ -290,15 +290,11 @@ namespace TownOfHost
                 roleTextMeeting.enableWordWrapping = false;
                 roleTextMeeting.enabled = seer.KnowTargetRole(target);
 
-
                 //会議画面での名前変更
                 if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
                     pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
-                if (seer.KnowDeathReason(target))
-                    pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
-                pva.NameText.text += Utils.GetTargetMark(seer, target, false);
-
+                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, false);
             }
         }
     }

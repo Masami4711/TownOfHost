@@ -740,7 +740,7 @@ namespace TownOfHost
                             break;
                     }
                     string RealName = Utils.GetDisplayRealName(seer, target, true);
-                    string DeathReason = seer.Data.IsDead && seer.KnowDeathReason(target) ? $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})" : "";
+                    string DeathReason = seer.Data.IsDead ? Utils.GetDeathReasonText(seer, target) : "";
                     string Mark = Utils.GetTargetMark(seer, target, true);
                     //Mark・Suffixの適用
                     target.cosmetics.nameText.text = $"{RealName}{DeathReason}{Mark}";
@@ -750,7 +750,6 @@ namespace TownOfHost
                         //名前が2行になると役職テキストを上にずらす必要がある
                         RoleText.transform.SetLocalY(0.35f);
                         target.cosmetics.nameText.text += "\r\n" + Suffix;
-
                     }
                     else
                     {
