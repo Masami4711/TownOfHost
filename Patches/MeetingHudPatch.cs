@@ -290,22 +290,20 @@ namespace TownOfHost
                 var seer = PlayerControl.LocalPlayer;
                 var target = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (target == null) continue;
-                var RoleTextData = Utils.GetRoleText(target);
                 var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = RoleTextData.Item1 + Utils.GetProgressText(target);
-                roleTextMeeting.color = RoleTextData.Item2;
+                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target);
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
                 roleTextMeeting.enabled = seer.KnowTargetRole(target);
 
                 //会議画面での名前変更
-                if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
+                if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
                     pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
-                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, false);
+                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, true);
             }
         }
     }
