@@ -301,32 +301,6 @@ namespace TownOfHost
         public static void Postfix(MeetingHud __instance)
         {
             SoundManager.Instance.ChangeMusicVolume(0f);
-            foreach (var pva in __instance.playerStates)
-            {
-                var pc = Utils.GetPlayerById(pva.TargetPlayerId);
-                if (pc == null) continue;
-                var RoleTextData = Utils.GetRoleText(pc);
-                if (PlayerControl.LocalPlayer.Is(CustomRoles.Insider)) RoleTextData = Insider.RoleTextData(pc);
-                var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
-                roleTextMeeting.transform.SetParent(pva.NameText.transform);
-                roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
-                roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = RoleTextData.Item1;
-                if (Main.VisibleTasksCount && !(PlayerControl.LocalPlayer.Is(CustomRoles.Insider) && Insider.DisableTaskText(pc))) roleTextMeeting.text += Utils.GetProgressText(pc);
-                roleTextMeeting.color = RoleTextData.Item2;
-                roleTextMeeting.gameObject.name = "RoleTextMeeting";
-                roleTextMeeting.enableWordWrapping = false;
-                roleTextMeeting.enabled =
-                    pva.TargetPlayerId == PlayerControl.LocalPlayer.PlayerId ||
-                    (Main.VisibleTasksCount && PlayerControl.LocalPlayer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) ||
-                    (AmongUsClient.Instance.AmHost && PlayerControl.LocalPlayer.Is(CustomRoles.GM)) || Insider.KnowOtherRole(PlayerControl.LocalPlayer, pc);
-
-                if (EvilTracker.IsTrackTarget(PlayerControl.LocalPlayer, pc) && EvilTracker.CanSeeLastRoomInMeeting.GetBool())
-                {
-                    roleTextMeeting.text = EvilTracker.GetArrowAndLastRoom(PlayerControl.LocalPlayer, pc);
-                    roleTextMeeting.enabled = true;
-                }
-            }
             if (Options.SyncButtonMode.GetBool())
             {
                 Utils.SendMessage(string.Format(GetString("Message.SyncButtonLeft"), Options.SyncedButtonCount.GetFloat() - Options.UsedButtonCount));
@@ -352,91 +326,25 @@ namespace TownOfHost
             foreach (var pva in __instance.playerStates)
             {
                 if (pva == null) continue;
-                PlayerControl seer = PlayerControl.LocalPlayer;
-                PlayerControl target = Utils.GetPlayerById(pva.TargetPlayerId);
+                var seer = PlayerControl.LocalPlayer;
+                var target = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (target == null) continue;
+                var RoleTextData = Utils.GetRoleText(target);
+                var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
+                roleTextMeeting.transform.SetParent(pva.NameText.transform);
+                roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
+                roleTextMeeting.fontSize = 1.5f;
+                roleTextMeeting.text = RoleTextData.Item1 + Utils.GetProgressText(target);
+                roleTextMeeting.color = RoleTextData.Item2;
+                roleTextMeeting.gameObject.name = "RoleTextMeeting";
+                roleTextMeeting.enableWordWrapping = false;
+                roleTextMeeting.enabled = seer.KnowTargetRole(target);
 
                 //会議画面での名前変更
-                //自分自身の名前の色を変更
-                if (target.AmOwner && AmongUsClient.Instance.IsGameStarted) //変更先が自分自身
-                    pva.NameText.color = seer.GetRoleColor();//名前の色を変更
+                if (seer.KnowTargetRoleColor(target) && AmongUsClient.Instance.IsGameStarted)
+                    pva.NameText.color = target.GetRoleColor();//名前の色を変更
 
-                foreach (var subRole in target.GetCustomSubRoles())
-                    switch (subRole)
-                    {
-                        case CustomRoles.Lovers:
-                            if (seer.Is(CustomRoles.Lovers) || (seer.Data.IsDead && Options.GhostCanSeeOtherRoles.GetBool()) || Insider.KnowGhostRole(seer, target))
-                                pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡");
-                            break;
-                    }
-                switch (target.GetCustomRole().GetRoleType())
-                {
-                    case RoleType.Impostor:
-                        if (seer.KnowSpecificImpostor(target))
-                            pva.NameText.color = Palette.ImpostorRed;
-                        break;
-                    case RoleType.Madmate:
-                        if (Outsider.KnowMadmate(seer, target))
-                            pva.NameText.text += Utils.ColorString(Palette.ImpostorRed, "★");
-                        break;
-                }
-                switch (target.GetCustomRole())
-                {
-                    case CustomRoles.BountyHunter:
-                        pva.NameText.text += BountyHunter.GetTargetMark(seer, target);
-                        break;
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
-                        break;
-                    case CustomRoles.Insider:
-                        pva.NameText.text += Insider.GetOtherImpostorMarks(seer, target);
-                        break;
-                    case CustomRoles.Warlock:
-                        pva.NameText.text += Utils.GetWarlockMark(seer, target);
-                        break;
-                    case CustomRoles.MadSnitch:
-                        if (target.KnowSpecificImpostor(seer) && Options.MadSnitchCanAlsoBeExposedToImpostor.GetBool())
-                            pva.NameText.text += Utils.ColorString(Palette.ImpostorRed, "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.Snitch:
-                        if (seer.KnowSnitch(target))
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Snitch), "★"); //変更対象にSnitchマークをつける
-                        break;
-                    case CustomRoles.ToughGuy:
-                        pva.NameText.text += ToughGuy.GetMark(seer, target);
-                        break;
-                    case CustomRoles.Egoist:
-                        if (seer.KnowEgoist())
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Egoist); //変更対象の名前の色変更
-                        break;
-                    case CustomRoles.Jackal:
-                        if (seer.KnowJackal())
-                            pva.NameText.color = Utils.GetRoleColor(CustomRoles.Jackal); //変更対象の名前をジャッカル色にする
-                        break;
-                }
-
-                //とりあえずSnitchは会議中にもインポスターを確認することができる仕様にしていますが、変更する可能性があります。
-                switch (seer.GetCustomRole())
-                {
-                    case CustomRoles.EvilTracker:
-                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
-                        break;
-                    case CustomRoles.Arsonist:
-                        if (seer.IsDousedPlayer(target)) //seerがtargetに既にオイルを塗っている(完了)
-                            pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲");
-                        break;
-                    case CustomRoles.Executioner:
-                        pva.NameText.text += Executioner.TargetMark(seer, target);
-                        break;
-                }
-
-                //呪われている場合
-                if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
-                    pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
-
-                if (seer.KnowDeathReason(target))
-                    pva.NameText.text += $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})";
-
+                pva.NameText.text += Utils.GetDeathReasonText(seer, target) + Utils.GetTargetMark(seer, target, false);
             }
         }
     }
