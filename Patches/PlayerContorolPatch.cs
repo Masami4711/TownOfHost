@@ -705,15 +705,7 @@ namespace TownOfHost
                         if (!target.AmOwner) target.cosmetics.nameText.text = target?.Data?.PlayerName;
                     }
 
-                    string RealName;
                     string Suffix = "";
-
-                    //名前変更
-                    RealName = target.GetRealName();
-
-                    //名前色変更処理
-                    if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
-                        RealName = Utils.ColorString(target.GetRoleColor(), RealName); //名前の色を変更
 
                     switch (target.GetCustomRole())
                     {
@@ -747,22 +739,7 @@ namespace TownOfHost
                             }
                             break;
                     }
-
-                    switch (seer.GetCustomRole())
-                    {
-                        case CustomRoles.Arsonist:
-                            if (target.AmOwner && seer.IsDouseDone())
-                                RealName = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), GetString("EnterVentToWin"));
-                            break;
-                    }
-
-                    if (Utils.IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool())
-                        RealName = $"<size=0>{RealName}</size> ";
-
-                    //NameColorManager準拠の処理
-                    var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
-                    if (ncd.color != null) RealName = ncd.OpenTag + RealName + ncd.CloseTag;
-
+                    string RealName = Utils.GetDisplayRealName(seer, target, true);
                     string DeathReason = seer.Data.IsDead && seer.KnowDeathReason(target) ? $"({Utils.ColorString(Utils.GetRoleColor(CustomRoles.Doctor), Utils.GetVitalText(target.PlayerId))})" : "";
                     string Mark = Utils.GetTargetMark(seer, target, true);
                     //Mark・Suffixの適用

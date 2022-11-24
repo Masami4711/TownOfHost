@@ -654,9 +654,6 @@ namespace TownOfHost
                 //Markとは違い、改行してから追記されます。
                 string SelfSuffix = "";
 
-                //RealNameを取得 なければ現在の名前をRealNamesに書き込む
-                string SeerRealName = seer.GetRealName(isMeeting);
-
                 switch (seer.GetCustomRole())
                 {
                     case CustomRoles.BountyHunter:
@@ -673,7 +670,7 @@ namespace TownOfHost
                         SelfSuffix = FireWorks.GetStateText(seer);
                         break;
                     case CustomRoles.Witch:
-                        SelfSuffix = seer.IsSpellMode() ? "Mode:" + GetString("WitchModeSpell") : "Mode:" + GetString("WitchModeKill");
+                        SelfSuffix = "Mode:" + GetString(seer.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill");
                         break;
                     case CustomRoles.Snitch:
                         if (seer.KnowImpostor() && Options.SnitchEnableTargetArrow.GetBool() && !isMeeting)
@@ -686,21 +683,14 @@ namespace TownOfHost
                             }
                         }
                         break;
-                    case CustomRoles.Arsonist:
-                        if (seer.IsDouseDone())
-                            SeerRealName = $"</size>\r\n{ColorString(seer.GetRoleColor(), GetString("EnterVentToWin"))}";
-                        break;
                 }
-
-                if (!isMeeting && MeetingStates.FirstMeeting && Options.ChangeNameToRoleInfo.GetBool())
-                    SeerRealName = seer.GetRoleInfo();
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
                 string SelfRoleName = $"<size={fontSize}>{ColorString(seer.GetRoleColor(), GetRoleName(seer.PlayerId))} {GetProgressText(seer)}</size>";
                 string SelfDeathReason = seer.KnowDeathReason(seer) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(seer.PlayerId))})" : "";
-                string SelfName = $"{ColorString(seer.GetRoleColor(), SeerRealName)}{SelfDeathReason}{GetTargetMark(seer, seer, !isMeeting)}";
+                string SelfName = GetDisplayRealName(seer, seer, !isMeeting) + SelfDeathReason + GetTargetMark(seer, seer, !isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
-                SelfName += SelfSuffix == "" ? "" : "\r\n " + SelfSuffix;
+                if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
                 if (!isMeeting) SelfName += "\r\n";
 
                 //適用
@@ -710,9 +700,9 @@ namespace TownOfHost
                 if (seer.Data.IsDead //seerが死んでいる
                     || seer.KnowImpostor() //seerがインポスターを知っている状態
                     || seer.Is(RoleType.Impostor) //seerがインポスター
+                    || seer.Is(RoleType.Madmate) //seerがインポスター
                     || seer.Is(CustomRoles.EgoSchrodingerCat) //seerがエゴイストのシュレディンガーの猫
                     || seer.Is(CustomRoles.JSchrodingerCat) //seerがJackal陣営のシュレディンガーの猫
-                    || seer.Is(CustomRoles.MSchrodingerCat) //seerがインポスター陣営のシュレディンガーの猫
                     || NameColorManager.Instance.GetDataBySeer(seer.PlayerId).Count > 0 //seer視点用の名前色データが一つ以上ある
                     || seer.Is(CustomRoles.Arsonist)
                     || seer.Is(CustomRoles.Lovers)
@@ -733,19 +723,9 @@ namespace TownOfHost
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
                         string TargetRoleText = seer.KnowTargetRole(target) ? $"<size={fontSize}>{ColorString(target.GetRoleColor(), target.GetRoleName())} {GetProgressText(target)}</size>\r\n" : "";
-                        //RealNameを取得 なければ現在の名前をRealNamesに書き込む
-                        string TargetPlayerName = target.GetRealName(isMeeting);
-                        if (seer.KnowTargetRoleColor(target, !isMeeting))
-                            TargetPlayerName = ColorString(target.GetRoleColor(), TargetPlayerName);
-
-                        var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
-                        if (ncd.color != null) TargetPlayerName = ncd.OpenTag + TargetPlayerName + ncd.CloseTag;
-
+                        string TargetPlayerName = GetDisplayRealName(seer, target, !isMeeting);
                         string TargetDeathReason = seer.KnowDeathReason(target) ? $"({ColorString(GetRoleColor(CustomRoles.Doctor), GetVitalText(target.PlayerId))})" : "";
                         string TargetMark = GetTargetMark(seer, target, !isMeeting);
-
-                        if (IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool() && !isMeeting)
-                            TargetPlayerName = $"<size=0%>{TargetPlayerName}</size>";
 
                         //全てのテキストを合成します。
                         string TargetName = $"{TargetRoleText}{TargetPlayerName}{TargetDeathReason}{TargetMark}";
@@ -879,6 +859,30 @@ namespace TownOfHost
             }
 
             return LivingImpostorsNum <= 0;
+        }
+        public static string GetDisplayRealName(PlayerControl seer, PlayerControl target, bool isInTask)
+        {
+            string Name = target.GetRealName(!isInTask);
+            //イントロに変更
+            if (!seer.IsModClient() && seer == target && isInTask && MeetingStates.FirstMeeting && Options.ChangeNameToRoleInfo.GetBool())
+                Name = target.GetRoleInfo();
+            switch (target.GetCustomRole())
+            {
+                case CustomRoles.Arsonist:
+                    if (seer == target && target.IsDouseDone())
+                        Name = ColorString(GetRoleColor(CustomRoles.Arsonist), GetString("EnterVentToWin"));
+                    break;
+            }
+            //名前に色付け
+            if (seer.KnowTargetRoleColor(target, isInTask))
+                Name = ColorString(target.GetRoleColor(), Name);
+            //通信障害でのカムフラージュ
+            if (IsActive(SystemTypes.Comms) && Options.CommsCamouflage.GetBool() && isInTask)
+                Name = $"<size=0%>{Name}</size>";
+            //NameColorManager準拠の処理
+            var ncd = NameColorManager.Instance.GetData(seer.PlayerId, target.PlayerId);
+            if (ncd.color != null) Name = ncd.OpenTag + Name + ncd.CloseTag;
+            return Name;
         }
         public static string GetTargetMark(PlayerControl seer, PlayerControl target, bool isInTask)
         {
