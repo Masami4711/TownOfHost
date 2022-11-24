@@ -189,7 +189,8 @@ namespace TownOfHost
             // {
 
             // }
-            return RoleText + TaskText == "" ? "" : RoleText + " " + TaskText;
+            if (TaskText != "") TaskText = " " + TaskText;
+            return RoleText + TaskText;
         }
 
         public static string GetVitalText(byte playerId, bool RealKillerColor = false)
