@@ -294,7 +294,7 @@ namespace TownOfHost
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target) + Utils.GetDisplayTaskText(seer, target);
+                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target, true) + Utils.GetDisplayTaskText(seer, target, true);
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
 

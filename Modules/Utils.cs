@@ -682,7 +682,7 @@ namespace TownOfHost
                 }
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
-                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer)}{GetDisplayTaskText(seer, seer)}</size>";
+                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer, isMeeting)}{GetDisplayTaskText(seer, seer, isMeeting)}</size>";
                 string SelfName = GetDisplayRealName(seer, seer, isMeeting) + GetDeathReasonText(seer, seer) + GetTargetMark(seer, seer, isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
                 if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
@@ -717,7 +717,7 @@ namespace TownOfHost
                         if (target == seer || target.Data.Disconnected) continue;
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
-                        string TargetRoleText = GetDisplayRoleText(seer, target) + GetDisplayTaskText(seer, target);
+                        string TargetRoleText = GetDisplayRoleText(seer, target, isMeeting) + GetDisplayTaskText(seer, target, isMeeting);
                         if (TargetRoleText != "") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
                         string TargetPlayerName = GetDisplayRealName(seer, target, isMeeting);
                         string TargetDeathReason = GetDeathReasonText(seer, target);
@@ -859,7 +859,7 @@ namespace TownOfHost
         ///<summary>
         ///seerから見たtargetの役職表示　誤認させる場合はここで書き換え
         ///</summary>
-        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target)
+        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string RoleText = seer.KnowTargetRole(target) ? GetSelfRoleName(target.PlayerId) : "";
             // switch (seer.GetCustomRole())
@@ -871,7 +871,7 @@ namespace TownOfHost
         ///<summary>
         ///seerから見たtargetのタスク表示　誤認させる場合はここで書き換え
         ///</summary>
-        public static string GetDisplayTaskText(PlayerControl seer, PlayerControl target)
+        public static string GetDisplayTaskText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
             // switch (seer.GetCustomRole())
