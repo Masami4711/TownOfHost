@@ -1016,6 +1016,7 @@ namespace TownOfHost
     {
         public static void Postfix(Vent __instance, [HarmonyArgument(0)] PlayerControl pc)
         {
+            // Logger.Info($"Vent:{__instance.Id}, Left:{__instance.Left?.Id}, Center:{__instance.Center?.Id}, Right:{__instance.Right?.Id}, ", "Vent");
             if (Options.CurrentGameMode == CustomGameMode.HideAndSeek && Options.IgnoreVent.GetBool())
                 pc.MyPhysics.RpcBootFromVent(__instance.Id);
             if (pc.Is(CustomRoles.Mayor))
@@ -1026,6 +1027,15 @@ namespace TownOfHost
                     pc?.ReportDeadBody(null);
                 }
             }
+            // if (pc.Is(RoleType.Madmate))
+            // {
+            //     Vent[] NeighborVents = { __instance.Right, __instance.Center, __instance.Left };
+            //     foreach (var vent in NeighborVents)
+            //     {
+            //         if (vent == null) continue;
+            //         VentilationSystem.Update(VentilationSystem.Operation.StartCleaning, vent.Id);
+            //     }
+            // }
         }
     }
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.CoEnterVent))]
