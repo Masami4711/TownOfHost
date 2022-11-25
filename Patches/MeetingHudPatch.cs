@@ -333,10 +333,9 @@ namespace TownOfHost
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
                 roleTextMeeting.fontSize = 1.5f;
-                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target);
+                roleTextMeeting.text = Utils.GetDisplayRoleText(seer, target) + Utils.GetDisplayTaskText(seer, target);
                 roleTextMeeting.gameObject.name = "RoleTextMeeting";
                 roleTextMeeting.enableWordWrapping = false;
-                roleTextMeeting.enabled = seer.KnowTargetRole(target);
 
                 //会議画面での名前変更
                 if (seer.KnowTargetRoleColor(target, true) && AmongUsClient.Instance.IsGameStarted)
