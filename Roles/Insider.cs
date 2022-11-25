@@ -105,7 +105,7 @@ namespace TownOfHost
             return target.GetCustomRole() switch //本人には表示しないケースのみ
             {
                 CustomRoles.FireWorks => FireWorks.GetFireWorksCount(target.PlayerId),
-                CustomRoles.Witch => Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}"),
+                CustomRoles.Witch => Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")),
                 _ => Utils.GetProgressText(target),
             };
         }
