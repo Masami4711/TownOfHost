@@ -868,10 +868,17 @@ namespace TownOfHost
         public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string RoleText = seer.KnowTargetRole(target) ? GetSelfRoleName(target.PlayerId) : "";
-            // switch (seer.GetCustomRole())
-            // {
-
-            // }
+            switch (seer.GetCustomRole())
+            {
+                case CustomRoles.EvilTracker:
+                    if (isMeeting && EvilTracker.IsTrackTarget(seer, target))
+                        RoleText = EvilTracker.GetArrowAndLastRoom(seer, target);
+                    break;
+                case CustomRoles.Insider:
+                    if (Insider.KnowOtherRole(seer, target))
+                        RoleText = Insider.GetRoleText(target);
+                    break;
+            }
             return RoleText;
         }
         ///<summary>
@@ -880,10 +887,13 @@ namespace TownOfHost
         public static string GetDisplayTaskText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
-            // switch (seer.GetCustomRole())
-            // {
-
-            // }
+            switch (seer.GetCustomRole())
+            {
+                case CustomRoles.Insider:
+                    if (Insider.KnowOtherRole(seer, target))
+                        TaskText = Insider.GetTaskText(target);
+                    break;
+            }
             if (TaskText != "") TaskText = " " + TaskText;
             return TaskText;
         }

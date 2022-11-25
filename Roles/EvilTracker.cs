@@ -198,6 +198,7 @@ namespace TownOfHost
             && (target.Is(RoleType.Impostor, false) || seer.GetTarget() == target);
         public static string GetArrowAndLastRoom(PlayerControl seer, PlayerControl target)
         {
+            if (!CanSeeLastRoomInMeeting.GetBool() || GameStates.IsInTask || !IsTrackTarget(seer, target)) return "";
             string text = Utils.ColorString(Palette.ImpostorRed, Main.targetArrows[(seer.PlayerId, target.PlayerId)]);
             var room = Main.PlayerStates[target.PlayerId].LastRoom;
             if (room == null) text += Utils.ColorString(Color.gray, $"@{GetString("FailToTrack")}");

@@ -84,36 +84,30 @@ namespace TownOfHost
                 int killCount = KillCount(Utils.GetPlayerById(playerId));
                 int Norma = KillCountToSeeMadmates.GetInt();
                 if (killCount < Norma) ProgressText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $"({killCount}/{Norma})");
-                else ProgressText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), " ★");
+                else ProgressText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), "★");
             }
             return ProgressText;
         }
-        public static string GetRoleText(PlayerControl target, string TargetTaskText, string fontSize)
+        public static string GetRoleText(PlayerControl target)
         {
-            if (DisableTaskText(target)) TargetTaskText = "";
-            switch (target.GetCustomRole()) //本人には表示しないケースのみ
-            {
-                case CustomRoles.FireWorks:
-                    TargetTaskText += FireWorks.GetFireWorksCount(target.PlayerId);
-                    break;
-                case CustomRoles.Witch:
-                    TargetTaskText += Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}");
-                    break;
-            }
-            var Role = RoleTextData(target);
-            var RoleText = $"<size={fontSize}>{Utils.ColorString(Role.Item2, Role.Item1)}{TargetTaskText}</size>\r\n";
-            return RoleText;
-        }
-        public static (string, Color) RoleTextData(PlayerControl target)
-        {
-            var RoleName = target.GetRoleName();
+            var RoleName = Utils.GetSelfRoleName(target.PlayerId);
             var RoleColor = target.GetRoleColor();
             if (ReplaceRoles.TryGetValue(target.GetCustomRole(), out var newRole))
             {
                 RoleName = Utils.GetRoleName(newRole);
                 RoleColor = Utils.GetRoleColor(newRole);
             }
-            return (RoleName, RoleColor);
+            return Utils.ColorString(RoleColor, RoleName);
+        }
+        public static string GetTaskText(PlayerControl target)
+        {
+            if (DisableTaskText(target)) return "";
+            return target.GetCustomRole() switch //本人には表示しないケースのみ
+            {
+                CustomRoles.FireWorks => FireWorks.GetFireWorksCount(target.PlayerId),
+                CustomRoles.Witch => Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" {GetString(target.IsSpellMode() ? "WitchModeSpell" : "WitchModeKill")}"),
+                _ => Utils.GetProgressText(target),
+            };
         }
         public static bool DisableTaskText(PlayerControl pc) => false;
         //=> Utils.HasTasks(pc.Data) && AssassinAndMarin.IsEnable(); && !Marin.HasTasks.GetBool();
