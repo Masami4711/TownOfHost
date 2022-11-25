@@ -145,19 +145,22 @@ namespace TownOfHost
         ///<summary>
         ///最終結果にも表示する役職名
         ///</summary>
-        public static string GetRoleName(byte playerId)
+        public static string GetSelfRoleName(byte playerId)
         {
-            var mainRole = Main.PlayerStates[playerId].MainRole;
-            var subRoles = Main.PlayerStates[playerId].SubRoles;
-            var RoleName = GetRoleName(mainRole);
-            // switch (mainRole)
-            // {
+            string RoleText = "Invalid Role";
+            Color RoleColor = Color.red;
 
-            // }
-            if (mainRole.IsImpostor() && mainRole != CustomRoles.LastImpostor && IsLastImpostor(playerId))
-                RoleName = GetRoleString("Last") + RoleName;
-            Color roleColor = GetRoleColor(mainRole);
-            return ColorString(roleColor, RoleName);
+            var role = Main.PlayerStates[playerId].MainRole;
+            var SubRoles = Main.PlayerStates[playerId].SubRoles;
+            RoleText = GetRoleName(role);
+            if (role.IsImpostor() && role != CustomRoles.LastImpostor && IsLastImpostor(playerId))
+            {
+                RoleText = GetRoleString("Last") + RoleText;
+            }
+
+            RoleColor = GetRoleColor(role);
+
+            return ColorString(RoleColor, RoleText);
         }
         public static string GetRoleName(CustomRoles role)
         {
@@ -178,20 +181,6 @@ namespace TownOfHost
             if (!Main.roleColors.TryGetValue(role, out var hexColor)) hexColor = "#ffffff";
             return hexColor;
         }
-        ///<summary>
-        ///seerから見たtargetの役職表示　誤認させる場合はここで書き換え
-        ///</summary>
-        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target)
-        {
-            string RoleText = seer.KnowTargetRole(target) ? GetRoleName(target.PlayerId) : "";
-            string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
-            // switch (seer.GetCustomRole())
-            // {
-
-            // }
-            return RoleText + TaskText == "" ? "" : RoleText + " " + TaskText;
-        }
-
         public static string GetVitalText(byte playerId, bool RealKillerColor = false)
         {
             var state = Main.PlayerStates[playerId];
@@ -693,7 +682,7 @@ namespace TownOfHost
                 }
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
-                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer)}</size>";
+                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer)}{GetDisplayTaskText(seer, seer)}</size>";
                 string SelfName = GetDisplayRealName(seer, seer, isMeeting) + GetDeathReasonText(seer, seer) + GetTargetMark(seer, seer, isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
                 if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
@@ -728,7 +717,7 @@ namespace TownOfHost
                         if (target == seer || target.Data.Disconnected) continue;
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
-                        string TargetRoleText = GetDisplayRoleText(seer, target);
+                        string TargetRoleText = GetDisplayRoleText(seer, target) + GetDisplayTaskText(seer, target);
                         if (TargetRoleText != "") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
                         string TargetPlayerName = GetDisplayRealName(seer, target, isMeeting);
                         string TargetDeathReason = GetDeathReasonText(seer, target);
@@ -850,7 +839,7 @@ namespace TownOfHost
         public static string SummaryTexts(byte id, bool disableColor = true)
         {
             var RolePos = TranslationController.Instance.currentLanguage.languageID == SupportedLangs.English ? 47 : 37;
-            string summary = $"{ColorString(Main.PlayerColors[id], Main.AllPlayerNames[id])}<pos=22%> {GetProgressText(id)}</pos><pos=29%> {GetVitalText(id)}</pos><pos={RolePos}%> {ColorString(GetRoleColor(Main.PlayerStates[id].MainRole), GetRoleName(id))}{GetSubRolesText(id)}</pos>";
+            string summary = $"{ColorString(Main.PlayerColors[id], Main.AllPlayerNames[id])}<pos=22%> {GetProgressText(id)}</pos><pos=29%> {GetVitalText(id)}</pos><pos={RolePos}%> {ColorString(GetRoleColor(Main.PlayerStates[id].MainRole), GetSelfRoleName(id))}{GetSubRolesText(id)}</pos>";
             return disableColor ? summary.RemoveHtmlTags() : summary;
         }
         public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", "");
@@ -867,12 +856,38 @@ namespace TownOfHost
 
             return LivingImpostorsNum <= 0;
         }
+        ///<summary>
+        ///seerから見たtargetの役職表示　誤認させる場合はここで書き換え
+        ///</summary>
+        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target)
+        {
+            string RoleText = seer.KnowTargetRole(target) ? GetSelfRoleName(target.PlayerId) : "";
+            // switch (seer.GetCustomRole())
+            // {
+
+            // }
+            return RoleText;
+        }
+        ///<summary>
+        ///seerから見たtargetのタスク表示　誤認させる場合はここで書き換え
+        ///</summary>
+        public static string GetDisplayTaskText(PlayerControl seer, PlayerControl target)
+        {
+            string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
+            // switch (seer.GetCustomRole())
+            // {
+
+            // }
+            if (TaskText != "") TaskText = " " + TaskText;
+            return TaskText;
+        }
         public static string GetDisplayRealName(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string Name = target.GetRealName(isMeeting);
             //イントロに変更
             if (!seer.IsModClient() && seer == target && !isMeeting && MeetingStates.FirstMeeting && Options.ChangeNameToRoleInfo.GetBool())
                 Name = target.GetRoleInfo();
+            //役職ごとに書き換え
             switch (target.GetCustomRole())
             {
                 case CustomRoles.Arsonist:
