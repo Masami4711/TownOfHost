@@ -111,6 +111,7 @@ namespace TownOfHost
             EvilTracker.Init();
             Insider.Init();
             Outsider.Init();
+            Runaway.Init();
             CustomWinnerHolder.Reset();
             AntiBlackout.Reset();
             IRandom.SetInstanceById(Options.RoleAssigningAlgorithm.GetSelection());
@@ -148,7 +149,7 @@ namespace TownOfHost
 
                 int EngineerNum = roleOpt.GetNumPerGame(RoleTypes.Engineer);
 
-                int AdditionalEngineerNum = CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount();// - EngineerNum;
+                int AdditionalEngineerNum = CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount() + CustomRoles.Runaway.GetCount();// - EngineerNum;
 
                 if (Options.MayorHasPortableButton.GetBool())
                     AdditionalEngineerNum += CustomRoles.Mayor.GetCount();
@@ -312,6 +313,7 @@ namespace TownOfHost
                 AssignCustomRolesFromList(CustomRoles.Seer, Crewmates);
                 AssignCustomRolesFromList(CustomRoles.Insider, Impostors);
                 AssignCustomRolesFromList(CustomRoles.ToughGuy, Crewmates);
+                AssignCustomRolesFromList(CustomRoles.Runaway, Engineers);
 
                 //RPCによる同期
                 foreach (var pc in PlayerControl.AllPlayerControls)
@@ -379,6 +381,9 @@ namespace TownOfHost
                         case CustomRoles.Jackal:
                             Jackal.Add(pc.PlayerId);
                             break;
+                        case CustomRoles.Runaway:
+                            Runaway.Add(pc.PlayerId);
+                            break;
 
                         case CustomRoles.Sheriff:
                             Sheriff.Add(pc.PlayerId);
@@ -418,7 +423,7 @@ namespace TownOfHost
 
                 int EngineerNum = roleOpt.GetNumPerGame(RoleTypes.Engineer);
 
-                EngineerNum -= CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount();
+                EngineerNum -= CustomRoles.Madmate.GetCount() + CustomRoles.Terrorist.GetCount() + CustomRoles.Runaway.GetCount();
 
                 if (Options.MayorHasPortableButton.GetBool())
                     EngineerNum -= CustomRoles.Mayor.GetCount();

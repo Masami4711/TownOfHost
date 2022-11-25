@@ -275,6 +275,7 @@ namespace TownOfHost
             switch (player.GetCustomRole())
             {
                 case CustomRoles.Terrorist:
+                case CustomRoles.Runaway:
                     goto InfinityVent;
                 // case CustomRoles.ShapeMaster:
                 //     opt.RoleOptions.ShapeshifterCooldown = 0.1f;
@@ -774,6 +775,7 @@ namespace TownOfHost
         public static bool Is(this PlayerControl target, RoleType type, bool includeOutsider = true) =>
             target.GetCustomRole().GetRoleType() == type && (includeOutsider || !target.Is(CustomRoles.Outsider));
         public static bool IsAlive(this PlayerControl target) { return target != null && !Main.PlayerStates[target.PlayerId].IsDead; }
+        public static bool Is(this PlayerControl target, PlayerState.DeathReason deathReason) { return Main.PlayerStates[target.PlayerId].deathReason == deathReason; }
 
     }
 }

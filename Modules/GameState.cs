@@ -91,6 +91,7 @@ namespace TownOfHost
             Execution,
             Disconnected,
             Fall,
+            Escape,
             etc = -1
         }
         public byte GetRealKiller()

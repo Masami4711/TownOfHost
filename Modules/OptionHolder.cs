@@ -406,6 +406,7 @@ namespace TownOfHost
             Egoist.SetupCustomOption();
             Executioner.SetupCustomOption();
             Jackal.SetupCustomOption();
+            Runaway.SetupCustomOption();
 
             // Add-Ons
             EnableLastImpostor = OptionItem.Create(80000, TabGroup.Addons, Utils.GetRoleColor(CustomRoles.Impostor), "LastImpostor", false, null, true)

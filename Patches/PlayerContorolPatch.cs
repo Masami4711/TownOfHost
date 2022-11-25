@@ -898,13 +898,18 @@ namespace TownOfHost
         {
             if (Options.CurrentGameMode == CustomGameMode.HideAndSeek && Options.IgnoreVent.GetBool())
                 pc.MyPhysics.RpcBootFromVent(__instance.Id);
-            if (pc.Is(CustomRoles.Mayor))
+            switch (pc.GetCustomRole())
             {
-                if (Main.MayorUsedButtonCount.TryGetValue(pc.PlayerId, out var count) && count < Options.MayorNumOfUseButton.GetInt())
-                {
-                    pc?.MyPhysics?.RpcBootFromVent(__instance.Id);
-                    pc?.ReportDeadBody(null);
-                }
+                case CustomRoles.Mayor:
+                    if (Main.MayorUsedButtonCount.TryGetValue(pc.PlayerId, out var count) && count < Options.MayorNumOfUseButton.GetInt())
+                    {
+                        pc?.MyPhysics?.RpcBootFromVent(__instance.Id);
+                        pc?.ReportDeadBody(null);
+                    }
+                    break;
+                case CustomRoles.Runaway:
+                    Runaway.OnEnterVent(pc, __instance.Id);
+                    break;
             }
         }
     }
@@ -942,7 +947,8 @@ namespace TownOfHost
                 __instance.myPlayer.Is(CustomRoles.SKMadmate) ||
                 __instance.myPlayer.Is(CustomRoles.Arsonist) ||
                 (__instance.myPlayer.Is(CustomRoles.Mayor) && Main.MayorUsedButtonCount.TryGetValue(__instance.myPlayer.PlayerId, out var count) && count >= Options.MayorNumOfUseButton.GetInt()) ||
-                (__instance.myPlayer.Is(CustomRoles.Jackal) && !Jackal.CanVent.GetBool())
+                (__instance.myPlayer.Is(CustomRoles.Jackal) && !Jackal.CanVent.GetBool()) ||
+                (__instance.myPlayer.Is(CustomRoles.Runaway) && !Runaway.CanUseVent(__instance.myPlayer))
                 )
                 {
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(__instance.NetId, (byte)RpcCalls.BootFromVent, SendOption.Reliable, -1);

@@ -99,6 +99,9 @@ namespace TownOfHost
                     case CustomRoles.EvilTracker:
                         EvilTracker.GetAbilityButtonText(__instance, player.PlayerId);
                         break;
+                    case CustomRoles.Runaway:
+                        Runaway.SetAbilityButton(__instance, player);
+                        break;
                 }
 
                 //バウンティハンターのターゲットテキスト
@@ -127,6 +130,11 @@ namespace TownOfHost
                 {
                     var stateText = FireWorks.GetStateText(player);
                     LowerInfoText.text = stateText;
+                    LowerInfoText.enabled = true;
+                }
+                else if (player.Is(CustomRoles.Runaway))
+                {
+                    LowerInfoText.text = Runaway.GetSuffixText(player);
                     LowerInfoText.enabled = true;
                 }
                 else

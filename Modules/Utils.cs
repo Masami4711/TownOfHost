@@ -270,6 +270,10 @@ namespace TownOfHost
                             hasTasks = !ForRecompute;
                         else hasTasks = false;
                         break;
+                    case CustomRoles.Runaway:
+                        if (p.IsDead && (Main.PlayerStates[p.PlayerId].deathReason != PlayerState.DeathReason.Escape || ForRecompute))
+                            hasTasks = false;
+                        break;
                     default:
                         if (role.IsImpostor() || role.IsKilledSchrodingerCat()) hasTasks = false;
                         break;
@@ -684,6 +688,9 @@ namespace TownOfHost
                                     SelfSuffix += arrow.Value;
                             }
                         }
+                        break;
+                    case CustomRoles.Runaway:
+                        SelfSuffix += Runaway.GetSuffixText(seer, fontSize);
                         break;
                 }
 
