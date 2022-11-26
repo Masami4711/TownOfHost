@@ -145,20 +145,19 @@ namespace TownOfHost
         ///<summary>
         ///最終結果にも表示する役職名
         ///</summary>
-        public static string GetSelfRoleName(byte playerId)
+        public static string GetDisplayRoleName(byte playerId)
         {
             string RoleText = "Invalid Role";
             Color RoleColor = Color.red;
 
-            var role = Main.PlayerStates[playerId].MainRole;
+            var mainRole = Main.PlayerStates[playerId].MainRole;
             var SubRoles = Main.PlayerStates[playerId].SubRoles;
-            RoleText = GetRoleName(role);
-            if (role.IsImpostor() && role != CustomRoles.LastImpostor && IsLastImpostor(playerId))
+            RoleText = GetRoleName(mainRole);
+            if (mainRole.IsImpostor() && mainRole != CustomRoles.LastImpostor && IsLastImpostor(playerId))
             {
-                RoleText = GetRoleString("Last") + RoleText;
+                RoleText = GetRoleString("Last-") + RoleText;
             }
-
-            RoleColor = GetRoleColor(role);
+            RoleColor = GetRoleColor(mainRole);
 
             return ColorString(RoleColor, RoleText);
         }
@@ -352,7 +351,7 @@ namespace TownOfHost
                     }
                     break;
             }
-            if (GetPlayerById(playerId).CanMakeMadmate()) ProgressText += $" [{Options.CanMakeMadmateCount.GetInt() - Main.SKMadmateNowCount}]";
+            if (GetPlayerById(playerId).CanMakeMadmate()) ProgressText += ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" [{Options.CanMakeMadmateCount.GetInt() - Main.SKMadmateNowCount}]");
 
             return ProgressText;
         }
@@ -695,7 +694,7 @@ namespace TownOfHost
                 }
 
                 //seerの役職名とSelfTaskTextとseerのプレイヤー名とSelfMarkを合成
-                string SelfRoleName = $"<size={fontSize}>{GetDisplayRoleText(seer, seer, isMeeting)}{GetDisplayTaskText(seer, seer, isMeeting)}</size>";
+                string SelfRoleName = $"<size={fontSize}>{GetTargetRoleText(seer, seer, isMeeting)}{GetTargetTaskText(seer, seer, isMeeting)}</size>";
                 string SelfName = GetDisplayRealName(seer, seer, isMeeting) + GetDeathReasonText(seer, seer) + GetTargetMark(seer, seer, isMeeting);
                 SelfName = SelfRoleName + "\r\n" + SelfName;
                 if (SelfSuffix != "") SelfName += "\r\n " + SelfSuffix;
@@ -730,7 +729,7 @@ namespace TownOfHost
                         if (target == seer || target.Data.Disconnected) continue;
                         Logger.Info("NotifyRoles-Loop2-" + target.GetNameWithRole() + ":START", "NotifyRoles");
 
-                        string TargetRoleText = GetDisplayRoleText(seer, target, isMeeting) + GetDisplayTaskText(seer, target, isMeeting);
+                        string TargetRoleText = GetTargetRoleText(seer, target, isMeeting) + GetTargetTaskText(seer, target, isMeeting);
                         if (TargetRoleText != "") TargetRoleText = $"<size={fontSize}>{TargetRoleText}</size>\r\n";
                         string TargetPlayerName = GetDisplayRealName(seer, target, isMeeting);
                         string TargetDeathReason = GetDeathReasonText(seer, target);
@@ -852,7 +851,7 @@ namespace TownOfHost
         public static string SummaryTexts(byte id, bool disableColor = true)
         {
             var RolePos = TranslationController.Instance.currentLanguage.languageID == SupportedLangs.English ? 47 : 37;
-            string summary = $"{ColorString(Main.PlayerColors[id], Main.AllPlayerNames[id])}<pos=22%> {GetProgressText(id)}</pos><pos=29%> {GetVitalText(id)}</pos><pos={RolePos}%> {ColorString(GetRoleColor(Main.PlayerStates[id].MainRole), GetSelfRoleName(id))}{GetSubRolesText(id)}</pos>";
+            string summary = $"{ColorString(Main.PlayerColors[id], Main.AllPlayerNames[id])}<pos=22%> {GetProgressText(id)}</pos><pos=29%> {GetVitalText(id)}</pos><pos={RolePos}%> {GetDisplayRoleName(id)}{GetSubRolesText(id)}</pos>";
             return disableColor ? summary.RemoveHtmlTags() : summary;
         }
         public static string RemoveHtmlTags(this string str) => Regex.Replace(str, "<[^>]*?>", "");
@@ -872,9 +871,9 @@ namespace TownOfHost
         ///<summary>
         ///seerから見たtargetの役職表示　誤認させる場合はここで書き換え
         ///</summary>
-        public static string GetDisplayRoleText(PlayerControl seer, PlayerControl target, bool isMeeting)
+        public static string GetTargetRoleText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
-            string RoleText = seer.KnowTargetRole(target) ? GetSelfRoleName(target.PlayerId) : "";
+            string RoleText = seer.KnowTargetRole(target) ? GetDisplayRoleName(target.PlayerId) : "";
             switch (seer.GetCustomRole())
             {
                 case CustomRoles.EvilTracker:
@@ -891,7 +890,7 @@ namespace TownOfHost
         ///<summary>
         ///seerから見たtargetのタスク表示　誤認させる場合はここで書き換え
         ///</summary>
-        public static string GetDisplayTaskText(PlayerControl seer, PlayerControl target, bool isMeeting)
+        public static string GetTargetTaskText(PlayerControl seer, PlayerControl target, bool isMeeting)
         {
             string TaskText = seer.KnowTargetRole(target) ? GetProgressText(target) : "";
             switch (seer.GetCustomRole())

@@ -720,7 +720,7 @@ namespace TownOfHost
                     var seer = PlayerControl.LocalPlayer;
                     var target = __instance;
 
-                    RoleText.text = Utils.GetDisplayRoleText(seer, target, false) + Utils.GetDisplayTaskText(seer, target, false);
+                    RoleText.text = Utils.GetTargetRoleText(seer, target, false) + Utils.GetTargetTaskText(seer, target, false);
                     RoleText.enabled = true;
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.GameMode != GameModes.FreePlay)
                     {

@@ -13,7 +13,7 @@ namespace TownOfHost
         public static OptionItem CanSeeKillFlash;
         public static OptionItem CanResetTargetAfterMeeting;
         public static OptionItem CanSeeLastRoomInMeeting;
-
+        public static OptionItem CanCreateMadmate;
         public static Dictionary<byte, PlayerControl> Target = new();
         public static Dictionary<byte, bool> CanSetTarget = new();
 
@@ -23,6 +23,7 @@ namespace TownOfHost
             CanSeeKillFlash = OptionItem.Create(Id + 10, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeKillFlash", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
             CanResetTargetAfterMeeting = OptionItem.Create(Id + 11, TabGroup.ImpostorRoles, Color.white, "EvilTrackerResetTargetAfterMeeting", true, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
             CanSeeLastRoomInMeeting = OptionItem.Create(Id + 12, TabGroup.ImpostorRoles, Color.white, "EvilTrackerCanSeeLastRoomInMeeting", false, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
+            CanCreateMadmate = OptionItem.Create(Id + 20, TabGroup.ImpostorRoles, Color.white, "CanCreateMadmate", false, Options.CustomRoleSpawnChances[CustomRoles.EvilTracker]);
         }
         public static void Init()
         {

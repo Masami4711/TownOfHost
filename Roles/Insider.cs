@@ -90,7 +90,7 @@ namespace TownOfHost
         }
         public static string GetRoleText(PlayerControl target)
         {
-            var RoleName = Utils.GetSelfRoleName(target.PlayerId);
+            var RoleName = Utils.GetDisplayRoleName(target.PlayerId);
             var RoleColor = target.GetRoleColor();
             if (ReplaceRoles.TryGetValue(target.GetCustomRole(), out var newRole))
             {

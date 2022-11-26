@@ -148,7 +148,7 @@ namespace TownOfHost
 
                 if (!player.GetCustomRole().IsVanilla())
                 {
-                    var RoleWithInfo = $"{player.GetRoleName()}\r\n";
+                    var RoleWithInfo = $"{player.GetDisplayRoleName()}\r\n";
                     RoleWithInfo += player.GetRoleInfo();
                     TaskTextPrefix = Utils.ColorString(player.GetRoleColor(), RoleWithInfo);
                 }
