@@ -32,6 +32,7 @@ namespace TownOfHost
                         }}, voteTarget.Data, false); //RPC
                         Logger.Info($"{voteTarget.GetNameWithRole()}を追放", "Dictator");
                         FollowingSuicideOnExile(pva.VotedFor);
+                        RevengeOnExile(pva.VotedFor);
                         Logger.Info("ディクテーターによる強制会議終了", "Special Phase");
                         voteTarget.SetRealKiller(pc);
                         return true;
@@ -144,7 +145,7 @@ namespace TownOfHost
 
                 if (Options.VoteMode.GetBool() && Options.WhenTie.GetBool() && tie)
                 {
-                    switch ((TieMode)Options.WhenTie.GetSelection())
+                    switch ((TieMode)Options.WhenTie.GetValue())
                     {
                         case TieMode.Default:
                             exiledPlayer = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(info => info.PlayerId == exileId);
@@ -175,23 +176,14 @@ namespace TownOfHost
                     ExileControllerWrapUpPatch.AntiBlackout_LastExiled = exiledPlayer;
                 }
                 else __instance.RpcVotingComplete(states, exiledPlayer, tie); //通常処理
-                if (Utils.GetPlayerById(exileId).Is(CustomRoles.Witch))
-                {
-                    var which = Utils.GetPlayerById(exileId);
-                    foreach (var pc in PlayerControl.AllPlayerControls)
-                        if (Main.SpelledPlayer.TryGetValue(pc.PlayerId, out var killer) && killer == which)
-                            Main.SpelledPlayer.Remove(pc.PlayerId);
-                }
-                foreach (var kvp in Main.SpelledPlayer)
-                {
-                    if (Utils.GetPlayerById(kvp.Key) == null) continue;
-                    TryAddAfterMeetingDeathPlayers(kvp.Key, PlayerState.DeathReason.Spell);
-                    Utils.GetPlayerById(kvp.Key).SetRealKiller(kvp.Value);
-                }
-                Main.SpelledPlayer.Clear();
 
+                if (CustomRoles.Witch.IsEnable())
+                {
+                    Witch.OnCheckForEndVoting(exileId);
+                }
 
                 FollowingSuicideOnExile(exileId);
+                RevengeOnExile(exileId);
 
                 //霊界用暗転バグ対処
                 if (!AntiBlackout.OverrideExiledPlayer && exiledPlayer != null && Main.ResetCamPlayerList.Contains(exiledPlayer.PlayerId))
@@ -215,6 +207,7 @@ namespace TownOfHost
             if (Main.AfterMeetingDeathPlayers.TryAdd(playerId, deathReason))
             {
                 FollowingSuicideOnExile(playerId);
+                RevengeOnExile(playerId, deathReason);
             }
         }
         public static void FollowingSuicideOnExile(byte playerId)
@@ -222,6 +215,39 @@ namespace TownOfHost
             //Loversの後追い
             if (CustomRoles.Lovers.IsEnable() && !Main.isLoversDead && Main.LoversPlayers.Find(lp => lp.PlayerId == playerId) != null)
                 FixedUpdatePatch.LoversSuicide(playerId, true);
+        }
+        public static void RevengeOnExile(byte playerId, PlayerState.DeathReason deathReason = PlayerState.DeathReason.Vote)
+        {
+            if (deathReason == PlayerState.DeathReason.Suicide) return;
+            var player = Utils.GetPlayerById(playerId);
+            if (player == null) return;
+            var target = PickRevengeTarget(player);
+            if (target == null) return;
+            TryAddAfterMeetingDeathPlayers(target.PlayerId, PlayerState.DeathReason.Revenge);
+            target.SetRealKiller(player);
+            Logger.Info($"{player.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "MadmatesRevengeOnExile");
+        }
+        public static PlayerControl PickRevengeTarget(PlayerControl exiledplayer)//道連れ先選定
+        {
+            List<PlayerControl> TargetList = new();
+            foreach (var candidate in PlayerControl.AllPlayerControls)
+            {
+                if (candidate == exiledplayer || candidate.Data.IsDead || Main.AfterMeetingDeathPlayers.ContainsKey(candidate.PlayerId)) continue;
+                switch (exiledplayer.GetCustomRole())
+                {
+                    //ここに道連れ役職を追加
+                    default:
+                        if (exiledplayer.Is(RoleType.Madmate) && Options.MadmateRevengeCrewmate.GetBool() //黒猫オプション
+                        && !candidate.Is(RoleType.Impostor))
+                            TargetList.Add(candidate);
+                        break;
+                }
+            }
+            if (TargetList == null || TargetList.Count == 0) return null;
+            var rand = new System.Random();
+            var target = TargetList[rand.Next(TargetList.Count)];
+            Logger.Info($"{exiledplayer.GetNameWithRole()}の道連れ先:{target.GetNameWithRole()}", "PickRevengeTarget");
+            return target;
         }
     }
 
@@ -266,7 +292,7 @@ namespace TownOfHost
             {
                 var pc = Utils.GetPlayerById(pva.TargetPlayerId);
                 if (pc == null) continue;
-                var RoleTextData = Utils.GetRoleText(pc);
+                var RoleTextData = Utils.GetRoleText(pc.PlayerId);
                 var roleTextMeeting = UnityEngine.Object.Instantiate(pva.NameText);
                 roleTextMeeting.transform.SetParent(pva.NameText.transform);
                 roleTextMeeting.transform.localPosition = new Vector3(0f, -0.18f, 0f);
@@ -402,7 +428,7 @@ namespace TownOfHost
                         pva.NameText.color = Palette.ImpostorRed; //変更対象の名前を赤くする
                 }
                 //呪われている場合
-                if (Main.SpelledPlayer.ContainsKey(target.PlayerId))
+                if (Witch.IsSpelled(target.PlayerId))
                     pva.NameText.text += Utils.ColorString(Utils.GetRoleColor(CustomRoles.Impostor), "†");
 
                 //会議画面ではインポスター自身の名前にSnitchマークはつけません。

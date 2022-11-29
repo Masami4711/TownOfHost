@@ -354,12 +354,13 @@ namespace TownOfHost
                         opt.PlayerSpeedMod = Mathf.Clamp(speed.Value, Main.MinSpeed, 3f);
                 }
             }
+            Main.PlayerStates[player.PlayerId].UpdateTask(player);
             if (Options.GhostCanSeeOtherVotes.GetBool() && player.Data.IsDead && opt.AnonymousVotes)
                 opt.AnonymousVotes = false;
             if (Options.AdditionalEmergencyCooldown.GetBool() &&
                 Options.AdditionalEmergencyCooldownThreshold.GetInt() <= PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead))
                 opt.EmergencyCooldown += Options.AdditionalEmergencyCooldownTime.GetInt();
-            if (Options.SyncButtonMode.GetBool() && Options.SyncedButtonCount.GetSelection() <= Options.UsedButtonCount)
+            if (Options.SyncButtonMode.GetBool() && Options.SyncedButtonCount.GetValue() <= Options.UsedButtonCount)
                 opt.EmergencyCooldown = 3600;
             if ((Options.CurrentGameMode == CustomGameMode.HideAndSeek || Options.IsStandardHAS) && Options.HideAndSeekKillDelayTimer > 0)
             {
@@ -394,27 +395,19 @@ namespace TownOfHost
             return GameOptionsData.FromBytes(optByte);
         }
 
-        public static string GetRoleName(this PlayerControl player)
+        public static string GetDisplayRoleName(this PlayerControl player)
         {
-            return $"{Utils.GetRoleName(player.GetCustomRole())}" /*({getString("Last")})"*/;
+            return Utils.GetDisplayRoleName(player.PlayerId);
         }
         public static string GetSubRoleName(this PlayerControl player)
         {
             var SubRoles = Main.PlayerStates[player.PlayerId].SubRoles;
             if (SubRoles.Count == 0) return "";
             var sb = new StringBuilder();
-            bool first = false;
             foreach (var role in SubRoles)
             {
                 if (role == CustomRoles.NotAssigned) continue;
-
-                if (!first)
-                {
-                    first = true;
-                    sb.Append($"{Utils.GetRoleName(role)}");
-                }
-                else
-                    sb.Append($" + {Utils.GetRoleName(role)}");
+                sb.Append($" + {Utils.GetRoleName(role)}");
             }
 
             return sb.ToString();
@@ -422,8 +415,8 @@ namespace TownOfHost
         public static string GetAllRoleName(this PlayerControl player)
         {
             if (!player) return null;
-            var text = player.GetRoleName();
-            text += $" + {player.GetSubRoleName()}";
+            var text = Utils.GetRoleName(player.GetCustomRole());
+            text += player.GetSubRoleName();
             return text;
         }
         public static string GetNameWithRole(this PlayerControl player)
@@ -486,22 +479,6 @@ namespace TownOfHost
         {
             return isMeeting ? player?.Data?.PlayerName : player?.name;
         }
-        public static bool IsSpellMode(this PlayerControl player)
-        {
-            if (!Main.KillOrSpell.TryGetValue(player.PlayerId, out var KillOrSpell))
-            {
-                Main.KillOrSpell[player.PlayerId] = false;
-                KillOrSpell = false;
-            }
-            return KillOrSpell;
-        }
-        public static void SyncKillOrSpell(this PlayerControl player)
-        {
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.SetKillOrSpell, SendOption.Reliable, -1);
-            writer.Write(player.PlayerId);
-            writer.Write(player.IsSpellMode());
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
         public static bool CanUseKillButton(this PlayerControl pc)
         {
             return pc.GetCustomRole() switch
@@ -515,10 +492,6 @@ namespace TownOfHost
                 CustomRoles.Egoist or CustomRoles.Jackal => true,
                 _ => pc.Is(RoleType.Impostor),
             };
-        }
-        public static bool IsLastImpostor(this PlayerControl pc)
-        { //キルクールを変更するインポスター役職は省く
-            return Utils.IsLastImpostor(pc.PlayerId);
         }
         public static bool IsDousedPlayer(this PlayerControl arsonist, PlayerControl target)
         {
@@ -563,8 +536,8 @@ namespace TownOfHost
                     Sheriff.SetKillCooldown(player.PlayerId); //シェリフはシェリフのキルクールに。
                     break;
             }
-            if (player.IsLastImpostor())
-                Main.AllPlayerKillCooldown[player.PlayerId] = Options.LastImpostorKillCooldown.GetFloat();
+            if (player.PlayerId == LastImpostor.currentId)
+                LastImpostor.SetKillCooldown();
         }
         public static void TrapperKilled(this PlayerControl killer, PlayerControl target)
         {
@@ -610,7 +583,7 @@ namespace TownOfHost
             return Options.CanMakeMadmateCount.GetInt() > Main.SKMadmateNowCount
                     && player != null
                     && player.Data.Role.Role == RoleTypes.Shapeshifter
-                    && !player.Is(CustomRoles.Warlock) && !player.Is(CustomRoles.FireWorks) && !player.Is(CustomRoles.Sniper) && !player.Is(CustomRoles.BountyHunter);
+                    && player.GetCustomRole().CanMakeMadmate();
         }
         public static void RpcExileV2(this PlayerControl player)
         {

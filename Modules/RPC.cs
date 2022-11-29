@@ -105,10 +105,10 @@ namespace TownOfHost
                     RPC.RpcVersionCheck();
                     break;
                 case CustomRPC.SyncCustomSettings:
-                    foreach (var co in OptionItem.Options)
+                    foreach (var co in OptionItem.AllOptions)
                     {
                         //すべてのカスタムオプションについてインデックス値で受信
-                        co.RecieveOptionSelection(reader.ReadInt32());
+                        co.SetValue(reader.ReadInt32());
                     }
                     break;
                 case CustomRPC.SetDeathReason:
@@ -131,9 +131,7 @@ namespace TownOfHost
                     BountyHunter.ReceiveRPC(reader);
                     break;
                 case CustomRPC.SetKillOrSpell:
-                    byte playerId = reader.ReadByte();
-                    bool KoS = reader.ReadBoolean();
-                    Main.KillOrSpell[playerId] = KoS;
+                    Witch.ReceiveRPC(reader, false);
                     break;
                 case CustomRPC.SetSheriffShotLimit:
                     Sheriff.ReceiveRPC(reader);
@@ -159,9 +157,7 @@ namespace TownOfHost
                     RPC.ResetNameColorData();
                     break;
                 case CustomRPC.DoSpell:
-                    byte spelledId = reader.ReadByte();
-                    var which = Utils.GetPlayerById(reader.ReadByte());
-                    Main.SpelledPlayer.Add(spelledId, which);
+                    Witch.ReceiveRPC(reader, true);
                     break;
                 case CustomRPC.SniperSync:
                     Sniper.ReceiveRPC(reader);
@@ -207,10 +203,10 @@ namespace TownOfHost
         {
             if (!AmongUsClient.Instance.AmHost) return;
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, 80, Hazel.SendOption.Reliable, -1);
-            foreach (var co in OptionItem.Options)
+            foreach (var co in OptionItem.AllOptions)
             {
                 //すべてのカスタムオプションについてインデックス値で送信
-                writer.Write(co.GetSelection());
+                writer.Write(co.GetValue());
             }
             AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
@@ -313,6 +309,9 @@ namespace TownOfHost
                 case CustomRoles.EvilTracker:
                     EvilTracker.Add(targetId);
                     break;
+                case CustomRoles.Witch:
+                    Witch.Add(targetId);
+                    break;
 
                 case CustomRoles.Egoist:
                     Egoist.Add(targetId);
@@ -335,6 +334,9 @@ namespace TownOfHost
                     break;
                 case CustomRoles.SabotageMaster:
                     SabotageMaster.Add(targetId);
+                    break;
+                case CustomRoles.LastImpostor:
+                    LastImpostor.Add(targetId);
                     break;
             }
             HudManager.Instance.SetHudActive(true);
