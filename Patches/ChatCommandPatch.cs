@@ -267,6 +267,7 @@ namespace TownOfHost
                 { CustomRoles.BountyHunter, "bo" },
                 { CustomRoles.EvilTracker,"et" },
                 { CustomRoles.FireWorks, "fw" },
+                { CustomRoles.Insider,"in" },
                 { CustomRoles.Mare, "ma" },
                 { CustomRoles.Mafia, "mf" },
                 { CustomRoles.SerialKiller, "sk" },

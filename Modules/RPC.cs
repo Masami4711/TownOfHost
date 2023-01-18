@@ -311,6 +311,9 @@ namespace TownOfHost
                 case CustomRoles.Vampire:
                     Vampire.Add(targetId);
                     break;
+                case CustomRoles.Insider:
+                    Insider.Add(targetId);
+                    break;
 
                 case CustomRoles.Egoist:
                     Egoist.Add(targetId);
