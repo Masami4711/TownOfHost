@@ -202,5 +202,7 @@ namespace TownOfHost.Roles.Impostor
             var targetId = GetTarget(seer);
             return TargetArrow.GetArrows(seer, targetId);
         }
+        public static string GetTargetMark(PlayerControl seer, PlayerControl target)
+            => GetTarget(seer) == target.PlayerId ? Utils.ColorString(Palette.ImpostorRed, "⊕") : "";
     }
 }

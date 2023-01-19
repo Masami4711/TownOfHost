@@ -846,7 +846,10 @@ namespace TownOfHost
                                 TargetRoleText = $"<size={fontSize}>{EvilTracker.GetArrowAndLastRoom(seer, target)}</size>\r\n";
                         }
                         if (Insider.KnowTargetRole(seer, target))
+                        {
                             TargetRoleText = $"<size={fontSize}>{Insider.GetTargetRoleName(target.PlayerId)}{Insider.GetProgressText(target)}</size>\r\n";
+                            TargetMark.Append(Insider.GetOtherImpostorMarks(seer, target, isMeeting));
+                        }
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isForMeeting);

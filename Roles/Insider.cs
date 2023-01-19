@@ -117,5 +117,23 @@ namespace TownOfHost
             if (killCount < Norma) return Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $"({killCount}/{Norma})");
             else return Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), " ★");
         }
+        public static string GetOtherImpostorMarks(PlayerControl insider, PlayerControl target, bool isMeeting)
+        {
+            if (!playerIdList.Contains(insider.PlayerId) || !CanSeeImpostorAbilities.GetBool()) return "";
+            StringBuilder Mark = new();
+            foreach (var seer in Main.AllPlayerControls)
+            {
+                switch (seer.GetCustomRole())
+                {
+                    case CustomRoles.BountyHunter:
+                        Mark.Append(BountyHunter.GetTargetMark(seer, target));
+                        break;
+                    case CustomRoles.EvilTracker:
+                        Mark.Append(EvilTracker.GetTargetMark(seer, target));
+                        break;
+                }
+            }
+            return Mark.ToString();
+        }
     }
 }

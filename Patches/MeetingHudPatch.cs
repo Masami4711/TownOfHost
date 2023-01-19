@@ -379,6 +379,15 @@ namespace TownOfHost
                 }
                 switch (seer.GetCustomRole())
                 {
+                    case CustomRoles.BountyHunter:
+                        pva.NameText.text += BountyHunter.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.EvilTracker:
+                        pva.NameText.text += EvilTracker.GetTargetMark(seer, target);
+                        break;
+                    case CustomRoles.Insider:
+                        pva.NameText.text += Insider.GetOtherImpostorMarks(seer, target, true);
+                        break;
                     case CustomRoles.Arsonist:
                         if (seer.IsDousedPlayer(target)) //seerがtargetに既にオイルを塗っている(完了)
                             sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Arsonist), "▲"));
@@ -389,9 +398,6 @@ namespace TownOfHost
                     case CustomRoles.Egoist:
                     case CustomRoles.Jackal:
                         sb.Append(Snitch.GetWarningMark(seer, target));
-                        break;
-                    case CustomRoles.EvilTracker:
-                        sb.Append(EvilTracker.GetTargetMark(seer, target));
                         break;
                 }
 

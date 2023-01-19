@@ -782,6 +782,7 @@ namespace TownOfHost
                         (RoleText.text, RoleText.color) = Insider.GetTargetRoleTextData(target.PlayerId);
                         RoleText.text += Insider.GetProgressText(target);
                     }
+                    Mark.Append(Insider.GetOtherImpostorMarks(seer, target, false));
 
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
                         Mark = isBlocked ? "(true)" : "(false)";
