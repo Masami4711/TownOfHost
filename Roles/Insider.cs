@@ -64,5 +64,28 @@ namespace TownOfHost
                     || target.GetRealKiller() == seer; //自分でキルした相手
             return false;
         }
+        public static string GetTargetRoleName(byte playerId)
+        {
+            var TextData = GetTargetRoleTextData(playerId);
+            return Utils.ColorString(TextData.Item2, TextData.Item1);
+        }
+        public static (string, Color) GetTargetRoleTextData(byte playerId)
+        {
+            string RoleText = "Invalid Role";
+            Color RoleColor = Color.red;
+
+            var mainRole = Main.PlayerStates[playerId].MainRole;
+            mainRole = mainRole switch
+            {
+                // CustomRoles.Marin => CustomRoles.Crewmate,
+                _ => mainRole,
+            };
+            RoleText = Utils.GetRoleName(mainRole);
+            RoleColor = Utils.GetRoleColor(mainRole);
+
+            var SubRoles = Main.PlayerStates[playerId].SubRoles;
+            (RoleText, RoleColor) = Utils.AddSubRoleText(SubRoles, RoleText, RoleColor);
+            return (RoleText, RoleColor);
+        }
     }
 }

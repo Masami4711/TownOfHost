@@ -776,6 +776,12 @@ namespace TownOfHost
 
                     Suffix.Append(EvilTracker.GetTargetArrow(seer, target));
 
+                    if (Insider.KnowTargetRole(seer, target))
+                    {
+                        RoleText.enabled = true;
+                        (RoleText.text, RoleText.color) = Insider.GetTargetRoleTextData(target.PlayerId);
+                    }
+
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {
                         Mark = isBlocked ? "(true)" : "(false)";
                     }*/

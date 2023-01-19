@@ -193,10 +193,14 @@ namespace TownOfHost
             Color RoleColor = Color.red;
 
             var mainRole = Main.PlayerStates[playerId].MainRole;
-            var SubRoles = Main.PlayerStates[playerId].SubRoles;
             RoleText = GetRoleName(mainRole);
             RoleColor = GetRoleColor(mainRole);
-            foreach (var subRole in Main.PlayerStates[playerId].SubRoles)
+            (RoleText, RoleColor) = AddSubRoleText(Main.PlayerStates[playerId].SubRoles, RoleText, RoleColor);
+            return (RoleText, RoleColor);
+        }
+        public static (string, Color) AddSubRoleText(List<CustomRoles> SubRoles, string RoleText, Color RoleColor)
+        {
+            foreach (var subRole in SubRoles)
             {
                 switch (subRole)
                 {
@@ -801,6 +805,11 @@ namespace TownOfHost
                         {
                             TargetMark.Append($"<color={GetRoleColorCode(CustomRoles.Lovers)}>♡</color>");
                         }
+                        //インサイダーからのラバーズ表示
+                        else if (Insider.KnowDeadTargetRole(seer, target) && target.Is(CustomRoles.Lovers))
+                        {
+                            TargetMark.Append(ColorString(GetRoleColor(CustomRoles.Lovers), "♡"));
+                        }
 
                         if (seer.Is(CustomRoles.Arsonist))//seerがアーソニストの時
                         {
@@ -833,6 +842,8 @@ namespace TownOfHost
                             if (isForMeeting && EvilTracker.IsTrackTarget(seer, target) && EvilTracker.CanSeeLastRoomInMeeting)
                                 TargetRoleText = $"<size={fontSize}>{EvilTracker.GetArrowAndLastRoom(seer, target)}</size>\r\n";
                         }
+                        if (Insider.KnowTargetRole(seer, target))
+                            TargetRoleText = $"<size={fontSize}>{Insider.GetTargetRoleName(target.PlayerId)}</size>\r\n";
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isForMeeting);

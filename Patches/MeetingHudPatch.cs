@@ -318,6 +318,11 @@ namespace TownOfHost
                     roleTextMeeting.text = EvilTracker.GetArrowAndLastRoom(PlayerControl.LocalPlayer, pc);
                     roleTextMeeting.enabled = true;
                 }
+                if (Insider.KnowTargetRole(PlayerControl.LocalPlayer, pc))
+                {
+                    roleTextMeeting.enabled = true;
+                    (roleTextMeeting.text, roleTextMeeting.color) = Insider.GetTargetRoleTextData(pc.PlayerId);
+                }
             }
             if (Options.SyncButtonMode.GetBool())
             {
@@ -394,7 +399,8 @@ namespace TownOfHost
                     switch (subRole)
                     {
                         case CustomRoles.Lovers:
-                            if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead)
+                            if (seer.Is(CustomRoles.Lovers) || seer.Data.IsDead
+                            || Insider.KnowDeadTargetRole(seer, target))
                                 sb.Append(Utils.ColorString(Utils.GetRoleColor(CustomRoles.Lovers), "♡"));
                             break;
                     }
