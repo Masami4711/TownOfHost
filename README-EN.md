@@ -291,6 +291,23 @@ Even if they mistakenly bomb themselves, killing everyone results in Impostor wi
 | FireWorks Max Count |
 | FireWorks Radius    |
 
+### Insider
+
+Team : Impostors<br>
+Decision : Impostor<br>
+
+The Insider is an impostor which can see others' roles.<br>
+They can see all impostors' roles and statuses.<br>
+Other roles whose they killed on their own are visible to them as well.<br>
+In Addition, a certain times of kill shows them Madmate.<br>
+
+| Settings Name                        |
+| ------------------------------------ |
+| Insider Can See Impostor Abilities   |
+| Insider Can See All Ghost's Roles    |
+| Insider Can See Madmates             |
+| Insider's Kill Count To See Madmates |
+
 ### Mare
 
 Create by Kihi, しゅー, そうくん, ゆりの<br>
