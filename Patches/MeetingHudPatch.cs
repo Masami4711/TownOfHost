@@ -322,6 +322,7 @@ namespace TownOfHost
                 {
                     roleTextMeeting.enabled = true;
                     (roleTextMeeting.text, roleTextMeeting.color) = Insider.GetTargetRoleTextData(pc.PlayerId);
+                    roleTextMeeting.text += Insider.GetProgressText(pc);
                 }
             }
             if (Options.SyncButtonMode.GetBool())

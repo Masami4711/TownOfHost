@@ -356,6 +356,9 @@ namespace TownOfHost
                 case CustomRoles.TimeThief:
                     ProgressText.Append(TimeThief.GetProgressText(playerId));
                     break;
+                case CustomRoles.Insider:
+                    ProgressText.Append(Insider.GetKillCount(playerId));
+                    break;
                 default:
                     //タスクテキスト
                     var taskState = Main.PlayerStates?[playerId].GetTaskState();
@@ -843,7 +846,7 @@ namespace TownOfHost
                                 TargetRoleText = $"<size={fontSize}>{EvilTracker.GetArrowAndLastRoom(seer, target)}</size>\r\n";
                         }
                         if (Insider.KnowTargetRole(seer, target))
-                            TargetRoleText = $"<size={fontSize}>{Insider.GetTargetRoleName(target.PlayerId)}</size>\r\n";
+                            TargetRoleText = $"<size={fontSize}>{Insider.GetTargetRoleName(target.PlayerId)}{Insider.GetProgressText(target)}</size>\r\n";
 
                         //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                         string TargetPlayerName = target.GetRealName(isForMeeting);

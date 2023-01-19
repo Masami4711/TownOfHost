@@ -780,6 +780,7 @@ namespace TownOfHost
                     {
                         RoleText.enabled = true;
                         (RoleText.text, RoleText.color) = Insider.GetTargetRoleTextData(target.PlayerId);
+                        RoleText.text += Insider.GetProgressText(target);
                     }
 
                     /*if(main.AmDebugger.Value && main.BlockKilling.TryGetValue(target.PlayerId, out var isBlocked)) {

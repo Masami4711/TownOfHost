@@ -1,3 +1,4 @@
+using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using static TownOfHost.Translator;
@@ -86,6 +87,35 @@ namespace TownOfHost
             var SubRoles = Main.PlayerStates[playerId].SubRoles;
             (RoleText, RoleColor) = Utils.AddSubRoleText(SubRoles, RoleText, RoleColor);
             return (RoleText, RoleColor);
+        }
+        public static string GetProgressText(PlayerControl pc)
+        {
+            StringBuilder ProgressText = new();
+            switch (pc.GetCustomRole()) //本人には表示しないケースのみ
+            {
+                case CustomRoles.FireWorks:
+                    ProgressText.Append(FireWorks.GetFireWorksCount(pc.PlayerId));
+                    break;
+                case CustomRoles.Witch:
+                    ProgressText.Append(Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(Witch.IsSpellMode(pc.PlayerId) ? "WitchModeSpell" : "WitchModeKill")));
+                    break;
+                default:
+                    if (pc.Is(RoleType.Impostor))
+                        ProgressText.Append(Utils.GetProgressText(pc));
+                    break;
+            }
+            if (ProgressText.Length != 0)
+                ProgressText.Insert(0, " "); //空じゃなければ空白を追加
+            return ProgressText.ToString();
+        }
+        public static string GetKillCount(byte playerId)
+        {
+            if (!CanSeeMadmates.GetBool()) return "";
+
+            int killCount = KillCount(playerId);
+            int Norma = KillCountToSeeMadmates.GetInt();
+            if (killCount < Norma) return Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $"({killCount}/{Norma})");
+            else return Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), " ★");
         }
     }
 }
