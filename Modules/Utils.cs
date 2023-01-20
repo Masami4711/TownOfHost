@@ -202,7 +202,7 @@ namespace TownOfHost
         {
             foreach (var subRole in Main.PlayerStates[playerId].SubRoles)
             {
-                if (IgnoreSubRolesList.Contains(subRole)) continue;
+                if (IgnoreSubRolesList != null && IgnoreSubRolesList.Contains(subRole)) continue;
                 switch (subRole)
                 {
                     case CustomRoles.LastImpostor:
