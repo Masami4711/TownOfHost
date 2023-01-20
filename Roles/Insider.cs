@@ -14,6 +14,16 @@ namespace TownOfHost
         private static OptionItem CanSeeAllGhostsRoles;
         private static OptionItem CanSeeMadmates;
         private static OptionItem KillCountToSeeMadmates;
+
+        private static Dictionary<CustomRoles, CustomRoles> ReplacementMainRolesDictionary = new()
+        {
+            // { CustomRoles.Marin, CustomRoles.Crewmate }
+        };
+        private static List<CustomRoles> IgnoreSubRolesList = new()
+        {
+            CustomRoles.NotAssigned
+        };
+
         public static void SetupCustomOption()
         {
             SetupRoleOptions(Id, TabGroup.ImpostorRoles, CustomRoles.Insider);
@@ -76,16 +86,12 @@ namespace TownOfHost
             Color RoleColor = Color.red;
 
             var mainRole = Main.PlayerStates[playerId].MainRole;
-            mainRole = mainRole switch
-            {
-                // CustomRoles.Marin => CustomRoles.Crewmate,
-                _ => mainRole,
-            };
+            if (ReplacementMainRolesDictionary.TryGetValue(mainRole, out var newMainRole))
+                mainRole = newMainRole;
             RoleText = Utils.GetRoleName(mainRole);
             RoleColor = Utils.GetRoleColor(mainRole);
 
-            var SubRoles = Main.PlayerStates[playerId].SubRoles;
-            (RoleText, RoleColor) = Utils.AddSubRoleText(SubRoles, RoleText, RoleColor);
+            (RoleText, RoleColor) = Utils.AddSubRoleText(playerId, RoleText, RoleColor, IgnoreSubRolesList);
             return (RoleText, RoleColor);
         }
         public static string GetProgressText(PlayerControl pc)

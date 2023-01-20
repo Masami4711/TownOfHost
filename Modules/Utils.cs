@@ -195,13 +195,14 @@ namespace TownOfHost
             var mainRole = Main.PlayerStates[playerId].MainRole;
             RoleText = GetRoleName(mainRole);
             RoleColor = GetRoleColor(mainRole);
-            (RoleText, RoleColor) = AddSubRoleText(Main.PlayerStates[playerId].SubRoles, RoleText, RoleColor);
+            (RoleText, RoleColor) = AddSubRoleText(playerId, RoleText, RoleColor);
             return (RoleText, RoleColor);
         }
-        public static (string, Color) AddSubRoleText(List<CustomRoles> SubRoles, string RoleText, Color RoleColor)
+        public static (string, Color) AddSubRoleText(byte playerId, string RoleText, Color RoleColor, List<CustomRoles> IgnoreSubRolesList = null)
         {
-            foreach (var subRole in SubRoles)
+            foreach (var subRole in Main.PlayerStates[playerId].SubRoles)
             {
+                if (IgnoreSubRolesList.Contains(subRole)) continue;
                 switch (subRole)
                 {
                     case CustomRoles.LastImpostor:
