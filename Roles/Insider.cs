@@ -103,7 +103,8 @@ namespace TownOfHost
                     ProgressText.Append(FireWorks.GetFireWorksCount(pc.PlayerId));
                     break;
                 case CustomRoles.Witch:
-                    ProgressText.Append(Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(Witch.IsSpellMode(pc.PlayerId) ? "WitchModeSpell" : "WitchModeKill")));
+                    if (Witch.NowSwitchTrigger != Witch.SwitchTrigger.DoubleTrigger)
+                        ProgressText.Append(Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(Witch.IsSpellMode(pc.PlayerId) ? "WitchModeSpell" : "WitchModeKill")));
                     break;
                 default:
                     if (pc.Is(RoleType.Impostor))
