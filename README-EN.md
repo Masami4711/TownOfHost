@@ -293,20 +293,22 @@ Even if they mistakenly bomb themselves, killing everyone results in Impostor wi
 
 ### Insider
 
+Create and idea by Masami<br>
+
 Team : Impostors<br>
-Decision : Impostor<br>
+Basis : Impostor<br>
 
-The Insider is an impostor which can see others' roles.<br>
-They can see all impostors' roles and statuses.<br>
-Other roles whose they killed on their own are visible to them as well.<br>
-In Addition, a certain times of kill shows them Madmate.<br>
+The Insider can see roles of other players.<br>
+You can see other Impostors' roles and states.<br>
+Other roles you killed on their own are visible to them as well.<br>
+In Addition, a configurable times of kill tells you Madmates.<br>
 
-| Settings Name                        |
-| ------------------------------------ |
-| Insider Can See Impostor Abilities   |
-| Insider Can See All Ghost's Roles    |
-| Insider Can See Madmates             |
-| Insider's Kill Count To See Madmates |
+| Settings Name              |
+| -------------------------- |
+| Can See Impostor Abilities |
+| Can See All Ghost's Roles  |
+| Can See Madmates           |
+| Kill Count To See Madmates |
 
 ### Mare
 
