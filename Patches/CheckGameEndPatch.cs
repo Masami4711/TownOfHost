@@ -54,6 +54,9 @@ namespace TownOfHost
                         CustomWinnerHolder.WinnerRoles.Add(CustomRoles.Egoist);
                         CustomWinnerHolder.WinnerRoles.Add(CustomRoles.EgoSchrodingerCat);
                         break;
+                    case CustomWinner.None:
+                        Runaway.SoloWin();
+                        break;
                 }
                 if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None)
                 {
@@ -75,6 +78,7 @@ namespace TownOfHost
                         }
                         //SchrodingerCat
                         SchrodingerCat.CheckAdditionalWin(pc);
+                        Runaway.AdditionalWin(pc);
                     }
                 }
                 ShipStatus.Instance.enabled = false;

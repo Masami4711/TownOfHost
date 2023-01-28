@@ -297,6 +297,10 @@ namespace TownOfHost
                             hasTasks = !ForRecompute;
                         else hasTasks = false;
                         break;
+                    case CustomRoles.Runaway:
+                        if (p.IsDead)
+                            hasTasks = false;
+                        break;
                     default:
                         if (role.IsImpostor() || role.IsKilledSchrodingerCat()) hasTasks = false;
                         break;

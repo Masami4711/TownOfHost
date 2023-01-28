@@ -60,6 +60,32 @@ namespace TownOfHost
             return (DefaultEscapeCooldown * numAlive + FinalEscapeCooldown * numDead) / numAll;
         }
 
+        //勝利条件関連
+        private static bool IsAliveWin(PlayerControl pc)
+            => pc.IsAlive()
+            && playerIdList.Contains(pc.PlayerId)
+            && CustomWinnerHolder.WinnerTeam == CustomWinner.Crewmate;
+        private static bool IsEscapeWin(PlayerControl pc)
+            => pc != null && !pc.IsAlive()
+            && pc.Is(PlayerState.DeathReason.Escape)
+            && CustomWinnerHolder.WinnerTeam != CustomWinner.Crewmate;
+        public static void SoloWin() //全滅 & 脱出
+        {
+            var winnerList = Main.AllPlayerControls.Where(pc => IsEscapeWin(pc));
+            if (winnerList == null || winnerList.Count() == 0) return;
+            CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Runaway);
+            foreach (var pc in winnerList)
+                CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+        }
+        public static void AdditionalWin(PlayerControl pc)
+        {
+            if (IsAliveWin(pc) || (IsEscapeWin(pc) && CustomWinnerHolder.WinnerTeam != CustomWinner.Runaway))
+            {
+                CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);
+                CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+            }
+        }
+
         //内部で呼ばれるvoid関数
         private static void Escape(PlayerControl pc)
         {
