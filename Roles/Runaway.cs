@@ -60,7 +60,27 @@ namespace TownOfHost
             return (DefaultEscapeCooldown * numAlive + FinalEscapeCooldown * numDead) / numAll;
         }
 
-        //各所で呼ばれる関数
+        //内部で呼ばれるvoid関数
+        private static void Escape(PlayerControl pc)
+        {
+            pc.RpcExileV2();
+            Main.PlayerStates[pc.PlayerId].deathReason = PlayerState.DeathReason.Escape;
+            Main.PlayerStates[pc.PlayerId].SetDead();
+            pc.SetRealKiller(pc);
+            Utils.MarkEveryoneDirtySettings();
+            Utils.NotifyRoles();
+        }
+        //外部で呼ばれるvoid関数
+        public static void OnEnterVent(PlayerControl pc, int ventId)
+        {
+            if (!AmongUsClient.Instance.AmHost || !AmongUsClient.Instance.IsGameStarted) return;
+            if (!CanUseVent(pc)) return;
+            new LateTask(() =>
+            {
+                pc?.MyPhysics?.RpcBootFromVent(ventId);
+                Escape(pc);
+            }, 0.25f, "Runaway Escape");
+        }
         public static void AfterMeetingTasks() //クールダウンを設定
         {
             foreach (var id in playerIdList)

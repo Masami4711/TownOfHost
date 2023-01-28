@@ -866,15 +866,21 @@ namespace TownOfHost
         {
             if (Options.CurrentGameMode == CustomGameMode.HideAndSeek && Options.IgnoreVent.GetBool())
                 pc.MyPhysics.RpcBootFromVent(__instance.Id);
-
-            Witch.OnEnterVent(pc);
-            if (pc.Is(CustomRoles.Mayor))
+            switch (pc.GetCustomRole())
             {
-                if (Main.MayorUsedButtonCount.TryGetValue(pc.PlayerId, out var count) && count < Options.MayorNumOfUseButton.GetInt())
-                {
-                    pc?.MyPhysics?.RpcBootFromVent(__instance.Id);
-                    pc?.ReportDeadBody(null);
-                }
+                case CustomRoles.Witch:
+                    Witch.OnEnterVent(pc);
+                    break;
+                case CustomRoles.Mayor:
+                    if (Main.MayorUsedButtonCount.TryGetValue(pc.PlayerId, out var count) && count < Options.MayorNumOfUseButton.GetInt())
+                    {
+                        pc?.MyPhysics?.RpcBootFromVent(__instance.Id);
+                        pc?.ReportDeadBody(null);
+                    }
+                    break;
+                case CustomRoles.Runaway:
+                    Runaway.OnEnterVent(pc, __instance.Id);
+                    break;
             }
         }
     }

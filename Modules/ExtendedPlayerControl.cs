@@ -537,6 +537,7 @@ namespace TownOfHost
         public static bool KnowDeathReason(this PlayerControl seer, PlayerControl target)
             => (seer.Is(CustomRoles.Doctor)
             || (seer.Is(CustomRoleTypes.Madmate) && Options.MadmateCanSeeDeathReason.GetBool())
+            || (seer == target && target.Is(PlayerState.DeathReason.Escape))
             || (seer.Data.IsDead && Options.GhostCanSeeDeathReason.GetBool()))
             && target.Data.IsDead;
         public static string GetRoleInfo(this PlayerControl player, bool InfoLong = false)
@@ -604,6 +605,7 @@ namespace TownOfHost
         public static bool Is(this PlayerControl target, CustomRoleTypes type) { return target.GetCustomRole().GetCustomRoleTypes() == type; }
         public static bool Is(this PlayerControl target, RoleTypes type) { return target.GetCustomRole().GetRoleTypes() == type; }
         public static bool Is(this PlayerControl target, CountTypes type) { return target.GetCountTypes() == type; }
+        public static bool Is(this PlayerControl target, PlayerState.DeathReason deathReason) { return Main.PlayerStates[target.PlayerId].deathReason == deathReason; }
         public static bool IsAlive(this PlayerControl target)
         {
             //ロビーなら生きている
