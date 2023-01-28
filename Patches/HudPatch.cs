@@ -99,6 +99,9 @@ namespace TownOfHost
                         case CustomRoles.EvilTracker:
                             EvilTracker.GetAbilityButtonText(__instance, player.PlayerId);
                             break;
+                        case CustomRoles.Runaway:
+                            Runaway.SetAbilityButton(__instance, player);
+                            break;
                     }
 
                     //バウンティハンターのターゲットテキスト

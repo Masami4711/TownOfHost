@@ -160,6 +160,9 @@ namespace TownOfHost.Modules
                 case CustomRoles.JSchrodingerCat:
                     Jackal.ApplyGameOptions(opt);
                     break;
+                case CustomRoles.Runaway:
+                    Runaway.ApplyGameOptions();
+                    break;
             }
             if (Main.AllPlayerKillCooldown.TryGetValue(player.PlayerId, out var killCooldown))
             {
