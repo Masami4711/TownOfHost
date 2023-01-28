@@ -298,6 +298,7 @@ namespace TownOfHost
         Puppeteer,
         TimeThief,
         EvilTracker,
+        EagleEye,
         //Madmate
         MadGuardian,
         Madmate,

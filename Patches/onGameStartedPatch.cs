@@ -134,6 +134,7 @@ namespace TownOfHost
             SchrodingerCat.Init();
             Vampire.Init();
             TimeManager.Init();
+            EagleEye.Init();
             LastImpostor.Init();
             TargetArrow.Init();
             DoubleTrigger.Init();
@@ -349,6 +350,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.Vampire:
                             Vampire.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.EagleEye:
+                            EagleEye.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Arsonist:

@@ -265,6 +265,7 @@ namespace TownOfHost
                 //Impostor役職
                 { (CustomRoles)(-1), $"== {GetString("Impostor")} ==" }, //区切り用
                 { CustomRoles.BountyHunter, "bo" },
+                { CustomRoles.EagleEye,"ee" },
                 { CustomRoles.EvilTracker,"et" },
                 { CustomRoles.FireWorks, "fw" },
                 { CustomRoles.Mare, "ma" },
