@@ -742,6 +742,8 @@ namespace TownOfHost
 
                 SelfSuffix.Append(EvilTracker.GetTargetArrow(seer, seer));
 
+                SelfSuffix.Append(Runaway.GetSuffixText(seer, fontSize));
+
                 //RealNameを取得 なければ現在の名前をRealNamesに書き込む
                 string SeerRealName = seer.GetRealName(isMeeting);
 

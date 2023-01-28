@@ -165,6 +165,11 @@ namespace TownOfHost
                     __instance.ImpostorVentButton.ToggleVisible(CanUseVent);
                     player.Data.Role.CanVent = CanUseVent;
                 }
+                else if (player.Is(CustomRoles.Runaway))
+                {
+                    LowerInfoText.text = Runaway.GetSuffixText(player);
+                    LowerInfoText.enabled = true;
+                }
                 else
                 {
                     __instance.ReportButton.Hide();

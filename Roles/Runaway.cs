@@ -151,5 +151,15 @@ namespace TownOfHost
                 }
             }
         }
+
+        //string関数
+        public static string GetSuffixText(PlayerControl pc, string fontSize = null)
+        {
+            if (GameStates.IsMeeting || !pc.IsAlive() || !playerIdList.Contains(pc.PlayerId)) return "";
+            string text = Utils.ColorString(Utils.GetRoleColor(CustomRoles.Runaway), GetString(CanUseVent(pc) ? "RunawayReadyToEscape" : "RunawayCantEscape"));
+            if (fontSize != null)
+                text = $"<size={fontSize}>" + text + "</size>";
+            return text;
+        }
     }
 }
