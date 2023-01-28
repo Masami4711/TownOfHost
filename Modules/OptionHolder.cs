@@ -443,6 +443,7 @@ namespace TownOfHost
             Egoist.SetupCustomOption();
             Executioner.SetupCustomOption();
             Jackal.SetupCustomOption();
+            Runaway.SetupCustomOption();
 
             // Add-Ons
             LastImpostor.SetupCustomOption();

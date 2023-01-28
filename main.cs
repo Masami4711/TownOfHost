@@ -227,6 +227,7 @@ namespace TownOfHost
                     {CustomRoles.EgoSchrodingerCat, "#5600ff"},
                     {CustomRoles.Jackal, "#00b4eb"},
                     {CustomRoles.JSchrodingerCat, "#00b4eb"},
+                    {CustomRoles.Runaway, "#708090"},
                     //HideAndSeek
                     {CustomRoles.HASFox, "#e478ff"},
                     {CustomRoles.HASTroll, "#00ff00"},
@@ -331,6 +332,7 @@ namespace TownOfHost
         EgoSchrodingerCat,//エゴイスト陣営のシュレディンガーの猫
         Jester,
         Opportunist,
+        Runaway,
         SchrodingerCat,//無所属のシュレディンガーの猫
         Terrorist,
         Executioner,

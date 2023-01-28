@@ -50,6 +50,7 @@ namespace TownOfHost
                 CustomRoles.EgoSchrodingerCat or
                 CustomRoles.Jackal or
                 CustomRoles.JSchrodingerCat or
+                CustomRoles.Runaway or
                 CustomRoles.HASTroll or
                 CustomRoles.HASFox;
         }
@@ -143,6 +144,7 @@ namespace TownOfHost
 
                 CustomRoles.Engineer or
                 CustomRoles.Madmate or
+                CustomRoles.Runaway or
                 CustomRoles.Terrorist => RoleTypes.Engineer,
 
                 CustomRoles.GuardianAngel or

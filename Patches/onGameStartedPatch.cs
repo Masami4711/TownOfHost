@@ -134,6 +134,7 @@ namespace TownOfHost
             SchrodingerCat.Init();
             Vampire.Init();
             TimeManager.Init();
+            Runaway.Init();
             LastImpostor.Init();
             TargetArrow.Init();
             DoubleTrigger.Init();
@@ -363,6 +364,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.Jackal:
                             Jackal.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.Runaway:
+                            Runaway.Add(pc.PlayerId);
                             break;
 
                         case CustomRoles.Sheriff:
