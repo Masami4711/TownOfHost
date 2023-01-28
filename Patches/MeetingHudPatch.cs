@@ -189,6 +189,7 @@ namespace TownOfHost
                 }
                 else __instance.RpcVotingComplete(states, exiledPlayer, tie); //通常処理
 
+                EagleEye.OnCheckForEndVoting(__instance);
                 CheckForDeathOnExile(PlayerState.DeathReason.Vote, exileId);
 
                 return false;
@@ -317,6 +318,11 @@ namespace TownOfHost
                 {
                     roleTextMeeting.text = EvilTracker.GetArrowAndLastRoom(PlayerControl.LocalPlayer, pc);
                     roleTextMeeting.enabled = true;
+                }
+                if (EagleEye.KnowTargetRole(PlayerControl.LocalPlayer, pc))
+                {
+                    roleTextMeeting.enabled = true;
+                    (roleTextMeeting.text, roleTextMeeting.color) = RoleTextData;
                 }
             }
             if (Options.SyncButtonMode.GetBool())
