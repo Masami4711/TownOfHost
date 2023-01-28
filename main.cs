@@ -374,6 +374,7 @@ namespace TownOfHost
         SchrodingerCat = CustomRoles.SchrodingerCat,
         Executioner = CustomRoles.Executioner,
         Runaway = CustomRoles.Runaway,
+        Lovers = CustomRoles.Lovers,
         HASFox = CustomRoles.HASFox,
     }
     /*public enum CustomRoles : byte

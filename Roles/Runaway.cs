@@ -73,16 +73,39 @@ namespace TownOfHost
         {
             var winnerList = Main.AllPlayerControls.Where(pc => IsEscapeWin(pc));
             if (winnerList == null || winnerList.Count() == 0) return;
-            CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Runaway);
-            foreach (var pc in winnerList)
-                CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+            if (CustomRoles.Lovers.IsEnable() //Loversがいて脱出している
+            && Main.LoversPlayers.All(pc => winnerList.Contains(pc)))
+            {
+                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Lovers);
+                Main.LoversPlayers.Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+            }
+            else
+            {
+                CustomWinnerHolder.ResetAndSetWinner(CustomWinner.Runaway);
+                foreach (var pc in winnerList)
+                    CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+            }
         }
         public static void AdditionalWin(PlayerControl pc)
         {
             if (IsAliveWin(pc) || (IsEscapeWin(pc) && CustomWinnerHolder.WinnerTeam != CustomWinner.Runaway))
             {
-                CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);
-                CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+                if (CustomRoles.Lovers.IsEnable() //Loversで相方がいて脱出している
+                && Main.LoversPlayers.Contains(pc)
+                && Main.LoversPlayers.All(pc => IsEscapeWin(pc)))
+                {
+                    if (CustomWinnerHolder.WinnerTeam != CustomWinner.Lovers
+                    && !CustomWinnerHolder.AdditionalWinnerTeams.Contains(AdditionalWinners.Lovers))
+                    {
+                        CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Lovers);
+                        Main.LoversPlayers.Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
+                    }
+                }
+                else
+                {
+                    CustomWinnerHolder.AdditionalWinnerTeams.Add(AdditionalWinners.Runaway);
+                    CustomWinnerHolder.WinnerIds.Add(pc.PlayerId);
+                }
             }
         }
 
@@ -106,6 +129,15 @@ namespace TownOfHost
                 pc?.MyPhysics?.RpcBootFromVent(ventId);
                 Escape(pc);
             }, 0.25f, "Runaway Escape");
+        }
+        public static void OnReportDeadBody() //Runawayの恋人の相方専用
+        {
+            if (CustomRoles.Lovers.IsEnable() && Main.isLoversDead)
+            {
+                if (Main.LoversPlayers.Any(pc => pc != null && !pc.IsAlive() && pc.Is(PlayerState.DeathReason.Escape)))
+                    Main.LoversPlayers.Where(pc => pc.IsAlive())
+                        .Do(pc => Escape(pc));
+            }
         }
         public static void AfterMeetingTasks() //クールダウンを設定
         {

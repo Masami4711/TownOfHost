@@ -460,6 +460,10 @@ namespace TownOfHost
             Utils.SyncAllSettings();
             return true;
         }
+        public static void Postfix(PlayerControl __instance, [HarmonyArgument(0)] GameData.PlayerInfo target)
+        {
+            Runaway.OnReportDeadBody();
+        }
         public static async void ChangeLocalNameAndRevert(string name, int time)
         {
             //async Taskじゃ警告出るから仕方ないよね。
@@ -817,6 +821,7 @@ namespace TownOfHost
                         //生きていて死ぬ予定もない場合は心中
                         if (partnerPlayer.PlayerId != deathId && !partnerPlayer.Data.IsDead)
                         {
+                            if (loversPlayer.Is(PlayerState.DeathReason.Escape)) continue;
                             Main.PlayerStates[partnerPlayer.PlayerId].deathReason = PlayerState.DeathReason.FollowingSuicide;
                             if (isExiled)
                                 CheckForEndVotingPatch.TryAddAfterMeetingDeathPlayers(PlayerState.DeathReason.FollowingSuicide, partnerPlayer.PlayerId);
