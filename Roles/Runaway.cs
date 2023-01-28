@@ -59,5 +59,19 @@ namespace TownOfHost
             // Alive : Deadで内分
             return (DefaultEscapeCooldown * numAlive + FinalEscapeCooldown * numDead) / numAll;
         }
+
+        //各所で呼ばれる関数
+        public static void AfterMeetingTasks() //クールダウンを設定
+        {
+            foreach (var id in playerIdList)
+            {
+                if (!Main.PlayerStates[id].IsDead)
+                {
+                    var pc = Utils.GetPlayerById(id);
+                    pc?.SyncSettings();
+                    pc?.RpcResetAbilityCooldown();
+                }
+            }
+        }
     }
 }

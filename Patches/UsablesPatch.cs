@@ -51,6 +51,9 @@ namespace TownOfHost
                     if (pc.Object.IsDouseDone())
                         VentForTrigger = true;
                     break;
+                case CustomRoles.Runaway:
+                    canUse = couldUse = VentForTrigger = Runaway.CanUseVent(pc.Object);
+                    break;
                 default:
                     if (pc.Role.Role == RoleTypes.Engineer) // インポスター陣営ベースの役職とエンジニアベースの役職は常にtrue
                         canUse = couldUse = true;
