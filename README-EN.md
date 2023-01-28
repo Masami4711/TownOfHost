@@ -878,6 +878,35 @@ Victory Conditions : Remain alive until the game end<br>
 
 Regardless of the games outcome, Opportunist wins an additional victory if they survive to the end of the match.<br>
 
+### Runaway
+
+Team : Neutral(Other)<br>
+Basis : Engineer<br>
+Count : Crew<br>
+Victory Conditions : Satisfy either ① or ②<br>
+- ①. Remain alive when team Crewmate wins<br>
+- ②. After the **Escape**, any team except for team Crewmate wins or everyone dies<br>
+
+As long as The Runaways are alive, they have the exactly same win condition with the one of team Crewmates (①) and tasks necessary to do for task win.<br>
+Only after finishing defined amount of tasks, they can enter vents to make the **Escape**.<br>
+Once The Runaways escape, they immediately die with no dead body (cause of death: Escape) and leave the game.<br>
+After the Escape, their win condition changes to defeat team Crewmate (②).<br>
+They lose if they die other than by Escape or an inappropriate team wins.<br>
+
+- Generally, they will never win without any other team (only if everyone dies after the Escape, they win as a solo)<br>
+- Any Runaways satisfying the win condition can win together.<br>
+- Escape cooldown gets longer as a player dies.<br>
+- Default(Final) cooldown designates a cooldown when everyone is alive(dead).<br>
+- they have no tasks to do after they die.<br>
+
+#### Game Options
+
+| Name                    |
+| ----------------------- |
+| Task Count To Escape    |
+| Default Escape Cooldown |
+| Final Escape Cooldown   |
+
 ### SchrodingerCat
 
 Team : Neutral(Other)<br>
@@ -955,6 +984,7 @@ Example of overlapping Roles: <br>
 - [Opportunist](#opportunist) Lover: Win if you survive. <br>
 - [Jester](#jester) Lover: If you are voted out, you will win as Jester. If the other Lover is voted out, you are defeated. <br>
 - [Bait](#bait) Lover: When the other Lover is killed and you die afterwards, the other Lover immediately reports you. <br>
+- [Runaway](#runaway) Lover: If you escape, the other Lover does not suicide but escape just before the coming meeting (if alive). they win as Lovers if they both escape and satisfy the win condition of Runaway.<br>
 
 ### Workhorse
 
