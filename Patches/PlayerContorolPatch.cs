@@ -261,34 +261,43 @@ namespace TownOfHost
                 //死因が設定されていない場合は死亡判定
                 Main.PlayerStates[target.PlayerId].deathReason = PlayerState.DeathReason.Kill;
             }
+            target.SetRealKiller(killer, true); //既に追加されてたらスキップ
 
-            //When Bait is killed
-            if (target.GetCustomRole() == CustomRoles.Bait && killer.PlayerId != target.PlayerId)
+            switch (target.GetCustomRole())
             {
-                Logger.Info(target?.Data?.PlayerName + "はBaitだった", "MurderPlayer");
-                new LateTask(() => killer.CmdReportDeadBody(target.Data), 0.15f, "Bait Self Report");
+                case CustomRoles.NekoKabocha:
+                    NekoKabocha.OnMurderPlayer(killer, target);
+                    break;
+                case CustomRoles.Bait:
+                    //When Bait is killed
+                    if (killer.PlayerId != target.PlayerId)
+                    {
+                        Logger.Info(target?.Data?.PlayerName + "はBaitだった", "MurderPlayer");
+                        new LateTask(() => killer.CmdReportDeadBody(target.Data), 0.15f, "Bait Self Report");
+                    }
+                    break;
+                case CustomRoles.Trapper:
+                    if (!killer.Is(CustomRoles.Trapper))
+                        killer.TrapperKilled(target);
+                    break;
+                case CustomRoles.Executioner:
+                    if (Executioner.Target.ContainsKey(target.PlayerId))
+                    {
+                        Executioner.Target.Remove(target.PlayerId);
+                        Executioner.SendRPC(target.PlayerId);
+                    }
+                    break;
+                case CustomRoles.Terrorist:
+                    Logger.Info(target?.Data?.PlayerName + "はTerroristだった", "MurderPlayer");
+                    Utils.CheckTerroristWin(target.Data);
+                    break;
             }
-            else
-            //Terrorist
-            if (target.Is(CustomRoles.Terrorist))
-            {
-                Logger.Info(target?.Data?.PlayerName + "はTerroristだった", "MurderPlayer");
-                Utils.CheckTerroristWin(target.Data);
-            }
-            if (target.Is(CustomRoles.Trapper) && !killer.Is(CustomRoles.Trapper))
-                killer.TrapperKilled(target);
             if (Executioner.Target.ContainsValue(target.PlayerId))
                 Executioner.ChangeRoleByTarget(target);
-            if (target.Is(CustomRoles.Executioner) && Executioner.Target.ContainsKey(target.PlayerId))
-            {
-                Executioner.Target.Remove(target.PlayerId);
-                Executioner.SendRPC(target.PlayerId);
-            }
 
             FixedUpdatePatch.LoversSuicide(target.PlayerId);
 
             Main.PlayerStates[target.PlayerId].SetDead();
-            target.SetRealKiller(killer, true); //既に追加されてたらスキップ
             Utils.CountAlivePlayers(true);
             Utils.SyncAllSettings();
             Utils.NotifyRoles();

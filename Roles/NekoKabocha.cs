@@ -61,5 +61,31 @@ namespace TownOfHost
             => RevengeOnExile
             && (RevengeOnEveryKill || deathReason == PlayerState.DeathReason.Vote)
             && CanRevengeTarget(target);
+
+        public static void OnMurderPlayer(PlayerControl killer, PlayerControl target)
+        {
+            if (!playerIdList.Contains(target.PlayerId)) return;
+            var realKiller = target.GetRealKiller() ?? killer;
+            if (realKiller != target && CanRevengeTarget(realKiller))
+                target.RevengeOnMurder(realKiller);
+            else if (RevengeOnEveryKill)
+            {
+                var revengeTargetArray = Main.AllAlivePlayerControls.Where(pc => CanRevengeTarget(pc)).ToArray();
+                var count = revengeTargetArray.Count();
+                Logger.Info($"{count}", "NekoKabocha.OnMurderPlayer");
+                if (count > 0)
+                {
+                    var revengeTarget = revengeTargetArray[IRandom.Instance.Next(count)];
+                    target.RevengeOnMurder(revengeTarget);
+                }
+            }
+        }
+        private static void RevengeOnMurder(this PlayerControl nekoKabocha, PlayerControl target)
+        {
+            Main.PlayerStates[target.PlayerId].deathReason = PlayerState.DeathReason.Revenge;
+            target.SetRealKiller(nekoKabocha);
+            target.RpcMurderPlayer(target);
+            Logger.Info($"{nekoKabocha.GetNameWithRole()} revenges on {target.GetNameWithRole()}", "NekoKabocha.RevengeOnKill");
+        }
     }
 }
