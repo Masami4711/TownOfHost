@@ -130,6 +130,7 @@ namespace TownOfHost
             Jackal.Init();
             Sheriff.Init();
             EvilTracker.Init();
+            NekoKabocha.Init();
             Snitch.Init();
             SchrodingerCat.Init();
             Vampire.Init();
@@ -376,6 +377,9 @@ namespace TownOfHost
                             break;
                         case CustomRoles.EvilTracker:
                             EvilTracker.Add(pc.PlayerId);
+                            break;
+                        case CustomRoles.NekoKabocha:
+                            NekoKabocha.Add(pc.PlayerId);
                             break;
                         case CustomRoles.Snitch:
                             Snitch.Add(pc.PlayerId);
