@@ -242,7 +242,10 @@ namespace TownOfHost
                 if (candidate == exiledplayer || Main.AfterMeetingDeathPlayers.ContainsKey(candidate.PlayerId)) continue;
                 switch (exiledplayer.GetCustomRole())
                 {
-                    //ここに道連れ役職を追加
+                    case CustomRoles.NekoKabocha:
+                        if (NekoKabocha.IsRevengeTarget(candidate, deathReason))
+                            TargetList.Add(candidate);
+                        break;
                     default:
                         if (exiledplayer.Is(CustomRoleTypes.Madmate) && deathReason == PlayerState.DeathReason.Vote && Options.MadmateRevengeCrewmate.GetBool() //黒猫オプション
                         && !candidate.Is(CustomRoleTypes.Impostor))

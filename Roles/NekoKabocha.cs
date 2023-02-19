@@ -49,5 +49,17 @@ namespace TownOfHost
             playerIdList.Add(playerId);
         }
         public static bool IsEnable => playerIdList.Count > 0;
+        private static bool CanRevengeTarget(PlayerControl target)
+            => target.GetCustomRole().GetCustomRoleTypes() switch
+            {
+                CustomRoleTypes.Crewmate or CustomRoleTypes.Madmate => RevengeCrewmate,
+                CustomRoleTypes.Impostor => RevengeImpostor,
+                CustomRoleTypes.Neutral => RevengeNeutral,
+                _ => false,
+            };
+        public static bool IsRevengeTarget(PlayerControl target, PlayerState.DeathReason deathReason)
+            => RevengeOnExile
+            && (RevengeOnEveryKill || deathReason == PlayerState.DeathReason.Vote)
+            && CanRevengeTarget(target);
     }
 }
