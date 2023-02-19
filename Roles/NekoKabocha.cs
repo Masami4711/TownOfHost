@@ -65,14 +65,18 @@ namespace TownOfHost
         public static void OnMurderPlayer(PlayerControl killer, PlayerControl target)
         {
             if (!playerIdList.Contains(target.PlayerId)) return;
+            if (Main.AllAlivePlayerControls.Count(pc => pc != target) <= 1) return;
+
             var realKiller = target.GetRealKiller() ?? killer;
-            if (realKiller != target && CanRevengeTarget(realKiller))
-                target.RevengeOnMurder(realKiller);
+            if (realKiller != target)
+            {
+                if (CanRevengeTarget(realKiller))
+                    target.RevengeOnMurder(realKiller);
+            }
             else if (RevengeOnEveryKill)
             {
                 var revengeTargetArray = Main.AllAlivePlayerControls.Where(pc => CanRevengeTarget(pc)).ToArray();
                 var count = revengeTargetArray.Count();
-                Logger.Info($"{count}", "NekoKabocha.OnMurderPlayer");
                 if (count > 0)
                 {
                     var revengeTarget = revengeTargetArray[IRandom.Instance.Next(count)];
