@@ -58,11 +58,11 @@ namespace TownOfHost
         {
             if (KnowDeadTargetRole(seer, target)) return true;
             if (BasicRequirementToSeeTargetRole(seer, target))
-                return target.GetCustomRole().GetRoleType() switch
+                return target.GetCustomRole().GetCustomRoleTypes() switch
                 {
-                    RoleType.Impostor
+                    CustomRoleTypes.Impostor
                         => CanSeeImpostorAbilities.GetBool(),
-                    RoleType.Madmate
+                    CustomRoleTypes.Madmate
                         => CanSeeMadmates.GetBool() && KillCount(seer.PlayerId) >= KillCountToSeeMadmates.GetInt(),
                     _ => false,
                 };
@@ -107,7 +107,7 @@ namespace TownOfHost
                         ProgressText.Append(Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(Witch.IsSpellMode(pc.PlayerId) ? "WitchModeSpell" : "WitchModeKill")));
                     break;
                 default:
-                    if (pc.Is(RoleType.Impostor))
+                    if (pc.Is(CustomRoleTypes.Impostor))
                         ProgressText.Append(Utils.GetProgressText(pc));
                     break;
             }
