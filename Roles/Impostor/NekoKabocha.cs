@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static TownOfHost.Options;
 
-namespace TownOfHost
+namespace TownOfHost.Roles.Impostor
 {
     public static class NekoKabocha
     {
