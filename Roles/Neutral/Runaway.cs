@@ -4,7 +4,7 @@ using HarmonyLib;
 using static TownOfHost.Options;
 using static TownOfHost.Translator;
 
-namespace TownOfHost
+namespace TownOfHost.Roles.Neutral
 {
     public static class Runaway
     {

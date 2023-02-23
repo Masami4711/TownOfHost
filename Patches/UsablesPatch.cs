@@ -1,6 +1,7 @@
 using AmongUs.GameOptions;
 using HarmonyLib;
 using UnityEngine;
+using TownOfHost.Roles.Neutral;
 
 namespace TownOfHost
 {
