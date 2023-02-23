@@ -3,7 +3,7 @@ using System.Linq;
 using Hazel;
 using static TownOfHost.Options;
 
-namespace TownOfHost
+namespace TownOfHost.Roles.Impostor
 {
     public static class EagleEye
     {
