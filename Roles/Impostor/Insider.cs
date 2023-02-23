@@ -4,7 +4,7 @@ using UnityEngine;
 using static TownOfHost.Translator;
 using static TownOfHost.Options;
 
-namespace TownOfHost
+namespace TownOfHost.Roles.Impostor
 {
     public static class Insider
     {
