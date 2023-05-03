@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Assets.CoreScripts;
 using HarmonyLib;
 using Hazel;
 using UnityEngine;
+
+using TownOfHost.Roles.Core;
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -81,10 +82,7 @@ namespace TownOfHost
                     case "/hidename":
                         canceled = true;
                         Main.HideName.Value = args.Length > 1 ? args.Skip(1).Join(delimiter: " ") : Main.HideName.DefaultValue.ToString();
-                        GameStartManagerPatch.GameStartManagerStartPatch.HideName.text =
-                            ColorUtility.TryParseHtmlString(Main.HideColor.Value, out _)
-                                ? $"<color={Main.HideColor.Value}>{Main.HideName.Value}</color>"
-                                : $"<color={Main.ModColor}>{Main.HideName.Value}</color>";
+                        GameStartManagerPatch.HideName.text = Main.HideName.Value;
                         break;
 
                     case "/n":

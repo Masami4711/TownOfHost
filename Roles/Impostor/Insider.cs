@@ -1,6 +1,8 @@
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
+using TownOfHost.Roles.Core;
+
 using static TownOfHost.Translator;
 using static TownOfHost.Options;
 
@@ -51,7 +53,7 @@ namespace TownOfHost.Roles.Impostor
             return playerIdList.Contains(seer.PlayerId);
         }
         private static int KillCount(byte playerId)
-            => Main.PlayerStates[playerId].GetKillCount(true);
+            => PlayerState.GetByPlayerId(playerId).GetKillCount(true);
 
         //役職を見る条件の関数
         public static bool KnowTargetRole(PlayerControl seer, PlayerControl target) //Insider能力で役職が分かるケースのみ
@@ -85,7 +87,7 @@ namespace TownOfHost.Roles.Impostor
             string RoleText = "Invalid Role";
             Color RoleColor = Color.red;
 
-            var mainRole = Main.PlayerStates[playerId].MainRole;
+            var mainRole = PlayerState.GetByPlayerId(playerId).MainRole;
             if (ReplacementMainRolesDictionary.TryGetValue(mainRole, out var newMainRole))
                 mainRole = newMainRole;
             RoleText = Utils.GetRoleName(mainRole);
@@ -99,13 +101,6 @@ namespace TownOfHost.Roles.Impostor
             StringBuilder ProgressText = new();
             switch (pc.GetCustomRole()) //本人には表示しないケースのみ
             {
-                case CustomRoles.FireWorks:
-                    ProgressText.Append(FireWorks.GetFireWorksCount(pc.PlayerId));
-                    break;
-                case CustomRoles.Witch:
-                    if (Witch.NowSwitchTrigger != Witch.SwitchTrigger.DoubleTrigger)
-                        ProgressText.Append(Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), GetString(Witch.IsSpellMode(pc.PlayerId) ? "WitchModeSpell" : "WitchModeKill")));
-                    break;
                 default:
                     if (pc.Is(CustomRoleTypes.Impostor))
                         ProgressText.Append(Utils.GetProgressText(pc));
@@ -132,9 +127,6 @@ namespace TownOfHost.Roles.Impostor
             {
                 switch (seer.GetCustomRole())
                 {
-                    case CustomRoles.BountyHunter:
-                        Mark.Append(BountyHunter.GetTargetMark(seer, target));
-                        break;
                     case CustomRoles.EvilTracker:
                         Mark.Append(EvilTracker.GetTargetMark(seer, target));
                         break;

@@ -6,6 +6,7 @@ using HarmonyLib;
 using UnityEngine;
 
 using TownOfHost.Roles;
+using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Impostor;
 using TownOfHost.Roles.Crewmate;
 using TownOfHost.Roles.Neutral;
@@ -76,13 +77,8 @@ namespace TownOfHost
         // 各役職の詳細設定
         public static OptionItem EnableGM;
         public static float DefaultKillCooldown = Main.NormalOptions?.KillCooldown ?? 20;
-        public static OptionItem VampireKillDelay;
-        public static OptionItem ShapeMasterShapeshiftDuration;
         public static OptionItem DefaultShapeshiftCooldown;
         public static OptionItem CanMakeMadmateCount;
-        public static OptionItem MadGuardianCanSeeWhoTriedToKill;
-        public static OptionItem MadSnitchCanVent;
-        public static OptionItem MadSnitchCanAlsoBeExposedToImpostor;
         public static OptionItem MadmateCanFixLightsOut; // TODO:mii-47 マッド役職統一
         public static OptionItem MadmateCanFixComms;
         public static OptionItem MadmateHasImpostorVision;
@@ -94,18 +90,7 @@ namespace TownOfHost
         public static OptionItem MadmateVentMaxTime;
 
         public static OptionItem EvilWatcherChance;
-        public static OptionItem LighterTaskCompletedVision;
-        public static OptionItem LighterTaskCompletedDisableLightOut;
-        public static OptionItem MayorAdditionalVote;
-        public static OptionItem MayorHasPortableButton;
-        public static OptionItem MayorNumOfUseButton;
-        public static OptionItem DoctorTaskCompletedBatteryCharge;
-        public static OptionItem SpeedBoosterUpSpeed; //加速値
-        public static OptionItem SpeedBoosterTaskTrigger; //効果を発動するタスク完了数
-        public static OptionItem TrapperBlockMoveTime;
         public static OptionItem CanTerroristSuicideWin;
-        public static OptionItem ArsonistDouseTime;
-        public static OptionItem ArsonistCooldown;
         public static OptionItem KillFlashDuration;
 
         // HideAndSeek
@@ -216,10 +201,8 @@ namespace TownOfHost
         public static OptionItem DisableAirshipCargoLightsPanel;
 
         // タスク上書き
-        public static OverrideTasksData MadGuardianTasks;
         public static OverrideTasksData TerroristTasks;
         public static OverrideTasksData SnitchTasks;
-        public static OverrideTasksData MadSnitchTasks;
 
         // その他
         public static OptionItem FixFirstKillCooldown;
@@ -297,6 +280,8 @@ namespace TownOfHost
             #region 役職・詳細設定
             CustomRoleCounts = new();
             CustomRoleSpawnChances = new();
+
+            var sortedRoleInfo = CustomRoleManager.AllRolesInfo.Values.OrderBy(role => role.ConfigId);
             // GM
             EnableGM = BooleanOptionItem.Create(100, "GM", false, TabGroup.MainSettings, false)
                 .SetColor(Utils.GetRoleColor(CustomRoles.GM))
@@ -305,19 +290,11 @@ namespace TownOfHost
 
             RoleAssignManager.SetupOptionItem();
             // Impostor
-            BountyHunter.SetupCustomOption();
-            SerialKiller.SetupCustomOption();
-            SetupRoleOptions(1200, TabGroup.ImpostorRoles, CustomRoles.ShapeMaster);
-            ShapeMasterShapeshiftDuration = FloatOptionItem.Create(1210, "ShapeMasterShapeshiftDuration", new(1, 1000, 1), 10, TabGroup.ImpostorRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.ShapeMaster]);
-            Vampire.SetupCustomOption();
-            SetupRoleOptions(1400, TabGroup.ImpostorRoles, CustomRoles.Warlock);
-            Witch.SetupCustomOption();
-            SetupRoleOptions(1600, TabGroup.ImpostorRoles, CustomRoles.Mafia);
-            FireWorks.SetupCustomOption();
-            Sniper.SetupCustomOption();
-            SetupRoleOptions(2000, TabGroup.ImpostorRoles, CustomRoles.Puppeteer);
-            Mare.SetupCustomOption();
-            TimeThief.SetupCustomOption();
+            sortedRoleInfo.Where(role => role.CustomRoleType == CustomRoleTypes.Impostor).Do(info =>
+            {
+                SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
+                info.OptionCreator?.Invoke();
+            });
             EvilTracker.SetupCustomOption();
             Insider.SetupCustomOption();
 
@@ -328,16 +305,11 @@ namespace TownOfHost
                 .SetValueFormat(OptionFormat.Times);
 
             // Madmate
-            SetupRoleOptions(10000, TabGroup.ImpostorRoles, CustomRoles.Madmate);
-            SetupRoleOptions(10100, TabGroup.ImpostorRoles, CustomRoles.MadGuardian);
-            MadGuardianCanSeeWhoTriedToKill = BooleanOptionItem.Create(10110, "MadGuardianCanSeeWhoTriedToKill", false, TabGroup.ImpostorRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.MadGuardian]);
-            //ID10120~10123を使用
-            MadGuardianTasks = OverrideTasksData.Create(10120, TabGroup.ImpostorRoles, CustomRoles.MadGuardian);
-            SetupRoleOptions(10200, TabGroup.ImpostorRoles, CustomRoles.MadSnitch);
-            MadSnitchCanVent = BooleanOptionItem.Create(10210, "CanVent", false, TabGroup.ImpostorRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.MadSnitch]);
-            MadSnitchCanAlsoBeExposedToImpostor = BooleanOptionItem.Create(10211, "MadSnitchCanAlsoBeExposedToImpostor", false, TabGroup.ImpostorRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.MadSnitch]);
-            //ID10220~10223を使用
-            MadSnitchTasks = OverrideTasksData.Create(10220, TabGroup.ImpostorRoles, CustomRoles.MadSnitch);
+            sortedRoleInfo.Where(role => role.CustomRoleType == CustomRoleTypes.Madmate).Do(info =>
+            {
+                SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
+                info.OptionCreator?.Invoke();
+            });
             // Madmate Common Options
             MadmateCanFixLightsOut = BooleanOptionItem.Create(15010, "MadmateCanFixLightsOut", false, TabGroup.ImpostorRoles, false)
                 .SetHeader(true);
@@ -356,54 +328,29 @@ namespace TownOfHost
             EvilWatcherChance = IntegerOptionItem.Create(30010, "EvilWatcherChance", new(0, 100, 10), 0, TabGroup.NeutralRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Watcher])
                 .SetValueFormat(OptionFormat.Percent);
             // Crewmate
-            SetupRoleOptions(20000, TabGroup.CrewmateRoles, CustomRoles.Bait);
-            SetupRoleOptions(20100, TabGroup.CrewmateRoles, CustomRoles.Lighter);
-            LighterTaskCompletedVision = FloatOptionItem.Create(20110, "LighterTaskCompletedVision", new(0f, 5f, 0.25f), 2f, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Lighter])
-                .SetValueFormat(OptionFormat.Multiplier);
-            LighterTaskCompletedDisableLightOut = BooleanOptionItem.Create(20111, "LighterTaskCompletedDisableLightOut", true, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Lighter]);
-            SetupRoleOptions(20200, TabGroup.CrewmateRoles, CustomRoles.Mayor);
-            MayorAdditionalVote = IntegerOptionItem.Create(20210, "MayorAdditionalVote", new(1, 99, 1), 1, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Mayor])
-                .SetValueFormat(OptionFormat.Votes);
-            MayorHasPortableButton = BooleanOptionItem.Create(20211, "MayorHasPortableButton", false, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Mayor]);
-            MayorNumOfUseButton = IntegerOptionItem.Create(20212, "MayorNumOfUseButton", new(1, 99, 1), 1, TabGroup.CrewmateRoles, false).SetParent(MayorHasPortableButton)
-                .SetValueFormat(OptionFormat.Times);
-            SabotageMaster.SetupCustomOption();
-            Sheriff.SetupCustomOption();
-            Snitch.SetupCustomOption();
-            SetupRoleOptions(20600, TabGroup.CrewmateRoles, CustomRoles.SpeedBooster);
-            SpeedBoosterUpSpeed = FloatOptionItem.Create(20610, "SpeedBoosterUpSpeed", new(0.1f, 0.5f, 0.1f), 0.3f, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.SpeedBooster])
-                .SetValueFormat(OptionFormat.Multiplier);
-            SpeedBoosterTaskTrigger = IntegerOptionItem.Create(20611, "SpeedBoosterTaskTrigger", new(1, 99, 1), 5, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.SpeedBooster])
-                .SetValueFormat(OptionFormat.Pieces);
-            SetupRoleOptions(20700, TabGroup.CrewmateRoles, CustomRoles.Doctor);
-            DoctorTaskCompletedBatteryCharge = FloatOptionItem.Create(20710, "DoctorTaskCompletedBatteryCharge", new(0f, 10f, 1f), 5f, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Doctor])
-                .SetValueFormat(OptionFormat.Seconds);
-            SetupRoleOptions(20800, TabGroup.CrewmateRoles, CustomRoles.Trapper);
-            TrapperBlockMoveTime = FloatOptionItem.Create(20810, "TrapperBlockMoveTime", new(1f, 180f, 1f), 5f, TabGroup.CrewmateRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Trapper])
-                .SetValueFormat(OptionFormat.Seconds);
-            SetupRoleOptions(20900, TabGroup.CrewmateRoles, CustomRoles.Dictator);
-            SetupRoleOptions(21000, TabGroup.CrewmateRoles, CustomRoles.Seer);
-            TimeManager.SetupCustomOption();
+            sortedRoleInfo.Where(role => role.CustomRoleType == CustomRoleTypes.Crewmate).Do(info =>
+            {
+                SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
+                info.OptionCreator?.Invoke();
+            });
 
             // Neutral
-            SetupRoleOptions(50500, TabGroup.NeutralRoles, CustomRoles.Arsonist);
-            ArsonistDouseTime = FloatOptionItem.Create(50510, "ArsonistDouseTime", new(1f, 10f, 1f), 3f, TabGroup.NeutralRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Arsonist])
-                .SetValueFormat(OptionFormat.Seconds);
-            ArsonistCooldown = FloatOptionItem.Create(50511, "Cooldown", new(5f, 100f, 1f), 10f, TabGroup.NeutralRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Arsonist])
-                .SetValueFormat(OptionFormat.Seconds);
-            SetupRoleOptions(50000, TabGroup.NeutralRoles, CustomRoles.Jester);
-            SetupRoleOptions(50100, TabGroup.NeutralRoles, CustomRoles.Opportunist);
-            SetupRoleOptions(50200, TabGroup.NeutralRoles, CustomRoles.Terrorist);
-            CanTerroristSuicideWin = BooleanOptionItem.Create(50210, "CanTerroristSuicideWin", false, TabGroup.NeutralRoles, false).SetParent(CustomRoleSpawnChances[CustomRoles.Terrorist])
-                .SetGameMode(CustomGameMode.Standard);
-            //50220~50223を使用
-            TerroristTasks = OverrideTasksData.Create(50220, TabGroup.NeutralRoles, CustomRoles.Terrorist);
+            sortedRoleInfo.Where(role => role.CustomRoleType == CustomRoleTypes.Neutral).Do(info =>
+            {
+                switch (info.RoleName)
+                {
+                    case CustomRoles.Jackal: //ジャッカルは1人固定
+                        SetupSingleRoleOptions(info.ConfigId, info.Tab, info.RoleName, 1);
+                        break;
+                    default:
+                        SetupRoleOptions(info.ConfigId, info.Tab, info.RoleName);
+                        break;
+                }
+                info.OptionCreator?.Invoke();
+            });
             SetupLoversRoleOptionsToggle(50300);
 
-            SchrodingerCat.SetupCustomOption();
             Egoist.SetupCustomOption();
-            Executioner.SetupCustomOption();
-            Jackal.SetupCustomOption();
 
             // Add-Ons
             LastImpostor.SetupCustomOption();
@@ -678,6 +625,7 @@ namespace TownOfHost
                 .SetGameMode(customGameMode) as IntegerOptionItem;
             // 初期値,最大値,最小値が同じで、stepが0のどうやっても変えることができない個数オプション
             var countOption = IntegerOptionItem.Create(id + 1, "Maximum", new(count, count, count), count, tab, false).SetParent(spawnOption)
+                .SetHidden(true)
                 .SetGameMode(customGameMode);
 
             CustomRoleSpawnChances.Add(role, spawnOption);
@@ -717,6 +665,10 @@ namespace TownOfHost
             public static OverrideTasksData Create(int idStart, TabGroup tab, CustomRoles role)
             {
                 return new OverrideTasksData(idStart, tab, role);
+            }
+            public static OverrideTasksData Create(SimpleRoleInfo roleInfo, int idOffset)
+            {
+                return new OverrideTasksData(roleInfo.ConfigId + idOffset, roleInfo.Tab, roleInfo.RoleName);
             }
         }
     }

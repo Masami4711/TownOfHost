@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AmongUs.GameOptions;
 
+using TownOfHost.Roles.Core;
+
 namespace TownOfHost.Roles
 {
     public static class RoleAssignManager
@@ -45,6 +47,34 @@ namespace TownOfHost.Roles
                 .SetValueFormat(OptionFormat.Players);
             NeutralMax = IntegerOptionItem.Create(idStart + 5, "NeutralRolesMax", new(0, 15, 1), 0, TabGroup.NeutralRoles, false)
                 .SetValueFormat(OptionFormat.Players);
+        }
+        public static bool CheckRoleCount()
+        {
+            var result = true;
+            var opt = Main.NormalOptions.Cast<IGameOptions>();
+
+            var playerCount = GameData.Instance.PlayerCount;
+            var numImpostors = Math.Min(playerCount, opt.GetInt(Int32OptionNames.NumImpostors));
+
+            var impostorMinCount = ImpostorMin.GetInt();
+            var impostorMaxCount = ImpostorMax.GetInt();
+            if (impostorMinCount > impostorMaxCount || impostorMinCount > numImpostors || impostorMaxCount > numImpostors)
+            {
+                var msg = Translator.GetString("Warning.NotMatchImpostorCount");
+                Logger.SendInGame(msg);
+                Logger.Warn(msg, "BeginGame");
+                result = false;
+            }
+
+            var roleMinCount = ImpostorMin.GetInt() + MadmateMin.GetInt() + CrewmateMin.GetInt() + NeutralMin.GetInt();
+            if (roleMinCount > playerCount)
+            {
+                var msg = Translator.GetString("Warning.NotMatchRoleCount");
+                Logger.SendInGame(msg);
+                Logger.Warn(msg, "BeginGame");
+                result = false;
+            }
+            return result;
         }
         public static void SelectAssignRoles()
         {
