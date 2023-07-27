@@ -278,10 +278,9 @@ namespace TownOfHost
     {
         public static void Prefix()
         {
-            foreach (var kvp in PlayerState.AllPlayerStates)
+            foreach (var state in PlayerState.AllPlayerStates.Values)
             {
-                var pc = Utils.GetPlayerById(kvp.Key);
-                kvp.Value.LastRoom = pc.GetPlainShipRoom();
+                state.UpdateLastRoom();
             }
         }
     }

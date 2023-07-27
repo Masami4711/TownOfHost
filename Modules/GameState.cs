@@ -20,8 +20,9 @@ namespace TownOfHost
         public TaskState MyTaskState { get; }
         public bool IsBlackOut { get; set; }
         public (DateTime, byte) RealKiller;
-        public PlainShipRoom LastRoom;
+        public PlainShipRoom LastRoom { get; private set; }
         public Dictionary<byte, string> TargetColorData;
+        public PlayerControl Player => Utils.GetPlayerById(PlayerId);
         public PlayerState(byte playerId)
         {
             MainRole = CustomRoles.NotAssigned;
@@ -92,6 +93,7 @@ namespace TownOfHost
             return count;
         }
         public void SetCountType(CountTypes countType) => CountType = countType;
+        public void UpdateLastRoom() => LastRoom = Player.GetPlainShipRoom();
 
         private static Dictionary<byte, PlayerState> allPlayerStates = new(15);
         public static IReadOnlyDictionary<byte, PlayerState> AllPlayerStates => allPlayerStates;
