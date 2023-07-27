@@ -21,7 +21,7 @@ namespace TownOfHost
         public bool IsBlackOut { get; set; }
         public (DateTime, byte) RealKiller;
         public PlainShipRoom LastRoom { get; private set; }
-        public Dictionary<byte, string> TargetColorData;
+        public Dictionary<byte, string> TargetColorData { get; }
         public PlayerControl Player => Utils.GetPlayerById(PlayerId);
         public PlayerState(byte playerId)
         {
