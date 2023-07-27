@@ -11,7 +11,7 @@ namespace TownOfHost
 {
     public class PlayerState
     {
-        byte PlayerId;
+        public byte PlayerId { get; }
         public CustomRoles MainRole;
         public List<CustomRoles> SubRoles;
         public CountTypes CountType { get; private set; }
