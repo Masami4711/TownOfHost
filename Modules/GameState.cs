@@ -12,7 +12,7 @@ namespace TownOfHost
     public class PlayerState
     {
         public byte PlayerId { get; }
-        public CustomRoles MainRole;
+        public CustomRoles MainRole { get; private set; }
         public List<CustomRoles> SubRoles;
         public CountTypes CountType { get; private set; }
         public bool IsDead { get; set; }
