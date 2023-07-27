@@ -13,7 +13,7 @@ namespace TownOfHost
     {
         public byte PlayerId { get; }
         public CustomRoles MainRole { get; private set; }
-        public List<CustomRoles> SubRoles;
+        public HashSet<CustomRoles> SubRoles { get; }
         public CountTypes CountType { get; private set; }
         public bool IsDead { get; set; }
         public CustomDeathReason DeathReason { get; set; }
@@ -69,15 +69,14 @@ namespace TownOfHost
         public void SetSubRole(CustomRoles role, bool AllReplace = false)
         {
             if (AllReplace)
-                SubRoles.ToArray().Do(role => SubRoles.Remove(role));
-
-            if (!SubRoles.Contains(role))
-                SubRoles.Add(role);
+            {
+                SubRoles.Clear();
+            }
+            _ = SubRoles.Add(role);
         }
         public void RemoveSubRole(CustomRoles role)
         {
-            if (SubRoles.Contains(role))
-                SubRoles.Remove(role);
+            _ = SubRoles.Remove(role);
         }
 
         public void SetDead()

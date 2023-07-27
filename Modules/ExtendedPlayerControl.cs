@@ -94,7 +94,7 @@ namespace TownOfHost
             return state?.MainRole ?? CustomRoles.Crewmate;
         }
 
-        public static List<CustomRoles> GetCustomSubRoles(this PlayerControl player)
+        public static HashSet<CustomRoles> GetCustomSubRoles(this PlayerControl player)
         {
             if (player == null)
             {

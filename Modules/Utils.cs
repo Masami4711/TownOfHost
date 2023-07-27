@@ -220,7 +220,7 @@ namespace TownOfHost
         /// <param name="mainRole">表示する役職</param>
         /// <param name="subRolesList">表示する属性のList</param>
         /// <returns>RoleNameを構築する色とテキスト(Color, string)</returns>
-        public static (Color color, string text) GetRoleNameData(CustomRoles mainRole, List<CustomRoles> subRolesList, bool showSubRoleMarks = true)
+        public static (Color color, string text) GetRoleNameData(CustomRoles mainRole, HashSet<CustomRoles> subRolesList, bool showSubRoleMarks = true)
         {
             string roleText = "";
             Color roleColor = Color.white;
@@ -251,7 +251,7 @@ namespace TownOfHost
 
             return (roleColor, roleText + subRoleMarks);
         }
-        public static string GetSubRoleMarks(List<CustomRoles> subRolesList)
+        public static string GetSubRoleMarks(HashSet<CustomRoles> subRolesList)
         {
             var sb = new StringBuilder(100);
             if (subRolesList != null)
