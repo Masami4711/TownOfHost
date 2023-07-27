@@ -88,7 +88,6 @@ namespace TownOfHost
             }
         }
         public bool IsSuicide() { return DeathReason == CustomDeathReason.Suicide; }
-        public TaskState GetTaskState() { return MyTaskState; }
         public void InitTask(PlayerControl player)
         {
             MyTaskState.Init(player);

@@ -53,7 +53,7 @@ public abstract class RoleBase : IDisposable
             RoleTypes.ImpostorGhost;
 
         MyState = PlayerState.GetByPlayerId(player.PlayerId);
-        MyTaskState = MyState.GetTaskState();
+        MyTaskState = MyState.MyTaskState;
 
         CustomRoleManager.AllActiveRoles.Add(Player.PlayerId, this);
     }

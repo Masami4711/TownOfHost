@@ -298,7 +298,7 @@ namespace TownOfHost
         }
         public static TaskState GetPlayerTaskState(this PlayerControl player)
         {
-            return PlayerState.GetByPlayerId(player.PlayerId).GetTaskState();
+            return PlayerState.GetByPlayerId(player.PlayerId).MyTaskState;
         }
 
         /*public static GameOptionsData DeepCopy(this GameOptionsData opt)
