@@ -17,7 +17,7 @@ namespace TownOfHost
         public CountTypes CountType { get; private set; }
         public bool IsDead { get; set; }
         public CustomDeathReason DeathReason { get; set; }
-        public TaskState taskState;
+        public TaskState MyTaskState { get; }
         public bool IsBlackOut { get; set; }
         public (DateTime, byte) RealKiller;
         public PlainShipRoom LastRoom;
@@ -30,7 +30,7 @@ namespace TownOfHost
             PlayerId = playerId;
             IsDead = false;
             DeathReason = CustomDeathReason.etc;
-            taskState = new();
+            MyTaskState = new();
             IsBlackOut = false;
             RealKiller = (DateTime.MinValue, byte.MaxValue);
             LastRoom = null;
@@ -88,14 +88,14 @@ namespace TownOfHost
             }
         }
         public bool IsSuicide() { return DeathReason == CustomDeathReason.Suicide; }
-        public TaskState GetTaskState() { return taskState; }
+        public TaskState GetTaskState() { return MyTaskState; }
         public void InitTask(PlayerControl player)
         {
-            taskState.Init(player);
+            MyTaskState.Init(player);
         }
         public void UpdateTask(PlayerControl player)
         {
-            taskState.Update(player);
+            MyTaskState.Update(player);
         }
 
         public byte GetRealKiller()

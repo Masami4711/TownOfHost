@@ -455,7 +455,7 @@ namespace TownOfHost
         public static string GetTaskProgressText(byte playerId, bool comms = false)
         {
             var state = PlayerState.GetByPlayerId(playerId);
-            if (state == null || state.taskState == null || !state.taskState.hasTasks)
+            if (state == null || state.MyTaskState == null || !state.MyTaskState.hasTasks)
             {
                 return "";
             }
@@ -468,11 +468,11 @@ namespace TownOfHost
             if (Workhorse.IsThisRole(playerId))
                 NonCompleteColor = Workhorse.RoleColor;
 
-            var NormalColor = state.taskState.IsTaskFinished ? TaskCompleteColor : NonCompleteColor;
+            var NormalColor = state.MyTaskState.IsTaskFinished ? TaskCompleteColor : NonCompleteColor;
 
             TextColor = comms ? Color.gray : NormalColor;
-            string Completed = comms ? "?" : $"{state.taskState.CompletedTasksCount}";
-            return ColorString(TextColor, $"({Completed}/{state.taskState.AllTasksCount})");
+            string Completed = comms ? "?" : $"{state.MyTaskState.CompletedTasksCount}";
+            return ColorString(TextColor, $"({Completed}/{state.MyTaskState.AllTasksCount})");
 
         }
         public static void ShowActiveSettingsHelp(byte PlayerId = byte.MaxValue)
