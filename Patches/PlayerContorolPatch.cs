@@ -14,6 +14,7 @@ using TownOfHost.Roles.Core.Interfaces;
 using TownOfHost.Roles.Neutral;
 using TownOfHost.Roles.AddOns.Crewmate;
 using static TownOfHost.Translator;
+using static TownOfHost.Modules.RoleNameManager;
 
 namespace TownOfHost
 {
@@ -367,7 +368,7 @@ namespace TownOfHost
                     //    var hasRole = main.AllPlayerCustomRoles.TryGetValue(__instance.PlayerId, out var role);
                     //    if (hasRole) RoleTextData = Utils.GetRoleTextHideAndSeek(__instance.Data.Role.Role, role);
                     //}
-                    (RoleText.enabled, RoleText.text) = Utils.GetRoleNameAndProgressTextData(PlayerControl.LocalPlayer, __instance);
+                    (RoleText.enabled, RoleText.text) = GetRoleNameAndProgressTextData(PlayerControl.LocalPlayer, __instance);
                     if (!AmongUsClient.Instance.IsGameStarted && AmongUsClient.Instance.NetworkMode != NetworkModes.FreePlay)
                     {
                         RoleText.enabled = false; //ゲームが始まっておらずフリープレイでなければロールを非表示

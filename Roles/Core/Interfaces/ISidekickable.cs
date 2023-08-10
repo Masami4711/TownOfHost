@@ -13,4 +13,6 @@ public interface ISidekickable
     /// </summary>
     /// <returns>作れるならtrue</returns>
     public bool CanMakeSidekick() => true;
+    public string NumSidekickLeftMark() =>
+        CanMakeSidekick() ? Utils.ColorString(Palette.ImpostorRed.ShadeColor(0.5f), $" [{Options.CanMakeMadmateCount.GetInt() - Main.SKMadmateNowCount}]") : "";
 }

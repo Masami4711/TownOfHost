@@ -309,7 +309,7 @@ namespace TownOfHost
 
         public static string GetTrueRoleName(this PlayerControl player)
         {
-            return Utils.GetTrueRoleName(player.PlayerId);
+            return RoleNameManager.GetTrueRoleName(player.PlayerId);
         }
         public static string GetSubRoleName(this PlayerControl player)
         {
