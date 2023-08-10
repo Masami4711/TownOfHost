@@ -4,6 +4,7 @@ using UnityEngine;
 using Hazel;
 using AmongUs.GameOptions;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 using static TownOfHost.Translator;
@@ -108,7 +109,7 @@ public sealed class Puppeteer : RoleBase, IImpostor
                     targetDistance.Add(pc, dis);
                 }
             }
-            if (targetDistance.Keys.Count <= 0) return;
+            if (targetDistance.Keys.IsNullOrEmpty()) return;
 
             var min = targetDistance.OrderBy(c => c.Value).FirstOrDefault();//一番値が小さい
             var target = min.Key;

@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using AmongUs.GameOptions;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 
 namespace TownOfHost.Roles.Crewmate;
@@ -103,7 +104,7 @@ public class Snitch : RoleBase
         //キラーじゃなければ無し
         if (!IsSnitchTarget(seer)) return "";
         //タスクが進んでいなければ無し
-        if (ExposedList.Count == 0) return "";
+        if (ExposedList.IsNullOrEmpty()) return "";
 
         if (seer.PlayerId == seen.PlayerId)
         {
@@ -158,7 +159,7 @@ public class Snitch : RoleBase
     public override bool OnCompleteTask()
     {
         var update = false;
-        if (TargetList.Count == 0)
+        if (TargetList.IsNullOrEmpty())
         {
             //TargetListが未作成ならここで作る
             foreach (var target in Main.AllAlivePlayerControls)

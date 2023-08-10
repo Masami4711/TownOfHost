@@ -2,6 +2,8 @@ using AmongUs.Data;
 using HarmonyLib;
 using UnityEngine;
 
+using TownOfHost.Modules.Extensions;
+
 namespace TownOfHost
 {
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
@@ -25,12 +27,12 @@ namespace TownOfHost
                 ClipboardHelper.PutClipboardString(__instance.freeChatField.textArea.text);
                 __instance.freeChatField.textArea.SetText("");
             }
-            if (Input.GetKeyDown(KeyCode.UpArrow) && ChatCommands.ChatHistory.Count > 0)
+            if (Input.GetKeyDown(KeyCode.UpArrow) && !ChatCommands.ChatHistory.IsNullOrEmpty())
             {
                 CurrentHistorySelection = Mathf.Clamp(--CurrentHistorySelection, 0, ChatCommands.ChatHistory.Count - 1);
                 __instance.freeChatField.textArea.SetText(ChatCommands.ChatHistory[CurrentHistorySelection]);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow) && ChatCommands.ChatHistory.Count > 0)
+            if (Input.GetKeyDown(KeyCode.DownArrow) && !ChatCommands.ChatHistory.IsNullOrEmpty())
             {
                 CurrentHistorySelection++;
                 if (CurrentHistorySelection < ChatCommands.ChatHistory.Count)

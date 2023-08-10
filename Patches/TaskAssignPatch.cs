@@ -3,6 +3,7 @@ using AmongUs.GameOptions;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.AddOns.Crewmate;
 
@@ -73,7 +74,7 @@ namespace TownOfHost
             if (pc.Is(CustomRoles.Workhorse))
                 (hasCommonTasks, NumLongTasks, NumShortTasks) = Workhorse.TaskData;
 
-            if (taskTypeIds.Count == 0) hasCommonTasks = false; //タスク再配布時はコモンを0に
+            if (taskTypeIds.IsNullOrEmpty()) hasCommonTasks = false; //タスク再配布時はコモンを0に
             if (!hasCommonTasks && NumLongTasks == 0 && NumShortTasks == 0) NumShortTasks = 1; //タスク0対策
             if (hasCommonTasks && NumLongTasks == Main.NormalOptions.NumLongTasks && NumShortTasks == Main.NormalOptions.NumShortTasks) return; //変更点がない場合
 
@@ -101,13 +102,13 @@ namespace TownOfHost
             Il2CppSystem.Collections.Generic.List<NormalPlayerTask> LongTasks = new();
             foreach (var task in ShipStatus.Instance.LongTasks)
                 LongTasks.Add(task);
-            Shuffle<NormalPlayerTask>(LongTasks);
+            LongTasks.Shuffle();
 
             //割り当て可能なショートタスクのリスト
             Il2CppSystem.Collections.Generic.List<NormalPlayerTask> ShortTasks = new();
             foreach (var task in ShipStatus.Instance.NormalTasks)
                 ShortTasks.Add(task);
-            Shuffle<NormalPlayerTask>(ShortTasks);
+            ShortTasks.Shuffle();
 
             //実際にAmong Us側で使われているタスクを割り当てる関数を使う。
             ShipStatus.Instance.AddTasksFromList(
@@ -130,16 +131,6 @@ namespace TownOfHost
             for (int i = 0; i < TasksList.Count; i++)
             {
                 taskTypeIds[i] = TasksList[i];
-            }
-        }
-        public static void Shuffle<T>(Il2CppSystem.Collections.Generic.List<T> list)
-        {
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                T obj = list[i];
-                int rand = UnityEngine.Random.Range(i, list.Count);
-                list[i] = list[rand];
-                list[rand] = obj;
             }
         }
     }

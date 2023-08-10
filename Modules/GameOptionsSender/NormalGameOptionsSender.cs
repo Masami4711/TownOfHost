@@ -1,4 +1,5 @@
 using AmongUs.GameOptions;
+using TownOfHost.Modules.Extensions;
 
 namespace TownOfHost.Modules
 {

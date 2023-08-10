@@ -8,6 +8,7 @@ using InnerNet;
 using UnityEngine;
 
 using TownOfHost.Modules;
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 using TownOfHost.Roles.Impostor;
@@ -314,7 +315,7 @@ namespace TownOfHost
         public static string GetSubRoleName(this PlayerControl player)
         {
             var SubRoles = PlayerState.GetByPlayerId(player.PlayerId).SubRoles;
-            if (SubRoles.Count == 0) return "";
+            if (SubRoles.IsNullOrEmpty()) return "";
             var sb = new StringBuilder();
             foreach (var role in SubRoles)
             {

@@ -4,6 +4,7 @@ using Hazel;
 using UnityEngine;
 using AmongUs.GameOptions;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 using static TownOfHost.Translator;
@@ -161,7 +162,7 @@ public sealed class BountyHunter : RoleBase, IImpostor
         if (cTargets.Count >= 2)
             cTargets.RemoveAll(x => x == Target); //前回のターゲットは除外
 
-        if (cTargets.Count <= 0)
+        if (cTargets.IsNullOrEmpty())
         {
             Logger.Warn("ターゲットの指定に失敗しました:ターゲット候補が存在しません", "BountyHunter");
             return null;

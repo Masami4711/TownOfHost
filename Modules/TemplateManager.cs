@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using AmongUs.Data;
 using HarmonyLib;
 using TownOfHost.Attributes;
+using TownOfHost.Modules.Extensions;
+
 using static TownOfHost.Translator;
 
 namespace TownOfHost
@@ -83,7 +85,7 @@ namespace TownOfHost
                     if (tmp[0].ToLower() == str.ToLower()) sendList.Add(tmp.Skip(1).Join(delimiter: ":").Replace("\\n", "\n"));
                 }
             }
-            if (sendList.Count == 0 && !noErr)
+            if (sendList.IsNullOrEmpty() && !noErr)
             {
                 if (playerId == 0xff)
                     HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, string.Format(GetString("Message.TemplateNotFoundHost"), str, tags.Join(delimiter: ", ")));

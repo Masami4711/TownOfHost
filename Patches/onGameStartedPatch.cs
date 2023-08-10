@@ -7,6 +7,7 @@ using Hazel;
 
 using TownOfHost.Attributes;
 using TownOfHost.Modules;
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.AddOns.Common;
@@ -332,7 +333,7 @@ namespace TownOfHost
 
             for (var i = 0; i < role.GetRealCount(); i++)
             {
-                if (AllPlayers.Count <= 0) break;
+                if (AllPlayers.IsNullOrEmpty()) break;
                 var player = AllPlayers[rand.Next(0, AllPlayers.Count)];
                 AllPlayers.Remove(player);
                 PlayerState.GetByPlayerId(player.PlayerId).SetMainRole(role);
@@ -385,7 +386,7 @@ namespace TownOfHost
 
         private static List<PlayerControl> AssignCustomRolesFromList(CustomRoles role, List<PlayerControl> players, int RawCount = -1)
         {
-            if (players == null || players.Count <= 0) return null;
+            if (players.IsNullOrEmpty()) return null;
             var rand = IRandom.Instance;
             var count = Math.Clamp(RawCount, 0, players.Count);
             if (RawCount == -1) count = Math.Clamp(role.GetRealCount(), 0, players.Count);

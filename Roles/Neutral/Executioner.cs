@@ -3,6 +3,7 @@ using System.Linq;
 using Hazel;
 using AmongUs.GameOptions;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 
@@ -95,7 +96,7 @@ public sealed class Executioner : RoleBase, IAdditionalWinner
     {
         Executioners.Remove(this);
 
-        if (Executioners.Count <= 0)
+        if (Executioners.IsNullOrEmpty())
         {
             CustomRoleManager.OnMurderPlayerOthers.Remove(OnMurderPlayerOthers);
         }

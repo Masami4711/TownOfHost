@@ -9,10 +9,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using AmongUs.Data;
 using AmongUs.GameOptions;
-using Il2CppInterop.Runtime.InteropTypes;
 using UnityEngine;
 
 using TownOfHost.Modules;
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 using TownOfHost.Roles.Impostor;
@@ -643,7 +643,7 @@ namespace TownOfHost
         public static string GetSubRolesText(byte id, bool disableColor = false)
         {
             var SubRoles = PlayerState.GetByPlayerId(id).SubRoles;
-            if (SubRoles.Count == 0) return "";
+            if (SubRoles.IsNullOrEmpty()) return "";
             var sb = new StringBuilder();
             foreach (var role in SubRoles)
             {
@@ -1061,12 +1061,6 @@ namespace TownOfHost
             return sb.ToString();
         }
 
-        public static bool TryCast<T>(this Il2CppObjectBase obj, out T casted)
-        where T : Il2CppObjectBase
-        {
-            casted = obj.TryCast<T>();
-            return casted != null;
-        }
         public static int AllPlayersCount => PlayerState.AllPlayerStates.Values.Count(state => state.CountType != CountTypes.OutOfGame);
         public static int AllAlivePlayersCount => Main.AllAlivePlayerControls.Count(pc => !pc.Is(CountTypes.OutOfGame));
         public static bool IsAllAlive => PlayerState.AllPlayerStates.Values.All(state => state.CountType == CountTypes.OutOfGame || !state.IsDead);

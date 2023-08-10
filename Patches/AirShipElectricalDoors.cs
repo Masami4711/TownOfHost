@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using HarmonyLib;
 
+using TownOfHost.Modules.Extensions;
+
 namespace TownOfHost
 {
     public class AirShipElectricalDoors
@@ -16,7 +18,7 @@ namespace TownOfHost
         public static byte[] GetClosedDoors()
         {
             List<byte> DoorsArray = new();
-            if (Instance.Doors == null || Instance.Doors.Count == 0) return DoorsArray.ToArray();
+            if (Instance.Doors.IsNullOrEmpty()) return DoorsArray.ToArray();
             for (byte i = 0; i < Instance.Doors.Count; i++)
             {
                 var door = Instance.Doors[i];

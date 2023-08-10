@@ -6,6 +6,7 @@ using Assets.CoreScripts;
 using HarmonyLib;
 using Hazel;
 
+using TownOfHost.Modules.Extensions;
 using TownOfHost.Roles.Core;
 using static TownOfHost.Translator;
 
