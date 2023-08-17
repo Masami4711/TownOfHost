@@ -1,5 +1,5 @@
 using System.Text;
-using UnityEngine;
+using System.Collections.Generic;
 using AmongUs.GameOptions;
 
 using TownOfHost.Roles.Core;
@@ -93,9 +93,9 @@ namespace TownOfHost.Roles.Impostor
         private bool KnowTargetRole(PlayerControl target)
             => KnowDeadRole(target) || KnowAllyRole(target);
 
-        public override void OverrideDisplayRoleNameAsSeer(PlayerControl seen, ref bool enabled, ref Color roleColor, ref string roleText)
+        public override void OverrideRoleNameAsSeer(PlayerControl seen, List<CustomRoles> subRoles, ref CustomRoles mainRole, ref bool isEnable)
         {
-            enabled |= KnowTargetRole(seen);
+            isEnable |= KnowTargetRole(seen);
         }
         public override void OverrideProgressTextAsSeer(PlayerControl seen, ref bool enabled, ref string text)
         {

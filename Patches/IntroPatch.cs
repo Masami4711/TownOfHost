@@ -18,16 +18,14 @@ namespace TownOfHost
             if (!GameStates.IsModHost) return;
             _ = new LateTask(() =>
             {
-                CustomRoles role = PlayerControl.LocalPlayer.GetCustomRole();
-                if (!role.IsVanilla())
-                {
-                    __instance.YouAreText.color = Utils.GetRoleColor(role);
-                    __instance.RoleText.text = Utils.GetRoleName(role);
-                    __instance.RoleText.color = Utils.GetRoleColor(role);
-                    __instance.RoleBlurbText.color = Utils.GetRoleColor(role);
+                var player = PlayerControl.LocalPlayer;
+                var (mainRole, subRoles, _) = Utils.GetDisplayRoles(player);
+                __instance.YouAreText.color = Utils.GetRoleColor(mainRole);
+                __instance.RoleText.text = Utils.GetRoleName(mainRole);
+                __instance.RoleText.color = Utils.GetRoleColor(mainRole);
+                __instance.RoleBlurbText.color = Utils.GetRoleColor(mainRole);
 
-                    __instance.RoleBlurbText.text = PlayerControl.LocalPlayer.GetRoleInfo();
-                }
+                __instance.RoleBlurbText.text = PlayerControl.LocalPlayer.GetRoleInfo();
 
                 foreach (var subRole in PlayerState.GetByPlayerId(PlayerControl.LocalPlayer.PlayerId).SubRoles)
                     __instance.RoleBlurbText.text += "\n" + Utils.ColorString(Utils.GetRoleColor(subRole), GetString($"{subRole}Info"));

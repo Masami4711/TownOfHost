@@ -199,20 +199,34 @@ namespace TownOfHost
         /// <returns>構築されたRoleName</returns>
         public static string GetDisplayRoleName(PlayerControl seer, PlayerControl seen = null)
         {
+            var (mainRole, subRoles, isEnable) = GetDisplayRoles(seer, seen);
+            var (roleColor, roleText) = GetRoleNameData(mainRole, subRoles);
+            return isEnable ? ColorString(roleColor, roleText) : "";
+        }
+        public static (CustomRoles mainRole, List<CustomRoles> subRoles, bool isEnable) GetDisplayRoles(PlayerControl seer, PlayerControl seen = null)
+        {
             seen ??= seer;
             //デフォルト値
-            bool enabled = seer == seen
-                        || seen.Is(CustomRoles.GM)
-                        || (Main.VisibleTasksCount && !seer.IsAlive() && Options.GhostCanSeeOtherRoles.GetBool());
-            var (roleColor, roleText) = GetTrueRoleNameData(seen.PlayerId);
+            var mainRole = seen.GetCustomRole();
+            var subRoles = seen.GetCustomSubRoles();
+            bool isEnable =
+                seer == seen ||
+                seen.Is(CustomRoles.GM) ||
+                (Main.VisibleTasksCount && !seer.IsAlive() && Options.GhostCanSeeOtherRoles.GetBool());
 
+            var seenRoleClass = seen.GetRoleClass();
+            if (seer == seen &&
+                seenRoleClass is ISecretRole secretRole &&
+                secretRole.DoReplace(seen))
+            {
+                mainRole = secretRole.ReplaceRole;
+            }
             //seen側による変更
-            seen.GetRoleClass()?.OverrideDisplayRoleNameAsSeen(seer, ref enabled, ref roleColor, ref roleText);
-
+            seenRoleClass?.OverrideRoleNameAsSeen(seer, subRoles, ref mainRole, ref isEnable);
             //seer側による変更
-            seer.GetRoleClass()?.OverrideDisplayRoleNameAsSeer(seen, ref enabled, ref roleColor, ref roleText);
+            seer.GetRoleClass()?.OverrideRoleNameAsSeer(seen, subRoles, ref mainRole, ref isEnable);
 
-            return enabled ? ColorString(roleColor, roleText) : "";
+            return (mainRole, subRoles, isEnable);
         }
         /// <summary>
         /// 引数の指定通りのRoleNameを表示

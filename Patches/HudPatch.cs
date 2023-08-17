@@ -226,15 +226,11 @@ namespace TownOfHost
         public static void Postfix(TaskPanelBehaviour __instance)
         {
             if (!GameStates.IsModHost) return;
-            PlayerControl player = PlayerControl.LocalPlayer;
+            var player = PlayerControl.LocalPlayer;
 
-            // 役職説明表示
-            if (!player.GetCustomRole().IsVanilla())
-            {
-                var RoleWithInfo = $"{player.GetTrueRoleName()}:\r\n";
-                RoleWithInfo += player.GetRoleInfo();
-                __instance.taskText.text = Utils.ColorString(player.GetRoleColor(), RoleWithInfo) + "\n" + __instance.taskText.text;
-            }
+            var (mainRole, _, _) = Utils.GetDisplayRoles(player);
+            var RoleWithInfo = $"{Utils.GetRoleName(mainRole)}:\r\n{player.GetRoleInfo()}";
+            __instance.taskText.text = Utils.ColorString(Utils.GetRoleColor(mainRole), RoleWithInfo) + "\n" + __instance.taskText.text;
 
             // RepairSenderの表示
             if (RepairSender.enabled && AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame)

@@ -513,15 +513,15 @@ namespace TownOfHost
         public static string GetRoleInfo(this PlayerControl player, bool InfoLong = false)
         {
             var roleClass = player.GetRoleClass();
-            var role = player.GetCustomRole();
-            if (role is CustomRoles.Crewmate or CustomRoles.Impostor)
+            var (mainRole, _, _) = Utils.GetDisplayRoles(player);
+            if (mainRole is CustomRoles.Crewmate or CustomRoles.Impostor)
                 InfoLong = false;
 
-            var text = role.ToString();
+            var text = mainRole.ToString();
 
             var Prefix = "";
             if (!InfoLong)
-                switch (role)
+                switch (mainRole)
                 {
                     case CustomRoles.Mafia:
                         if (roleClass is not Mafia mafia) break;
@@ -534,7 +534,7 @@ namespace TownOfHost
                         Prefix = player.GetPlayerTaskState().IsTaskFinished ? "" : "Before";
                         break;
                 };
-            var Info = (role.IsVanilla() ? "Blurb" : "Info") + (InfoLong ? "Long" : "");
+            var Info = (mainRole.IsVanilla() ? "Blurb" : "Info") + (InfoLong ? "Long" : "");
             return GetString($"{Prefix}{text}{Info}");
         }
         public static void SetRealKiller(this PlayerControl target, PlayerControl killer, bool NotOverRide = false)
