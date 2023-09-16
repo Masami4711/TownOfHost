@@ -364,6 +364,7 @@ public enum CustomRoles
     Shapeshifter,
     //Impostor
     BountyHunter,
+    EagleEye,
     FireWorks,
     Mafia,
     SerialKiller,

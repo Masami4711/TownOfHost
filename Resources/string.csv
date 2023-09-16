@@ -34,6 +34,7 @@
 "EvilHacker","Evil Hacker","イビルハッカー","","","Злой Хакер",""
 "Penguin","Penguin","ペンギン","","","Пингвин",""
 "Insider","Insider","インサイダー","","","Инсайдер",""
+"EagleEye","Eagle Eye","イーグルアイ"
 
 "# マッドメイト系役職"
 "Madmate","Madmate","マッドメイト","叛徒","叛徒","Безумец","Tripulante Louco"
@@ -115,6 +116,7 @@
 "EvilHackerInfo","Hack systems","システムをハッキングせよ","","","Взломайте систему",""
 "PenguinInfo","Let's drag and kill!","ぺちぺち！","","","Давайте тащить и убивать!",""
 "InsiderInfo","Knowledge is power","知は力なり","","","Знание - сила!",""
+"EagleEyeInfo","Glance other's role","役職を覗き見しよう","","","",""
 
 "# マッドメイト系役職"
 "MadmateInfo","Help the Impostors","インポスターの援助をしよう","帮助内鬼","幫助偽裝者","Помогите Предателям","Ajude os Impostores"
@@ -185,6 +187,7 @@
 "EvilHackerInfoLong","(Impostors):\nThe EvilHacker can get the last-minute admin information at the meeting beginning.\nUnoccupied rooms are not shown.\nA '★' marks rooms with impostors.\nRooms with dead-bodies are marked with the number of bodies.\ne.g.)★Cafeteria: 3(DEAD×1)","(インポスター陣営):\n会議直前のアドミン情報を見ることができる。\n誰もいない部屋は省略される。\nインポスターがいる部屋には★印が付く。\n死体がある部屋には死体数が表記される。\n例)★カフェテリア: 3(死体×1)","","","(Предатель):\nЗлой Хакер может получить последнюю информацию на админке в начале встречи.\nНезанятые локации не показаны.\nA '★' Помечает локации с Предателями.\nЛокации с трупами помечаются количеством трупом) \nНапример: \n★Кафетерия: 3 (Мертвы×1)""",""
 "PenguinInfoLong","(Impostors):\nPenguins can restrain target by pressing the kill button, and drag around.\While dragging, the target dies by pressing the kill button again or after a certain period of time.\nPress the kill button twice for a direct kill.","(インポスター陣営):\nキルボタン一回で相手を拘束して連れまわすことが出来る。\nもう一度キルボタンを押すか一定時間経過でキルする。\nキルボタン2回で直接キル可能。","","","(Предатель):\nПингвины могут удерживать цель, нажимая кнопку убийства, и перетаскивать ее.\Во время перетаскивания цель умирает, нажав кнопку убийства еще раз или через определенный промежуток времени.\nНажмите кнопку убийства дважды, чтобы убить напрямую.",""
 "InsiderInfoLong","(Impostors):\nYou can see roles whose you killed.\nYou can also see roles and abilities of all Impostors.\nKIlling specified times tells you Madmate as well.","(インポスター陣営):\nキルした相手の役職が分かる。\nまた、味方インポスターの役職と能力が見える。\nさらに、特定回数キルするとマッドメイトも分かる。","","","(Предатель):\nВы можете увидеть роли, которых  Вы убили\nВы также можете увидеть роли и способности всех Предателей.\nУбийство в указанное время также сообщает вам о Безумце.",""
+"EagleEyeInfoLong","(Impostors):\nYou can find out others' role when ","(インポスター陣営):\n投票先に自分以外が誰も投票していないとき、投票先の役職を知ることができる。","","","",""
 
 
 "# マッドメイト系役職"

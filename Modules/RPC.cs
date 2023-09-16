@@ -37,6 +37,7 @@ namespace TownOfHost
         PenguinSync,
         MareSync,
         SyncPlagueDoctor,
+        EagleEyeAddTarget,
     }
     public enum Sounds
     {

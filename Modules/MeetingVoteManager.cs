@@ -143,6 +143,12 @@ public class MeetingVoteManager
         {
             meetingHud.RpcVotingComplete(states.ToArray(), result.Exiled, result.IsTie);
         }
+
+        foreach (var (playerId, voteData) in AllVotes)
+        {
+            CustomRoleManager.GetByPlayerId(playerId)?.OnVotingComplete(voteData, result);
+        }
+
         if (result.Exiled != null)
         {
             MeetingHudPatch.CheckForDeathOnExile(CustomDeathReason.Vote, result.Exiled.PlayerId);
