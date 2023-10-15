@@ -9,7 +9,7 @@ using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
 
-public sealed class FireWorks : RoleBase, IImpostor
+public sealed class FireWorks : RoleBase, IImpostor, IShapeshifter
 {
     public enum FireWorksState
     {
@@ -54,6 +54,9 @@ public sealed class FireWorks : RoleBase, IImpostor
     int NowFireWorksCount;
     List<Vector3> FireWorksPosition = new();
     FireWorksState State = FireWorksState.Initial;
+    float IShapeshifter.ShapeshifterCooldown => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterCooldown);
+    float IShapeshifter.ShapeshifterDuration => State == FireWorksState.FireEnd ? 30f : 1f;
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
 
     public static void SetupCustomOption()
     {
@@ -75,10 +78,10 @@ public sealed class FireWorks : RoleBase, IImpostor
         if (!Player.IsAlive()) return false;
         return (State & FireWorksState.CanUseKill) != 0;
     }
-    public override void ApplyGameOptions(IGameOptions opt)
-    {
-        AURoleOptions.ShapeshifterDuration = State != FireWorksState.FireEnd ? 1f : 30f;
-    }
+    // public override void ApplyGameOptions(IGameOptions opt)
+    // {
+    //     AURoleOptions.ShapeshifterDuration = State != FireWorksState.FireEnd ? 1f : 30f;
+    // }
 
     public override void OnShapeshift(PlayerControl target)
     {

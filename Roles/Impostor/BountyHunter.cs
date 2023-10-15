@@ -10,7 +10,7 @@ using TownOfHost.Roles.Neutral;
 using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
-public sealed class BountyHunter : RoleBase, IImpostor
+public sealed class BountyHunter : RoleBase, IImpostor, IShapeshifter
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -58,6 +58,10 @@ public sealed class BountyHunter : RoleBase, IImpostor
     public PlayerControl Target;
     public float ChangeTimer;
 
+    float IShapeshifter.ShapeshifterCooldown => TargetChangeTime;
+    float IShapeshifter.ShapeshifterDuration => 1f;
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     private static void SetupOptionItem()
     {
         OptionTargetChangeTime = FloatOptionItem.Create(RoleInfo, 10, OptionName.BountyTargetChangeTime, new(10f, 900f, 2.5f), 60f, false)
@@ -90,7 +94,7 @@ public sealed class BountyHunter : RoleBase, IImpostor
         Logger.Info($"{Player.GetNameWithRole()}のターゲットを{Target.GetNameWithRole()}に変更", "BountyHunter");
     }
     //public static void SetKillCooldown(byte id, float amount) => Main.AllPlayerKillCooldown[id] = amount;
-    public override void ApplyGameOptions(IGameOptions opt) => AURoleOptions.ShapeshifterCooldown = TargetChangeTime;
+    // public override void ApplyGameOptions(IGameOptions opt) => AURoleOptions.ShapeshifterCooldown = TargetChangeTime;
 
     public void OnCheckMurderAsKiller(MurderInfo info)
     {

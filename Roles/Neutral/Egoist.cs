@@ -48,6 +48,10 @@ public sealed class Egoist : RoleBase, ISidekickable, IKiller, ISchrodingerCatOw
 
     public SchrodingerCat.TeamType SchrodingerCatChangeTo => SchrodingerCat.TeamType.Egoist;
 
+    float IShapeshifter.ShapeshifterCooldown => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterCooldown);
+    float IShapeshifter.ShapeshifterDuration => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterDuration);
+    bool IShapeshifter.ShapeshifterLeaveSkin => Main.RealOptionsData.GetBool(BoolOptionNames.ShapeshifterLeaveSkin);
+
     private static void SetupOptionItem()
     {
         OptionKillCooldown = FloatOptionItem.Create(RoleInfo, 10, GeneralOption.KillCooldown, new(2.5f, 180f, 2.5f), 20f, false)
@@ -88,5 +92,10 @@ public sealed class Egoist : RoleBase, ISidekickable, IKiller, ISchrodingerCatOw
     public void ApplySchrodingerCatOptions(IGameOptions option)
     {
         option.SetVision(true);
+    }
+
+    bool ISidekickable.CanMakeSidekick()
+    {
+        throw new System.NotImplementedException();
     }
 }

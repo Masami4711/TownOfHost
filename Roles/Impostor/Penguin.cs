@@ -8,7 +8,7 @@ using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
 
-class Penguin : RoleBase, IImpostor
+class Penguin : RoleBase, IImpostor, IShapeshifter
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -49,6 +49,10 @@ class Penguin : RoleBase, IImpostor
 
     //拉致中にキルしそうになった相手の能力を使わせないための処置
     public bool IsKiller => AbductVictim == null;
+    float IShapeshifter.ShapeshifterCooldown => AbductVictim != null ? AbductTimer : 255f;
+    float IShapeshifter.ShapeshifterDuration => 1f;
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     public static void SetupOptionItem()
     {
         OptionAbductTimerLimit = FloatOptionItem.Create(RoleInfo, 11, OptionName.PenguinAbductTimerLimit, new(5f, 20f, 1f), 10f, false)
@@ -60,7 +64,7 @@ class Penguin : RoleBase, IImpostor
         AbductTimer = 255f;
         stopCount = false;
     }
-    public override void ApplyGameOptions(IGameOptions opt) => AURoleOptions.ShapeshifterCooldown = AbductVictim != null ? AbductTimer : 255f;
+    // public override void ApplyGameOptions(IGameOptions opt) => AURoleOptions.ShapeshifterCooldown = AbductVictim != null ? AbductTimer : 255f;
     private void SendRPC()
     {
         using var sender = CreateSender(CustomRPC.PenguinSync);

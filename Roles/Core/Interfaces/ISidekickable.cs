@@ -1,6 +1,6 @@
 namespace TownOfHost.Roles.Core.Interfaces;
 
-public interface ISidekickable
+public interface ISidekickable : IShapeshifter
 {
     /// <summary>
     /// サイドキック対象が変化する役職です．SKMadmateなら何もする必要はありません．<br/>

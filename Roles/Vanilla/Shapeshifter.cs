@@ -20,4 +20,8 @@ public sealed class Shapeshifter : RoleBase, IImpostor, IKiller, ISidekickable
         player
     )
     { }
+
+    float IShapeshifter.ShapeshifterCooldown => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterCooldown);
+    float IShapeshifter.ShapeshifterDuration => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterDuration);
+    bool IShapeshifter.ShapeshifterLeaveSkin => Main.RealOptionsData.GetBool(BoolOptionNames.ShapeshifterLeaveSkin);
 }

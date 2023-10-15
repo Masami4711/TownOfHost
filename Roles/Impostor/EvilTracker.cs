@@ -10,7 +10,7 @@ using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
 
-public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, ISidekickable
+public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, IShapeshifter, ISidekickable
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -102,6 +102,10 @@ public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, ISidek
         SetTarget,
     }
 
+    float IShapeshifter.ShapeshifterCooldown => CanTarget() ? 1f : 255f;
+    float IShapeshifter.ShapeshifterDuration => 1f;
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     private static void SetupOptionItem()
     {
         OptionCanSeeKillFlash = BooleanOptionItem.Create(RoleInfo, 10, OptionName.EvilTrackerCanSeeKillFlash, true, false);
@@ -170,11 +174,11 @@ public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, ISidek
         }
     }
 
-    public override void ApplyGameOptions(IGameOptions opt)
-    {
-        AURoleOptions.ShapeshifterCooldown = CanTarget() ? 1f : 255f;
-        AURoleOptions.ShapeshifterDuration = 1f;
-    }
+    // public override void ApplyGameOptions(IGameOptions opt)
+    // {
+    //     AURoleOptions.ShapeshifterCooldown = CanTarget() ? 1f : 255f;
+    //     AURoleOptions.ShapeshifterDuration = 1f;
+    // }
     public override string GetAbilityButtonText() => GetString("EvilTrackerChangeButtonText");
     public override bool CanUseAbilityButton() => CanTarget();
 

@@ -5,7 +5,7 @@ using TownOfHost.Roles.Core.Interfaces;
 
 namespace TownOfHost.Roles.Impostor;
 
-public sealed class ShapeMaster : RoleBase, IImpostor
+public sealed class ShapeMaster : RoleBase, IImpostor, IShapeshifter
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -33,15 +33,19 @@ public sealed class ShapeMaster : RoleBase, IImpostor
     }
     private static float shapeshiftDuration;
 
+    float IShapeshifter.ShapeshifterCooldown => 0f;
+    float IShapeshifter.ShapeshifterDuration => shapeshiftDuration;
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     public static void SetupOptionItem()
     {
         OptionShapeshiftDuration = FloatOptionItem.Create(RoleInfo, 10, OptionName.ShapeMasterShapeshiftDuration, new(1, 1000, 1), 10, false);
     }
 
-    public override void ApplyGameOptions(IGameOptions opt)
-    {
-        AURoleOptions.ShapeshifterCooldown = 0f;
-        AURoleOptions.ShapeshifterLeaveSkin = false;
-        AURoleOptions.ShapeshifterDuration = shapeshiftDuration;
-    }
+    // public override void ApplyGameOptions(IGameOptions opt)
+    // {
+    //     AURoleOptions.ShapeshifterCooldown = 0f;
+    //     AURoleOptions.ShapeshifterLeaveSkin = false;
+    //     AURoleOptions.ShapeshifterDuration = shapeshiftDuration;
+    // }
 }

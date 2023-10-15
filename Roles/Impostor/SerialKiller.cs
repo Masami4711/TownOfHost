@@ -8,7 +8,7 @@ using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor
 {
-    public sealed class SerialKiller : RoleBase, IImpostor
+    public sealed class SerialKiller : RoleBase, IImpostor, IShapeshifter
     {
         public static readonly SimpleRoleInfo RoleInfo =
             SimpleRoleInfo.Create(
@@ -42,6 +42,10 @@ namespace TownOfHost.Roles.Impostor
         private static float TimeLimit;
 
         public bool CanBeLastImpostor { get; } = false;
+        float IShapeshifter.ShapeshifterCooldown => HasKilled() ? TimeLimit : 255f;
+        float IShapeshifter.ShapeshifterDuration => 1f;
+        bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
         public float? SuicideTimer;
 
         private static void SetUpOptionItem()
@@ -52,11 +56,11 @@ namespace TownOfHost.Roles.Impostor
                 .SetValueFormat(OptionFormat.Seconds);
         }
         public float CalculateKillCooldown() => KillCooldown;
-        public override void ApplyGameOptions(IGameOptions opt)
-        {
-            AURoleOptions.ShapeshifterCooldown = HasKilled() ? TimeLimit : 255f;
-            AURoleOptions.ShapeshifterDuration = 1f;
-        }
+        // public override void ApplyGameOptions(IGameOptions opt)
+        // {
+        //     AURoleOptions.ShapeshifterCooldown = HasKilled() ? TimeLimit : 255f;
+        //     AURoleOptions.ShapeshifterDuration = 1f;
+        // }
         ///<summary>
         ///シリアルキラー＋生存＋一人以上キルしている
         ///</summary>
