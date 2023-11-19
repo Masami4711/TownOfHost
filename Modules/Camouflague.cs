@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TownOfHost.Attributes;
+using TownOfHost.Roles.Core.Interfaces;
 
 namespace TownOfHost
 {
@@ -86,10 +87,10 @@ namespace TownOfHost
             {
                 //コミュサボ解除または強制解除
 
-                if (Main.CheckShapeshift.TryGetValue(id, out var shapeshifting) && shapeshifting && !RevertToDefault)
+                if (IShapeshifter.CheckShapeshift.TryGetValue(id, out var shapeshifting) && shapeshifting && !RevertToDefault)
                 {
                     //シェイプシフターなら今の姿のidに変更
-                    id = Main.ShapeshiftTarget[id];
+                    id = IShapeshifter.ShapeshiftTarget[id];
                 }
 
                 newOutfit = PlayerSkins[id];

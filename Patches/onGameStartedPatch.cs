@@ -11,6 +11,7 @@ using TownOfHost.Roles;
 using TownOfHost.Roles.Core;
 using TownOfHost.Roles.AddOns.Common;
 using static TownOfHost.Translator;
+using TownOfHost.Roles.Core.Interfaces;
 
 namespace TownOfHost
 {
@@ -30,8 +31,8 @@ namespace TownOfHost
             Main.AfterMeetingDeathPlayers = new();
             Main.clientIdList = new();
 
-            Main.CheckShapeshift = new();
-            Main.ShapeshiftTarget = new();
+            IShapeshifter.CheckShapeshift = new();
+            IShapeshifter.ShapeshiftTarget = new();
 
             ReportDeadBodyPatch.CanReport = new();
 

@@ -5,7 +5,7 @@ using TownOfHost.Roles.Core.Interfaces;
 
 namespace TownOfHost.Roles.Vanilla;
 
-public sealed class Shapeshifter : RoleBase, IImpostor, IKiller, ISidekickable
+public sealed class Shapeshifter : RoleBase, IImpostor, IShapeshifter, ISidekickable
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.CreateForVanilla(

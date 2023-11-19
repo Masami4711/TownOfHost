@@ -125,6 +125,18 @@ public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, IShape
         return realKiller.Is(CustomRoleTypes.Impostor) && realKiller != target;
     }
     public bool CanMakeSidekick() => CanCreateMadmate; // ISidekickable
+    bool IShapeshifter.OnCheckShapeshift(PlayerControl target, bool animate)
+    {
+        var shapeshifting = !Is(target);
+        if (!CanTarget() || !shapeshifting) return false;
+        if (target == null || target.Is(CustomRoleTypes.Impostor)) return false;
+
+        SetTarget(target.PlayerId);
+        Logger.Info($"{Player.GetNameWithRole()}のターゲットを{target.GetNameWithRole()}に設定", "EvilTrackerTarget");
+        Player.MarkDirtySettings();
+        Utils.NotifyRoles();
+        return false;
+    }
 
     public override void ReceiveRPC(MessageReader reader, CustomRPC rpcType)
     {
@@ -174,11 +186,6 @@ public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, IShape
         }
     }
 
-    // public override void ApplyGameOptions(IGameOptions opt)
-    // {
-    //     AURoleOptions.ShapeshifterCooldown = CanTarget() ? 1f : 255f;
-    //     AURoleOptions.ShapeshifterDuration = 1f;
-    // }
     public override string GetAbilityButtonText() => GetString("EvilTrackerChangeButtonText");
     public override bool CanUseAbilityButton() => CanTarget();
 
@@ -189,17 +196,6 @@ public sealed class EvilTracker : RoleBase, IImpostor, IKillFlashSeeable, IShape
         && (target.Is(CustomRoleTypes.Impostor) || TargetId == target.PlayerId);
 
     // 各所で呼ばれる処理
-    public override void OnShapeshift(PlayerControl target)
-    {
-        var shapeshifting = !Is(target);
-        if (!CanTarget() || !shapeshifting) return;
-        if (target == null || target.Is(CustomRoleTypes.Impostor)) return;
-
-        SetTarget(target.PlayerId);
-        Logger.Info($"{Player.GetNameWithRole()}のターゲットを{target.GetNameWithRole()}に設定", "EvilTrackerTarget");
-        Player.MarkDirtySettings();
-        Utils.NotifyRoles();
-    }
     public override void AfterMeetingTasks()
     {
         if (CurrentTargetMode == TargetMode.EveryMeeting)

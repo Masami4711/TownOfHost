@@ -93,9 +93,6 @@ public sealed class BountyHunter : RoleBase, IImpostor, IShapeshifter
         if (ShowTargetArrow) TargetArrow.Add(Player.PlayerId, targetId);
         Logger.Info($"{Player.GetNameWithRole()}のターゲットを{Target.GetNameWithRole()}に変更", "BountyHunter");
     }
-    //public static void SetKillCooldown(byte id, float amount) => Main.AllPlayerKillCooldown[id] = amount;
-    // public override void ApplyGameOptions(IGameOptions opt) => AURoleOptions.ShapeshifterCooldown = TargetChangeTime;
-
     public void OnCheckMurderAsKiller(MurderInfo info)
     {
         if (!info.IsSuicide)
@@ -118,6 +115,7 @@ public sealed class BountyHunter : RoleBase, IImpostor, IShapeshifter
         }
         return;
     }
+    bool IShapeshifter.OnCheckShapeshift(PlayerControl target, bool animate) => false;
     public override void OnFixedUpdate(PlayerControl player)
     {
         if (AmongUsClient.Instance.AmHost)

@@ -142,6 +142,8 @@ class Penguin : RoleBase, IImpostor, IShapeshifter
         }
         return true;
     }
+    bool IShapeshifter.OnCheckShapeshift(PlayerControl target, bool animate) => false;
+
     public override string GetAbilityButtonText()
     {
         return GetString("PenguinTimerText");

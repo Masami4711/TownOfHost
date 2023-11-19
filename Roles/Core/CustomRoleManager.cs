@@ -218,7 +218,7 @@ public static class CustomRoleManager
         }
         if (player.Data.Role.Role == RoleTypes.Shapeshifter)
         {
-            Main.CheckShapeshift.TryAdd(player.PlayerId, false);
+            IShapeshifter.CheckShapeshift.TryAdd(player.PlayerId, false);
         }
     }
     public static void OtherRolesAdd(PlayerControl pc)

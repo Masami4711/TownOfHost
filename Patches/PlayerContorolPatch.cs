@@ -167,7 +167,7 @@ namespace TownOfHost
                 }
                 else
                 {
-                    if (Main.CheckShapeshift.TryGetValue(target.PlayerId, out var shapeshifting) && shapeshifting)
+                    if (IShapeshifter.CheckShapeshift.TryGetValue(target.PlayerId, out var shapeshifting) && shapeshifting)
                     {
                         //シェイプシフト強制解除
                         target.RpcShapeshift(target, false);
@@ -209,7 +209,7 @@ namespace TownOfHost
                 return false;
             }
             // 役職の処理
-            if (__instance.GetRoleClass()?.OnCheckShapeshift(target, shouldAnimate) == false)
+            if ((__instance.GetRoleClass() as IShapeshifter)?.OnCheckShapeshift(target, shouldAnimate) != true)
             {
                 __instance.RpcRejectShapeshift();
                 return false;
@@ -266,16 +266,16 @@ namespace TownOfHost
             var shapeshifter = __instance;
             var shapeshifting = shapeshifter.PlayerId != target.PlayerId;
 
-            if (Main.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
+            if (IShapeshifter.CheckShapeshift.TryGetValue(shapeshifter.PlayerId, out var last) && last == shapeshifting)
             {
                 Logger.Info($"{__instance?.GetNameWithRole()}:Cancel Shapeshift.Prefix", "Shapeshift");
                 return;
             }
 
-            Main.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
-            Main.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
+            IShapeshifter.CheckShapeshift[shapeshifter.PlayerId] = shapeshifting;
+            IShapeshifter.ShapeshiftTarget[shapeshifter.PlayerId] = target.PlayerId;
 
-            shapeshifter.GetRoleClass()?.OnShapeshift(target);
+            (shapeshifter.GetRoleClass() as IShapeshifter)?.OnShapeshift(target);
 
             if (!AmongUsClient.Instance.AmHost) return;
 
@@ -368,7 +368,7 @@ namespace TownOfHost
             }
 
             Main.AllPlayerControls
-                .Where(pc => Main.CheckShapeshift.ContainsKey(pc.PlayerId))
+                .Where(pc => IShapeshifter.CheckShapeshift.ContainsKey(pc.PlayerId))
                 .Do(pc => Camouflage.RpcSetSkin(pc, RevertToDefault: true));
             MeetingTimeManager.OnReportDeadBody();
 

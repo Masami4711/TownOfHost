@@ -78,12 +78,8 @@ public sealed class FireWorks : RoleBase, IImpostor, IShapeshifter
         if (!Player.IsAlive()) return false;
         return (State & FireWorksState.CanUseKill) != 0;
     }
-    // public override void ApplyGameOptions(IGameOptions opt)
-    // {
-    //     AURoleOptions.ShapeshifterDuration = State != FireWorksState.FireEnd ? 1f : 30f;
-    // }
 
-    public override void OnShapeshift(PlayerControl target)
+    void IShapeshifter.OnShapeshift(PlayerControl target)
     {
         var shapeshifting = !Is(target);
         Logger.Info($"FireWorks ShapeShift", "FireWorks");

@@ -9,7 +9,7 @@ using TownOfHost.Roles.Core.Interfaces;
 using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
-public sealed class Sniper : RoleBase, IImpostor
+public sealed class Sniper : RoleBase, IImpostor, IShapeshifter
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -66,6 +66,11 @@ public sealed class Sniper : RoleBase, IImpostor
     bool AimAssistOneshot;
 
     bool MeetingReset;
+
+    float IShapeshifter.ShapeshifterCooldown => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterCooldown);
+    float IShapeshifter.ShapeshifterDuration => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterDuration);
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     public static void SetupOptionItem()
     {
         SniperBulletCount = IntegerOptionItem.Create(RoleInfo, 10, OptionName.SniperBulletCount, new(1, 5, 1), 2, false)
@@ -184,7 +189,7 @@ public sealed class Sniper : RoleBase, IImpostor
         return targets;
 
     }
-    public override void OnShapeshift(PlayerControl target)
+    void IShapeshifter.OnShapeshift(PlayerControl target)
     {
         var shapeshifting = Player.PlayerId != target.PlayerId;
 

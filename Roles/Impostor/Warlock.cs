@@ -9,7 +9,7 @@ using static TownOfHost.Translator;
 
 namespace TownOfHost.Roles.Impostor;
 
-public sealed class Warlock : RoleBase, IImpostor
+public sealed class Warlock : RoleBase, IImpostor, IShapeshifter
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -37,6 +37,11 @@ public sealed class Warlock : RoleBase, IImpostor
     PlayerControl CursedPlayer;
     bool IsCursed;
     bool Shapeshifting;
+
+    float IShapeshifter.ShapeshifterCooldown => IsCursed ? 1f : Options.DefaultKillCooldown;
+    float IShapeshifter.ShapeshifterDuration => Main.RealOptionsData.GetFloat(FloatOptionNames.ShapeshifterDuration);
+    bool IShapeshifter.ShapeshifterLeaveSkin => false;
+
     public override void Add()
     {
         CursedPlayer = null;
@@ -55,10 +60,6 @@ public sealed class Warlock : RoleBase, IImpostor
             text = default;
             return false;
         }
-    }
-    public override void ApplyGameOptions(IGameOptions opt)
-    {
-        AURoleOptions.ShapeshifterCooldown = IsCursed ? 1f : Options.DefaultKillCooldown;
     }
     public void OnCheckMurderAsKiller(MurderInfo info)
     {
@@ -81,7 +82,7 @@ public sealed class Warlock : RoleBase, IImpostor
         }
         //変身中は通常キル
     }
-    public override void OnShapeshift(PlayerControl target)
+    void IShapeshifter.OnShapeshift(PlayerControl target)
     {
         Shapeshifting = !Is(target);
 

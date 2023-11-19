@@ -56,11 +56,8 @@ namespace TownOfHost.Roles.Impostor
                 .SetValueFormat(OptionFormat.Seconds);
         }
         public float CalculateKillCooldown() => KillCooldown;
-        // public override void ApplyGameOptions(IGameOptions opt)
-        // {
-        //     AURoleOptions.ShapeshifterCooldown = HasKilled() ? TimeLimit : 255f;
-        //     AURoleOptions.ShapeshifterDuration = 1f;
-        // }
+
+        bool IShapeshifter.OnCheckShapeshift(PlayerControl target, bool animate) => false;
         ///<summary>
         ///シリアルキラー＋生存＋一人以上キルしている
         ///</summary>

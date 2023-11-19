@@ -6,7 +6,7 @@ using TownOfHost.Roles.Core;
 using TownOfHost.Roles.Core.Interfaces;
 
 namespace TownOfHost.Roles.Neutral;
-public sealed class Egoist : RoleBase, ISidekickable, IKiller, ISchrodingerCatOwner
+public sealed class Egoist : RoleBase, ISidekickable, IShapeshifter, ISchrodingerCatOwner
 {
     public static readonly SimpleRoleInfo RoleInfo =
         SimpleRoleInfo.Create(
@@ -92,10 +92,5 @@ public sealed class Egoist : RoleBase, ISidekickable, IKiller, ISchrodingerCatOw
     public void ApplySchrodingerCatOptions(IGameOptions option)
     {
         option.SetVision(true);
-    }
-
-    bool ISidekickable.CanMakeSidekick()
-    {
-        throw new System.NotImplementedException();
     }
 }
