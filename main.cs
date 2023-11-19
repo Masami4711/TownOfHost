@@ -105,8 +105,6 @@ namespace TownOfHost
         public const float MinSpeed = 0.0001f;
         public static int AliveImpostorCount;
         public static int SKMadmateNowCount;
-        public static Dictionary<byte, bool> CheckShapeshift = new();
-        public static Dictionary<byte, byte> ShapeshiftTarget = new();
         public static bool VisibleTasksCount;
         public static string nickName = "";
         public static bool introDestroyed = false;
