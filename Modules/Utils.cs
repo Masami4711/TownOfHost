@@ -855,6 +855,7 @@ namespace TownOfHost
                     || seer.Is(CustomRoles.Executioner)
                     || seer.Is(CustomRoles.Doctor) //seerがドクター
                     || seer.Is(CustomRoles.Puppeteer)
+                    || seer.Is(CustomRoles.Duelist)
                     || seer.IsNeutralKiller() //seerがキル出来るニュートラル
                     || IsActive(SystemTypes.Electrical)
                     || IsActive(SystemTypes.Comms)

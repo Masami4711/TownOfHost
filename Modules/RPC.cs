@@ -37,6 +37,7 @@ namespace TownOfHost
         PenguinSync,
         MareSync,
         SyncPlagueDoctor,
+        DuelistAddTarget,
     }
     public enum Sounds
     {

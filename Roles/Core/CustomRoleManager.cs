@@ -417,6 +417,7 @@ public enum CustomRoles
     Terrorist,
     Executioner,
     Jackal,
+    Duelist,
     //HideAndSeek
     HASFox,
     HASTroll,
