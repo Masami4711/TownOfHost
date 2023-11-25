@@ -413,6 +413,7 @@ public enum CustomRoles
     Jester,
     Opportunist,
     PlagueDoctor,
+    Runaway,
     SchrodingerCat,
     Terrorist,
     Executioner,

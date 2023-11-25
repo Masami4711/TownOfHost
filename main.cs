@@ -237,6 +237,7 @@ namespace TownOfHost
         Torched,
         Sniped,
         Revenge,
+        Escape,
         Execution,
         Infected,
         Disconnected,
@@ -259,6 +260,7 @@ namespace TownOfHost
         Egoist = CustomRoles.Egoist,
         Jackal = CustomRoles.Jackal,
         PlagueDoctor = CustomRoles.PlagueDoctor,
+        Runaway = CustomRoles.Runaway,
         HASTroll = CustomRoles.HASTroll,
     }
     /*public enum CustomRoles : byte

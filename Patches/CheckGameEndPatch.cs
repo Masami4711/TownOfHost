@@ -50,6 +50,9 @@ namespace TownOfHost
                             .Where(pc => (pc.Is(CustomRoleTypes.Impostor) || pc.Is(CustomRoleTypes.Madmate)) && !pc.Is(CustomRoles.Lovers))
                             .Do(pc => CustomWinnerHolder.WinnerIds.Add(pc.PlayerId));
                         break;
+                    case CustomWinner.None:
+                        Runaway.CheckSoloWin();
+                        break;
                 }
                 if (CustomWinnerHolder.WinnerTeam is not CustomWinner.Draw and not CustomWinner.None)
                 {
